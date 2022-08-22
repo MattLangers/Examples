@@ -1,9 +1,14 @@
+using Microsoft.EntityFrameworkCore;
+using Database;
+using Database.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddDbContext<DatabaseContext>(opt => opt.UseInMemoryDatabase("ProductCatalogue"));
 
 var app = builder.Build();
 
@@ -16,28 +21,16 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+app.MapGet("/product", async (DatabaseContext db) =>
+    await db.Product.ToListAsync());
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-       new WeatherForecast
-       (
-           DateTime.Now.AddDays(index),
-           Random.Shared.Next(-20, 55),
-           summaries[Random.Shared.Next(summaries.Length)]
-       ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+app.MapGet("/product/{id}", async (Guid id, DatabaseContext db) =>
+    await db.Product.FindAsync(id)
+        is Product product
+            ? Results.Ok(product)
+            : Results.NotFound());
+
+app.MapGet("/product-types", async (DatabaseContext db) =>
+    await db.ProductType.ToListAsync());
 
 app.Run();
-
-internal record WeatherForecast(DateTime Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

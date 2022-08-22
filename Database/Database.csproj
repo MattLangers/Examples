@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 	<ItemGroup>
+		<PackageReference Include="FastEnum" Version="1.8.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.8" />
 	</ItemGroup>
 </Project>
