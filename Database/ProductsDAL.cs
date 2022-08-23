@@ -1,5 +1,6 @@
 ﻿using Database.Models;
 using Database.Models.DTO;
+using Microsoft.EntityFrameworkCore;
 
 namespace Database
 {
@@ -16,11 +17,11 @@ namespace Database
         {
             return Task.Run(() =>
             {
-                var query = from products in _dbContext.Set<Product>()
-                            from productsPublished in _dbContext.Set<ProductPublished>().Where(pb => pb.Id == products.Id).DefaultIfEmpty()
-                            select new ProductDto() { Id = products.Id, Name = products.Name, ProductTypeId = products.ProductType.Id };
-
-                return query.ToHashSet();
+                /* TODO: we should be using Linq to buid the query */
+                return _dbContext.Set<Product>()
+                .FromSqlRaw("select p.* from Product p Left Join ProductPublished pb on p.Id = pb.Id Where pb.Id is NULL")
+                .Select(products => new ProductDto() { Id = products.Id, Name = products.Name, ProductTypeId = products.ProductType.Id })
+                .ToHashSet();
             });
         }
 
