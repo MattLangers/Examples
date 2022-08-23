@@ -12,8 +12,7 @@ namespace Database.Models
         [Required, MaxLength(250)]
         public string Name { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime CreationDate { get; set; }
+        public DateTime CreationDate { get; set; } = DateTime.UtcNow;
 
         public ProductType ProductType { get; set; }
     }
