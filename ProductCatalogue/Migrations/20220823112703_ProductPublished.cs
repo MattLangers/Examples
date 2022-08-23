@@ -19,6 +19,12 @@ namespace ProductCatalogue.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ProductPublished", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProductPublished_Product_Id",
+                        column: x => x.Id,
+                        principalTable: "Product",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.UpdateData(
@@ -26,93 +32,81 @@ namespace ProductCatalogue.Migrations
                 keyColumn: "Id",
                 keyValue: 1,
                 column: "CreationDate",
-                value: new DateTime(2022, 8, 23, 10, 15, 42, 210, DateTimeKind.Utc).AddTicks(7799));
+                value: new DateTime(2022, 8, 23, 11, 27, 3, 132, DateTimeKind.Utc).AddTicks(5015));
 
             migrationBuilder.UpdateData(
                 table: "ProductType",
                 keyColumn: "Id",
                 keyValue: 2,
                 column: "CreationDate",
-                value: new DateTime(2022, 8, 23, 10, 15, 42, 210, DateTimeKind.Utc).AddTicks(7821));
+                value: new DateTime(2022, 8, 23, 11, 27, 3, 132, DateTimeKind.Utc).AddTicks(5025));
 
             migrationBuilder.UpdateData(
                 table: "ProductType",
                 keyColumn: "Id",
                 keyValue: 3,
                 column: "CreationDate",
-                value: new DateTime(2022, 8, 23, 10, 15, 42, 210, DateTimeKind.Utc).AddTicks(7823));
+                value: new DateTime(2022, 8, 23, 11, 27, 3, 132, DateTimeKind.Utc).AddTicks(5026));
 
             migrationBuilder.UpdateData(
                 table: "ProductType",
                 keyColumn: "Id",
                 keyValue: 4,
                 column: "CreationDate",
-                value: new DateTime(2022, 8, 23, 10, 15, 42, 210, DateTimeKind.Utc).AddTicks(7824));
+                value: new DateTime(2022, 8, 23, 11, 27, 3, 132, DateTimeKind.Utc).AddTicks(5028));
 
             migrationBuilder.UpdateData(
                 table: "ProductType",
                 keyColumn: "Id",
                 keyValue: 5,
                 column: "CreationDate",
-                value: new DateTime(2022, 8, 23, 10, 15, 42, 210, DateTimeKind.Utc).AddTicks(7833));
+                value: new DateTime(2022, 8, 23, 11, 27, 3, 132, DateTimeKind.Utc).AddTicks(5029));
 
             migrationBuilder.UpdateData(
                 table: "ProductType",
                 keyColumn: "Id",
                 keyValue: 6,
                 column: "CreationDate",
-                value: new DateTime(2022, 8, 23, 10, 15, 42, 210, DateTimeKind.Utc).AddTicks(7836));
+                value: new DateTime(2022, 8, 23, 11, 27, 3, 132, DateTimeKind.Utc).AddTicks(5032));
 
             migrationBuilder.UpdateData(
                 table: "ProductType",
                 keyColumn: "Id",
                 keyValue: 7,
                 column: "CreationDate",
-                value: new DateTime(2022, 8, 23, 10, 15, 42, 210, DateTimeKind.Utc).AddTicks(7838));
+                value: new DateTime(2022, 8, 23, 11, 27, 3, 132, DateTimeKind.Utc).AddTicks(5033));
 
             migrationBuilder.UpdateData(
                 table: "ProductType",
                 keyColumn: "Id",
                 keyValue: 8,
                 column: "CreationDate",
-                value: new DateTime(2022, 8, 23, 10, 15, 42, 210, DateTimeKind.Utc).AddTicks(7839));
+                value: new DateTime(2022, 8, 23, 11, 27, 3, 132, DateTimeKind.Utc).AddTicks(5035));
 
             migrationBuilder.UpdateData(
                 table: "ProductType",
                 keyColumn: "Id",
                 keyValue: 9,
                 column: "CreationDate",
-                value: new DateTime(2022, 8, 23, 10, 15, 42, 210, DateTimeKind.Utc).AddTicks(7840));
+                value: new DateTime(2022, 8, 23, 11, 27, 3, 132, DateTimeKind.Utc).AddTicks(5036));
 
             migrationBuilder.UpdateData(
                 table: "ProductType",
                 keyColumn: "Id",
                 keyValue: 10,
                 column: "CreationDate",
-                value: new DateTime(2022, 8, 23, 10, 15, 42, 210, DateTimeKind.Utc).AddTicks(7842));
+                value: new DateTime(2022, 8, 23, 11, 27, 3, 132, DateTimeKind.Utc).AddTicks(5038));
 
             migrationBuilder.UpdateData(
                 table: "ProductType",
                 keyColumn: "Id",
                 keyValue: 11,
                 column: "CreationDate",
-                value: new DateTime(2022, 8, 23, 10, 15, 42, 210, DateTimeKind.Utc).AddTicks(7843));
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Product_ProductPublished_Id",
-                table: "Product",
-                column: "Id",
-                principalTable: "ProductPublished",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                value: new DateTime(2022, 8, 23, 11, 27, 3, 132, DateTimeKind.Utc).AddTicks(5039));
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Product_ProductPublished_Id",
-                table: "Product");
-
             migrationBuilder.DropTable(
                 name: "ProductPublished");
 

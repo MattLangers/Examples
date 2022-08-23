@@ -24,7 +24,7 @@ namespace Database
         {
             modelBuilder.Entity<ProductType>().HasData(databaseSeedingFactory.CreateProductTypes());
 
-            modelBuilder.Entity<ProductPublished>().HasOne(p => p.Product).WithOne(p => p.ProductPublished).HasForeignKey<Product>(p => p.Id);
+            modelBuilder.Entity<Product>().HasOne(p => p.ProductPublished).WithOne(p => p.Product).HasForeignKey<ProductPublished>(p => p.Id);
         }
     }
 }
