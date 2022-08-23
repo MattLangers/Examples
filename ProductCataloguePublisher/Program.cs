@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Database;
 using Microsoft.EntityFrameworkCore;
 using Publisher.Logic;
+using Publisher.Configuration;
 
 Console.WriteLine($"Publisher Start: {DateTime.UtcNow}");
 
@@ -12,10 +13,12 @@ IConfiguration config = new ConfigurationBuilder()
     .Build();
 
 var host = Host.CreateDefaultBuilder(args)
-    .ConfigureServices(services => {
+    .ConfigureServices((hostContext, services) => {
         services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(config.GetConnectionString("ProductCatalogue")));
         services.AddScoped<IProductsDAL, ProductsDAL>();
         services.AddScoped<IPublisherOrchestration, PublisherOrchestration>();
+        services.Configure<QueueConfiguration>(hostContext.Configuration.GetSection("QueueConfiguration"));
+
     })
     .Build();
 
