@@ -5,6 +5,7 @@ using Database;
 using Microsoft.EntityFrameworkCore;
 using Publisher.Logic;
 using Publisher.Configuration;
+using Publisher.Logic.Factories;
 
 Console.WriteLine($"Publisher Start: {DateTime.UtcNow}");
 
@@ -17,6 +18,7 @@ var host = Host.CreateDefaultBuilder(args)
         services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(config.GetConnectionString("ProductCatalogue")));
         services.AddScoped<IProductsDAL, ProductsDAL>();
         services.AddScoped<IPublisherOrchestration, PublisherOrchestration>();
+        services.AddScoped<IQueueFactory, QueueFactory>();
         services.Configure<QueueConfiguration>(hostContext.Configuration.GetSection("QueueConfiguration"));
 
     })
