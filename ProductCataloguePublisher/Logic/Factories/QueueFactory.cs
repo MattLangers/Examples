@@ -1,5 +1,4 @@
 ﻿using Azure.Storage.Queues;
-using Database.Models.DTO;
 using Publisher.Configuration;
 
 namespace Publisher.Logic.Factories
@@ -13,11 +12,11 @@ namespace Publisher.Logic.Factories
             this.configuration = queueConfiguration;
         }
 
-        public async Task<QueueClient> CreateQueueClient()
+        public async Task<IQueueClientWrapper> CreateQueueClient()
         {
             var queue = new QueueClient(configuration.StorageConnectionString, configuration.QueueName);
             await queue.CreateAsync();
-            return queue;
+            return new QueueClientWrapper(queue);
         }
     }
 }
