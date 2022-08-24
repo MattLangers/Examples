@@ -9,6 +9,8 @@ using Publisher.Logic.Factories;
 
 Console.WriteLine($"Publisher Start: {DateTime.UtcNow}");
 
+var cancellationToken = new CancellationTokenSource();
+
 IConfiguration config = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")
     .Build();
@@ -20,9 +22,16 @@ var host = Host.CreateDefaultBuilder(args)
         services.AddScoped<IPublisherOrchestration, PublisherOrchestration>();
         services.AddScoped<IQueueFactory, QueueFactory>();
         services.Configure<QueueConfiguration>(hostContext.Configuration.GetSection("QueueConfiguration"));
-
     })
     .Build();
 
 var my = host.Services.GetRequiredService<IPublisherOrchestration>();
-await my.Start();
+
+Console.CancelKeyPress += (sender, eventArgs) =>
+{
+    Console.WriteLine("Cancel event triggered");
+    cancellationToken.Cancel();
+    eventArgs.Cancel = true;
+};
+
+await my.Start(cancellationToken.Token);

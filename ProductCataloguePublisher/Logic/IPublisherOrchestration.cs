@@ -2,6 +2,6 @@
 {
     internal interface IPublisherOrchestration
     {
-        Task Start(CancellationToken stoppingToken = default);
+        Task Start(CancellationToken cancelationToken = default);
     }
 }
