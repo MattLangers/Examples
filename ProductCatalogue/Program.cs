@@ -5,6 +5,9 @@ using Database.SpecificationPattern;
 using Database.SpecificationPattern.Specifications;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Http.Json;
+using Microsoft.AspNetCore.Mvc;
+using System.Xml.Linq;
+using ProductCatalogue.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,14 +34,8 @@ app.MapGet("/products", async (DatabaseContext db) =>
     return products;
 });
 
-app.MapGet("/products/{id}", async (Guid id, DatabaseContext db) =>
-    await db.Product.FindAsync(id)
-        is Product product
-            ? Results.Ok(product)
-            : Results.NotFound());
-
-app.MapGet("/products/product-types/{id}", (int id, DatabaseContext db) =>
-    db.Product.Specify(new ProductByProductTypeSpecification(id)).ToList()
+app.MapGet("/products", (ProductSearchInputModel productSearchInputModel, DatabaseContext db) =>
+    db.Product.Specify(new ProductSearchSpecification(productSearchInputModel)).ToList()
         is List<Product> product
             ? Results.Ok(product)
             : Results.NotFound());
