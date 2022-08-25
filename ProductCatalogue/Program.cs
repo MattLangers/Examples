@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Database;
 using Database.Models;
-
-
+using Database.SpecificationPattern;
+using Database.SpecificationPattern.Specifications;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +29,12 @@ app.MapGet("/products", async (DatabaseContext db) =>
 app.MapGet("/products/{id}", async (Guid id, DatabaseContext db) =>
     await db.Product.FindAsync(id)
         is Product product
+            ? Results.Ok(product)
+            : Results.NotFound());
+
+app.MapGet("/products/product-type/{id}", (int id, DatabaseContext db) =>
+    db.Product.Specify(new ProductByProductTypeSpecification(id)).ToList()
+        is List<Product> product
             ? Results.Ok(product)
             : Results.NotFound());
 
