@@ -3,6 +3,8 @@ using Database;
 using Database.Models;
 using Database.SpecificationPattern;
 using Database.SpecificationPattern.Specifications;
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Http.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,7 +26,10 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.MapGet("/products", async (DatabaseContext db) =>
-    await db.Product.ToListAsync());
+{
+    var products = await db.Product.ToListAsync();
+    return products;
+});
 
 app.MapGet("/products/{id}", async (Guid id, DatabaseContext db) =>
     await db.Product.FindAsync(id)
@@ -32,13 +37,16 @@ app.MapGet("/products/{id}", async (Guid id, DatabaseContext db) =>
             ? Results.Ok(product)
             : Results.NotFound());
 
-app.MapGet("/products/product-type/{id}", (int id, DatabaseContext db) =>
+app.MapGet("/products/product-types/{id}", (int id, DatabaseContext db) =>
     db.Product.Specify(new ProductByProductTypeSpecification(id)).ToList()
         is List<Product> product
             ? Results.Ok(product)
             : Results.NotFound());
 
 app.MapGet("/product-types", async (DatabaseContext db) =>
-    await db.ProductType.ToListAsync());
+{
+    var productTypes = await db.ProductType.ToListAsync();
+    return productTypes;
+});
 
 app.Run();

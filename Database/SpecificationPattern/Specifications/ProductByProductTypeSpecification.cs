@@ -7,8 +7,6 @@ namespace Database.SpecificationPattern.Specifications
         public ProductByProductTypeSpecification(int productTypeId)
         {
             Criteria = i => i.ProductType.Id == productTypeId;
-
-            Includes.Add(p => p.ProductType);
         }
     }
 }
