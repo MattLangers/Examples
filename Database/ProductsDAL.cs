@@ -17,7 +17,7 @@ namespace Database
         {
             return Task.Run(() =>
             {
-                /* TODO: we should be using Linq to buid the query */
+                /* TODO: should we be using Linq to buid the query */
                 return _dbContext.Set<Product>()
                 .FromSqlRaw("select p.* from Product p Left Join ProductPublished pb on p.Id = pb.Id Where pb.Id is NULL")
                 .Select(products => new ProductDto() { Id = products.Id, Name = products.Name, ProductTypeId = products.ProductType.Id })

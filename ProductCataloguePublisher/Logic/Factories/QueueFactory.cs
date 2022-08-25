@@ -15,7 +15,7 @@ namespace Publisher.Logic.Factories
         public async Task<IQueueClientWrapper> CreateQueueClient()
         {
             var queue = new QueueClient(configuration.StorageConnectionString, configuration.QueueName);
-            await queue.CreateAsync();
+            await queue.CreateIfNotExistsAsync();
             return new QueueClientWrapper(queue);
         }
     }
