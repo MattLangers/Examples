@@ -17,11 +17,17 @@ IConfiguration config = new ConfigurationBuilder()
 
 var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((hostContext, services) => {
+        var configuration = new QueueConfiguration();
+        hostContext.Configuration.GetSection("QueueConfiguration").Bind(configuration);
+
         services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(config.GetConnectionString("ProductCatalogue")));
         services.AddScoped<IProductsDAL, ProductsDAL>();
         services.AddScoped<IPublisherOrchestration, PublisherOrchestration>();
         services.AddScoped<IQueueFactory, QueueFactory>();
-        services.Configure<QueueConfiguration>(hostContext.Configuration.GetSection("QueueConfiguration"));
+        services.AddSingleton(configuration);
+        services.AddScoped<IQueueFactory, QueueFactory>();
+        services.AddScoped<IQueueClientWrapper, QueueClientWrapper>();
+        services.AddScoped<IJsonFactory, JsonFactory>();
     })
     .Build();
 
