@@ -16,10 +16,18 @@ update-database
 When running the publisher locally, you will need to startup the azurite emulator - follow these steps:
 
 * Create a folder on c drive to host the persisted data that azurite will create
-** New-Item C:\azurite
+```powershell
+New-Item C:\azurite
+```
 * pull azurite docker image
-** docker pull mcr.microsoft.com/azure-storage/azurite
+```powershell
+docker pull mcr.microsoft.com/azure-storage/azurite
+```
 * check image exists
-** docker image ls
+```powershell
+docker image ls
+```
 * run azurite from docker image
-** docker run -p 10000:10000 -p 10001:10001 -p 10002:10002 -v c:/azurite:/data mcr.microsoft.com/azure-storage/azurite
+```powershell
+docker run -p 10000:10000 -p 10001:10001 -p 10002:10002 -v c:/azurite:/data mcr.microsoft.com/azure-storage/azurite
+```
