@@ -7,19 +7,24 @@ namespace Database.SpecificationPattern.Specifications
     {
         public ProductSearchSpecification(ProductSearchInputModel productSearchInputModel)
         {
+            if (productSearchInputModel.HasSearchPropertiesDefined)
+            {
+                Criteria = p => true;
+            }
+
             if (productSearchInputModel.Id != null)
             {
-                Criteria = i => i.Id == productSearchInputModel.Id;
+                Criteria = p => p.Id == productSearchInputModel.Id;
             }
 
             if (productSearchInputModel.ProductTypeId > 0)
             {
-                Criteria = i => i.ProductType.Id == productSearchInputModel.ProductTypeId;
+                Criteria = p => p.ProductType.Id == productSearchInputModel.ProductTypeId;
             }
 
             if (!string.IsNullOrWhiteSpace(productSearchInputModel.Name))
             {
-                Criteria = i => i.Name.Contains(productSearchInputModel.Name);
+                Criteria = p => p.Name.Contains(productSearchInputModel.Name);
             }
         }
     }

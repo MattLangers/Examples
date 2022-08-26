@@ -3,20 +3,15 @@ using Database;
 using Database.Models;
 using Database.SpecificationPattern;
 using Database.SpecificationPattern.Specifications;
-using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Mvc;
-using System.Xml.Linq;
-using ProductCatalogue.Models.InputModels;
-using ProductCatalogue;
+using ProductCatalogue.Models.Factories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ProductCatalogue"), b => b.MigrationsAssembly("ProductCatalogue")));
+builder.Services.AddScoped<IProductSearchInputModelFactory, ProductSearchInputModelFactory>();
 
 var app = builder.Build();
 
@@ -29,11 +24,18 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/products", (ProductSearchInputModel productSearchInputModel, DatabaseContext db) =>
-    db.Product.Specify(new ProductSearchSpecification(productSearchInputModel)).ToList()
+app.MapGet("/products", (
+    [FromQuery(Name = "id")] string? id,
+    [FromQuery(Name = "product-type")] int? poductTypeId,
+    [FromQuery(Name = "name")] string? name,
+    DatabaseContext db,
+    IProductSearchInputModelFactory factory) =>
+{
+    return db.Product.Specify(new ProductSearchSpecification(factory.Create(id, poductTypeId, name))).ToList()
         is List<Product> product
             ? Results.Ok(product)
-            : Results.NotFound());
+            : Results.NotFound();
+});
 
 app.MapGet("/product-types", async (DatabaseContext db) =>
 {
