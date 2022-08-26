@@ -47,4 +47,6 @@ app.MapGet("/product-types", async (DatabaseContext db) =>
     return productTypes;
 });
 
+app.UseMiddleware<ExceptionHandlerMiddleware>();
+
 app.Run();
