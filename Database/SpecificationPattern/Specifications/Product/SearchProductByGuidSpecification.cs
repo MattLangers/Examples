@@ -1,7 +1,6 @@
-﻿using Database.Models;
-using ProductCatalogue.Models.InputModels;
+﻿using ProductCatalogue.Models.InputModels;
 
-namespace Database.SpecificationPattern.Specifications
+namespace Database.SpecificationPattern.Specifications.Product
 {
     public class SearchProductByGuidSpecification : BaseSpecification<Models.Product>
     {

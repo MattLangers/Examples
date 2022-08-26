@@ -5,6 +5,8 @@ using Database.SpecificationPattern;
 using Database.SpecificationPattern.Specifications;
 using Microsoft.AspNetCore.Mvc;
 using ProductCatalogue.Models.Factories;
+using Database.Search;
+using ProductCatalogue.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +14,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ProductCatalogue"), b => b.MigrationsAssembly("ProductCatalogue")));
 builder.Services.AddScoped<IProductSearchInputModelFactory, ProductSearchInputModelFactory>();
+builder.Services.AddScoped<IDatabaseSearchOrchestrator, DatabaseSearchOrchestrator>();
 
 var app = builder.Build();
 
@@ -28,13 +31,14 @@ app.MapGet("/products", (
     [FromQuery(Name = "id")] string? id,
     [FromQuery(Name = "product-type")] int? poductTypeId,
     [FromQuery(Name = "name")] string? name,
-    DatabaseContext db,
-    IProductSearchInputModelFactory factory) =>
+    IProductSearchInputModelFactory factory,
+    IDatabaseSearchOrchestrator databaseSearchOrchestrator) =>
 {
-    return db.Product.Specify(new ProductSearchSpecification(factory.Create(id, poductTypeId, name))).ToList()
-        is List<Product> product
-            ? Results.Ok(product)
-            : Results.NotFound();
+    var inputModel = factory.Create(id, poductTypeId, name);
+    return databaseSearchOrchestrator.SearchProducts(inputModel)
+            is List<Product> product
+                ? Results.Ok(product)
+                : Results.NotFound();
 });
 
 app.MapGet("/product-types", async (DatabaseContext db) =>
