@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Database\Database.csproj" />
+    <ProjectReference Include="..\ProductCatalogue.Models\ProductCatalogue.Models.csproj" />
   </ItemGroup>
 
 </Project>

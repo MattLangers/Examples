@@ -7,7 +7,8 @@ using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Mvc;
 using System.Xml.Linq;
-using ProductCatalogue.Models;
+using ProductCatalogue.Models.InputModels;
+using ProductCatalogue;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,12 +28,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-app.MapGet("/products", async (DatabaseContext db) =>
-{
-    var products = await db.Product.ToListAsync();
-    return products;
-});
 
 app.MapGet("/products", (ProductSearchInputModel productSearchInputModel, DatabaseContext db) =>
     db.Product.Specify(new ProductSearchSpecification(productSearchInputModel)).ToList()

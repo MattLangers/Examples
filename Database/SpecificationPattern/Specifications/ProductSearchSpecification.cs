@@ -1,5 +1,5 @@
 ﻿using Database.Models;
-using Microsoft.EntityFrameworkCore;
+using ProductCatalogue.Models.InputModels;
 
 namespace Database.SpecificationPattern.Specifications
 {
@@ -7,21 +7,20 @@ namespace Database.SpecificationPattern.Specifications
     {
         public ProductSearchSpecification(ProductSearchInputModel productSearchInputModel)
         {
+            if (productSearchInputModel.Id != null)
+            {
+                Criteria = i => i.Id == productSearchInputModel.Id;
+            }
 
-        }
-        public ProductSearchSpecification(int productTypeId)
-        {
-            Criteria = i => i.ProductType.Id == productTypeId;
-        }
+            if (productSearchInputModel.ProductTypeId > 0)
+            {
+                Criteria = i => i.ProductType.Id == productSearchInputModel.ProductTypeId;
+            }
 
-        public ProductSearchSpecification(Guid id)
-        {
-            Criteria = i => i.Id == id;
-        }
-
-        public ProductSearchSpecification(string name)
-        {
-            Criteria = i => i.Name.Contains(name);
+            if (!string.IsNullOrWhiteSpace(productSearchInputModel.Name))
+            {
+                Criteria = i => i.Name.Contains(productSearchInputModel.Name);
+            }
         }
     }
 }
