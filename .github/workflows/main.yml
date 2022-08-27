@@ -34,4 +34,4 @@ jobs:
           dotnet tool install dotnet-ef
 
     - name: Generate scripts
-      run: dotnet ef migrations script --output ./sql/sql-script.sql --idempotent
+      run: dotnet ef migrations script --project ./ProductCatalogue/ --output ./sql/sql-script.sql --idempotent
