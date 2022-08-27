@@ -23,8 +23,9 @@ namespace Database.Factories
             {
                 products.Add(new Product()
                 {
+                    Id = Guid.Parse(value.GetLabel()),
                     Name = value.GetEnumMemberValue(),
-                    ProductType = new Models.ProductType() { Id = (int)mapEnumToEnum.MapProductToProductType(value) }
+                    ProductTypeId = (int)mapEnumToEnum.MapProductToProductType(value)
                 });
             }
 

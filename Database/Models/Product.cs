@@ -14,6 +14,8 @@ namespace Database.Models
 
         public DateTime CreationDate { get; set; } = DateTime.UtcNow;
 
+        public int ProductTypeId { get; set; }
+
         public ProductType ProductType { get; set; }
 
         public ProductPublished ProductPublished { get; set; }
