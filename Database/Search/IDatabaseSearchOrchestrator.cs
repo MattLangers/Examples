@@ -1,5 +1,5 @@
-﻿using Database.Models;
-using ProductCatalogue.Models.InputModels;
+﻿using API.Models.InputModels;
+using Database.Models;
 
 namespace Database.Search
 {

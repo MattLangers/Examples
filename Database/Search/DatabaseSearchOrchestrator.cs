@@ -1,8 +1,8 @@
-﻿using Database.Models;
+﻿using API.Models.InputModels;
+using Database.Models;
 using Database.SpecificationPattern;
 using Database.SpecificationPattern.Specifications;
 using Microsoft.Extensions.Logging;
-using ProductCatalogue.Models.InputModels;
 
 namespace Database.Search
 {
@@ -66,17 +66,17 @@ namespace Database.Search
             return products.ToList();
         }
 
-        static SearchProductByGuidSpecification SearchByGuid(ProductCatalogue.Models.InputModels.ProductSearchInputModel inputModel)
+        static SearchProductByGuidSpecification SearchByGuid(ProductSearchInputModel inputModel)
         {
             return new SearchProductByGuidSpecification(inputModel);
         }
 
-        static SearchProductByProductTypeSpecification SearchByProductId(ProductCatalogue.Models.InputModels.ProductSearchInputModel inputModel)
+        static SearchProductByProductTypeSpecification SearchByProductId(ProductSearchInputModel inputModel)
         {
             return new SearchProductByProductTypeSpecification(inputModel);
         }
 
-        static SearchProductByNameSpecification SearchByName(ProductCatalogue.Models.InputModels.ProductSearchInputModel inputModel)
+        static SearchProductByNameSpecification SearchByName(ProductSearchInputModel inputModel)
         {
             return new SearchProductByNameSpecification(inputModel);
         }

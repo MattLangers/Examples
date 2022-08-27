@@ -4,9 +4,9 @@ using Database.Models;
 using Database.SpecificationPattern;
 using Database.SpecificationPattern.Specifications;
 using Microsoft.AspNetCore.Mvc;
-using ProductCatalogue.Models.Factories;
 using Database.Search;
-using ProductCatalogue.Middleware;
+using API.Middleware;
+using API.Models.Factories;
 
 var builder = WebApplication.CreateBuilder(args);
 

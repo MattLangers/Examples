@@ -11,6 +11,6 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.8" />
 	</ItemGroup>
 	<ItemGroup>
-	  <ProjectReference Include="..\ProductCatalogue.Models\ProductCatalogue.Models.csproj" />
+	  <ProjectReference Include="..\API.Models\API.Models.csproj" />
 	</ItemGroup>
 </Project>

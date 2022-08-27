@@ -1,6 +1,6 @@
-﻿using ProductCatalogue.Models.InputModels;
+﻿using API.Models.InputModels;
 
-namespace ProductCatalogue.Models.Factories
+namespace API.Models.Factories
 {
     public interface IProductSearchInputModelFactory
     {

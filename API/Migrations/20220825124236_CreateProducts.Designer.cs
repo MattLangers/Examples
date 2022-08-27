@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace ProductCatalogue.Migrations
+namespace API.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20220823093133_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20220825124236_CreateProducts")]
+    partial class CreateProducts
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -48,6 +48,20 @@ namespace ProductCatalogue.Migrations
                     b.ToTable("Product");
                 });
 
+            modelBuilder.Entity("Database.Models.ProductPublished", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("PublishDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProductPublished");
+                });
+
             modelBuilder.Entity("Database.Models.ProductType", b =>
                 {
                     b.Property<int>("Id")
@@ -72,67 +86,67 @@ namespace ProductCatalogue.Migrations
                         new
                         {
                             Id = 1,
-                            CreationDate = new DateTime(2022, 8, 23, 9, 31, 33, 73, DateTimeKind.Utc).AddTicks(4646),
+                            CreationDate = new DateTime(2022, 8, 25, 12, 42, 36, 661, DateTimeKind.Utc).AddTicks(4777),
                             Name = "Boiled"
                         },
                         new
                         {
                             Id = 2,
-                            CreationDate = new DateTime(2022, 8, 23, 9, 31, 33, 73, DateTimeKind.Utc).AddTicks(4667),
+                            CreationDate = new DateTime(2022, 8, 25, 12, 42, 36, 661, DateTimeKind.Utc).AddTicks(4791),
                             Name = "Chewy"
                         },
                         new
                         {
                             Id = 3,
-                            CreationDate = new DateTime(2022, 8, 23, 9, 31, 33, 73, DateTimeKind.Utc).AddTicks(4672),
+                            CreationDate = new DateTime(2022, 8, 25, 12, 42, 36, 661, DateTimeKind.Utc).AddTicks(4792),
                             Name = "BubbleGum"
                         },
                         new
                         {
                             Id = 4,
-                            CreationDate = new DateTime(2022, 8, 23, 9, 31, 33, 73, DateTimeKind.Utc).AddTicks(4673),
+                            CreationDate = new DateTime(2022, 8, 25, 12, 42, 36, 661, DateTimeKind.Utc).AddTicks(4793),
                             Name = "Fizzy"
                         },
                         new
                         {
                             Id = 5,
-                            CreationDate = new DateTime(2022, 8, 23, 9, 31, 33, 73, DateTimeKind.Utc).AddTicks(4675),
+                            CreationDate = new DateTime(2022, 8, 25, 12, 42, 36, 661, DateTimeKind.Utc).AddTicks(4795),
                             Name = "Marshmallow"
                         },
                         new
                         {
                             Id = 6,
-                            CreationDate = new DateTime(2022, 8, 23, 9, 31, 33, 73, DateTimeKind.Utc).AddTicks(4677),
+                            CreationDate = new DateTime(2022, 8, 25, 12, 42, 36, 661, DateTimeKind.Utc).AddTicks(4797),
                             Name = "Jellies"
                         },
                         new
                         {
                             Id = 7,
-                            CreationDate = new DateTime(2022, 8, 23, 9, 31, 33, 73, DateTimeKind.Utc).AddTicks(4679),
+                            CreationDate = new DateTime(2022, 8, 25, 12, 42, 36, 661, DateTimeKind.Utc).AddTicks(4799),
                             Name = "Liquorice"
                         },
                         new
                         {
                             Id = 8,
-                            CreationDate = new DateTime(2022, 8, 23, 9, 31, 33, 73, DateTimeKind.Utc).AddTicks(4680),
+                            CreationDate = new DateTime(2022, 8, 25, 12, 42, 36, 661, DateTimeKind.Utc).AddTicks(4799),
                             Name = "Lollipops"
                         },
                         new
                         {
                             Id = 9,
-                            CreationDate = new DateTime(2022, 8, 23, 9, 31, 33, 73, DateTimeKind.Utc).AddTicks(4682),
+                            CreationDate = new DateTime(2022, 8, 25, 12, 42, 36, 661, DateTimeKind.Utc).AddTicks(4802),
                             Name = "Mints"
                         },
                         new
                         {
                             Id = 10,
-                            CreationDate = new DateTime(2022, 8, 23, 9, 31, 33, 73, DateTimeKind.Utc).AddTicks(4683),
+                            CreationDate = new DateTime(2022, 8, 25, 12, 42, 36, 661, DateTimeKind.Utc).AddTicks(4804),
                             Name = "Sherbet"
                         },
                         new
                         {
                             Id = 11,
-                            CreationDate = new DateTime(2022, 8, 23, 9, 31, 33, 73, DateTimeKind.Utc).AddTicks(4684),
+                            CreationDate = new DateTime(2022, 8, 25, 12, 42, 36, 661, DateTimeKind.Utc).AddTicks(4806),
                             Name = "Chocolate"
                         });
                 });
@@ -146,6 +160,23 @@ namespace ProductCatalogue.Migrations
                         .IsRequired();
 
                     b.Navigation("ProductType");
+                });
+
+            modelBuilder.Entity("Database.Models.ProductPublished", b =>
+                {
+                    b.HasOne("Database.Models.Product", "Product")
+                        .WithOne("ProductPublished")
+                        .HasForeignKey("Database.Models.ProductPublished", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Database.Models.Product", b =>
+                {
+                    b.Navigation("ProductPublished")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

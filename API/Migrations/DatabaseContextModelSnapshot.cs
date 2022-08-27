@@ -4,18 +4,16 @@ using Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace ProductCatalogue.Migrations
+namespace API.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20220823112703_ProductPublished")]
-    partial class ProductPublished
+    partial class DatabaseContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -86,67 +84,67 @@ namespace ProductCatalogue.Migrations
                         new
                         {
                             Id = 1,
-                            CreationDate = new DateTime(2022, 8, 23, 11, 27, 3, 132, DateTimeKind.Utc).AddTicks(5015),
+                            CreationDate = new DateTime(2022, 8, 25, 12, 42, 36, 661, DateTimeKind.Utc).AddTicks(4777),
                             Name = "Boiled"
                         },
                         new
                         {
                             Id = 2,
-                            CreationDate = new DateTime(2022, 8, 23, 11, 27, 3, 132, DateTimeKind.Utc).AddTicks(5025),
+                            CreationDate = new DateTime(2022, 8, 25, 12, 42, 36, 661, DateTimeKind.Utc).AddTicks(4791),
                             Name = "Chewy"
                         },
                         new
                         {
                             Id = 3,
-                            CreationDate = new DateTime(2022, 8, 23, 11, 27, 3, 132, DateTimeKind.Utc).AddTicks(5026),
+                            CreationDate = new DateTime(2022, 8, 25, 12, 42, 36, 661, DateTimeKind.Utc).AddTicks(4792),
                             Name = "BubbleGum"
                         },
                         new
                         {
                             Id = 4,
-                            CreationDate = new DateTime(2022, 8, 23, 11, 27, 3, 132, DateTimeKind.Utc).AddTicks(5028),
+                            CreationDate = new DateTime(2022, 8, 25, 12, 42, 36, 661, DateTimeKind.Utc).AddTicks(4793),
                             Name = "Fizzy"
                         },
                         new
                         {
                             Id = 5,
-                            CreationDate = new DateTime(2022, 8, 23, 11, 27, 3, 132, DateTimeKind.Utc).AddTicks(5029),
+                            CreationDate = new DateTime(2022, 8, 25, 12, 42, 36, 661, DateTimeKind.Utc).AddTicks(4795),
                             Name = "Marshmallow"
                         },
                         new
                         {
                             Id = 6,
-                            CreationDate = new DateTime(2022, 8, 23, 11, 27, 3, 132, DateTimeKind.Utc).AddTicks(5032),
+                            CreationDate = new DateTime(2022, 8, 25, 12, 42, 36, 661, DateTimeKind.Utc).AddTicks(4797),
                             Name = "Jellies"
                         },
                         new
                         {
                             Id = 7,
-                            CreationDate = new DateTime(2022, 8, 23, 11, 27, 3, 132, DateTimeKind.Utc).AddTicks(5033),
+                            CreationDate = new DateTime(2022, 8, 25, 12, 42, 36, 661, DateTimeKind.Utc).AddTicks(4799),
                             Name = "Liquorice"
                         },
                         new
                         {
                             Id = 8,
-                            CreationDate = new DateTime(2022, 8, 23, 11, 27, 3, 132, DateTimeKind.Utc).AddTicks(5035),
+                            CreationDate = new DateTime(2022, 8, 25, 12, 42, 36, 661, DateTimeKind.Utc).AddTicks(4799),
                             Name = "Lollipops"
                         },
                         new
                         {
                             Id = 9,
-                            CreationDate = new DateTime(2022, 8, 23, 11, 27, 3, 132, DateTimeKind.Utc).AddTicks(5036),
+                            CreationDate = new DateTime(2022, 8, 25, 12, 42, 36, 661, DateTimeKind.Utc).AddTicks(4802),
                             Name = "Mints"
                         },
                         new
                         {
                             Id = 10,
-                            CreationDate = new DateTime(2022, 8, 23, 11, 27, 3, 132, DateTimeKind.Utc).AddTicks(5038),
+                            CreationDate = new DateTime(2022, 8, 25, 12, 42, 36, 661, DateTimeKind.Utc).AddTicks(4804),
                             Name = "Sherbet"
                         },
                         new
                         {
                             Id = 11,
-                            CreationDate = new DateTime(2022, 8, 23, 11, 27, 3, 132, DateTimeKind.Utc).AddTicks(5039),
+                            CreationDate = new DateTime(2022, 8, 25, 12, 42, 36, 661, DateTimeKind.Utc).AddTicks(4806),
                             Name = "Chocolate"
                         });
                 });

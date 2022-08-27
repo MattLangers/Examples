@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Database\Database.csproj" />
-    <ProjectReference Include="..\ProductCatalogue.Models\ProductCatalogue.Models.csproj" />
+    <ProjectReference Include="..\API.Models\API.Models.csproj" />
   </ItemGroup>
 
 </Project>

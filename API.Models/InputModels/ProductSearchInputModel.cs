@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System.Reflection;
-
-namespace ProductCatalogue.Models.InputModels
+﻿namespace API.Models.InputModels
 {
     public class ProductSearchInputModel
     {

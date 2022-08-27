@@ -1,4 +1,4 @@
-﻿using ProductCatalogue.Models.InputModels;
+﻿using API.Models.InputModels;
 
 namespace Database.SpecificationPattern.Specifications
 {

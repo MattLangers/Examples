@@ -1,6 +1,6 @@
-﻿using Database.Models;
+﻿using API.Models.InputModels;
+using Database.Models;
 using Microsoft.EntityFrameworkCore;
-using ProductCatalogue.Models.InputModels;
 
 namespace Database.SpecificationPattern.Specifications
 {

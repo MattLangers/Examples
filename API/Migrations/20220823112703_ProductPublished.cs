@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace ProductCatalogue.Migrations
+namespace API.Migrations
 {
     public partial class ProductPublished : Migration
     {
