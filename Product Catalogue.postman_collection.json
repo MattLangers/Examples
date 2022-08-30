@@ -1,0 +1,112 @@
+{
+	"info": {
+		"_postman_id": "1c8ad893-8764-4b6c-af59-4ef5640e3afc",
+		"name": "Product Catalogue",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Product types",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content type header is application/json\", () => {\r",
+							"    pm.expect(pm.response.headers.get(\"Content-type\")).to.eq(\"application/json; charset=utf-8\");\r",
+							"});\r",
+							"\r",
+							"const schema = {\r",
+							"    \"type\": \"array\",\r",
+							"    \"items\":{\r",
+							"        \"type\": \"object\",\r",
+							"        \"properties\":{\r",
+							"            \"id\": { \"type\": \"number\" },\r",
+							"            \"name\": { \"type\": \"string\" },\r",
+							"            \"creationDate\": { \"type\": \"string\" },\r",
+							"        },\r",
+							"        \"required\": [\"id\", \"name\", \"creationDate\"]\r",
+							"    },\r",
+							"}\r",
+							"\r",
+							"pm.test(\"Validate Schema\", () =>{\r",
+							"    pm.response.to.have.jsonSchema(schema);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{product_catalogue_url}}/product-types",
+					"host": [
+						"{{product_catalogue_url}}"
+					],
+					"path": [
+						"product-types"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Products",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content type header is application/json\", () => {\r",
+							"    pm.expect(pm.response.headers.get(\"Content-type\")).to.eq(\"application/json; charset=utf-8\");\r",
+							"});\r",
+							"\r",
+							"const schema = {\r",
+							"    \"type\": \"array\",\r",
+							"    \"items\":{\r",
+							"        \"type\": \"object\",\r",
+							"        \"properties\":{\r",
+							"            \"id\": { \"type\": \"string\" },\r",
+							"            \"name\": { \"type\": \"string\" },\r",
+							"            \"creationDate\": { \"type\": \"string\" },\r",
+							"            \"productTypeId\": { \"type\": \"number\" },\r",
+							"        },\r",
+							"        \"required\": [\"id\", \"name\", \"creationDate\", \"productTypeId\"]\r",
+							"    },\r",
+							"}\r",
+							"\r",
+							"pm.test(\"Validate Schema\", () =>{\r",
+							"    pm.response.to.have.jsonSchema(schema);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{product_catalogue_url}}/products",
+					"host": [
+						"{{product_catalogue_url}}"
+					],
+					"path": [
+						"products"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
