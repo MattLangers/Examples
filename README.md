@@ -1,8 +1,8 @@
-# Examples
+# Portfolio
 
 ## Introduction
 I have created this example repository, to help provide future colleagues example of my programming abilities as a .net developer. 
-Therefore, this is not a finished product and the features are light.
+Therefore, this is not a finished product, features are light.
 
 I have decided to create a product catalogue for a sweats company, consisting of a 
 .net 6 lightweight API. And a console application, for publishing new 
@@ -32,8 +32,8 @@ products onto a queue, so consumers can process these outside of the main API th
 * Github pipelines for Continuous integration
 
 ## Honest appraisal
-* Specification pattern: I am a bit unhappy with the amount of if statements in the [database search orchestration layer](/blob/main/Database/Search/DatabaseSearchOrchestrator.cs). Overall I think its the best approach, but its good enough for a first pass, and I will hopeully improve this in the future
-* Unit-testing coverage should be better
+* Specification pattern: I am a bit unhappy with the amount of if statements in the [database search orchestration layer](/blob/main/Database/Search/DatabaseSearchOrchestrator.cs). Overall I think its the best approach, and good enough for a first pass, and I will hopeully improve this in the future, and write tests to cover this.
+* Overll the unit-test coverage should be better
 
 
 ## Instructions
