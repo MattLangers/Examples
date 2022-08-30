@@ -24,15 +24,15 @@ products onto a queue, so consumers can process these outside of the main API th
 
 ## Highlights
 * I have created a SQL schema, using entity framework core, code first
- * I have used the specification pattern to search for products.   
-* Unit-testing: 
+* I have used the specification pattern to search for products.   
+* Unit-testing:
  - Use Moq.AutoMock to instansiate unit under test: saves time as there is no need to create mocks, and if a constructor call signiture change there is no additional work to fix broken tests
- - Use  [Nunit.Framework.ValuesAttribute](Database.Tests\Enums\MapEnumToEnum\MapProductToProductType\EnsureAllProductsAreMapped.Tests.cs) to allow a test to scale with the Enum we are testing - protection if a new enum value is added and the engineer doesn't see the need to extend mapping logic.
+ - Use  [Nunit.Framework.ValuesAttribute](https://github.com/MattLangers/Portfolio/blob/c3ffa861bea1df0132df632212f3abe9d2f94e52/Database.Tests/Enums/MapEnumToEnum/MapProductToProductType/EnsureAllProductsAreMapped.Tests.cs#L11) to allow a test to scale with the Enum we are testing - protection if a new enum value is added and the engineer doesn't see the need to extend mapping logic.
 * Middleware: Exception handling to capure any exceptions that bubble up to the route of the API
 * Github pipelines for Continuous integration
 
 ## Honest appraisal
-* Specification pattern: I am a bit unhappy with the amount of if statements in the [database search orchestration layer](/blob/main/Database/Search/DatabaseSearchOrchestrator.cs). Overall I think its the best approach, and good enough for a first pass, and I will hopeully improve this in the future, and write tests to cover this.
+* Specification pattern: I am a bit unhappy with the amount of if statements in the [database search orchestration layer](https://github.com/MattLangers/Portfolio/blob/c3ffa861bea1df0132df632212f3abe9d2f94e52/Database/Search/DatabaseSearchOrchestrator.cs#L24). Overall I think its the best approach, and good enough for a first pass, and I will hopeully improve this in the future, and write tests to cover this.
 * Overll the unit-test coverage should be better
 
 
