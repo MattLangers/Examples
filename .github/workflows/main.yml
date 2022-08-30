@@ -34,4 +34,9 @@ jobs:
           dotnet tool install dotnet-ef
 
     - name: Generate scripts
-      run: dotnet ef migrations script --project ./API/ --output ./sql/sql-script.sql --idempotent
+      run: dotnet ef migrations script --project ./API/ --output ./sql/product-catalogue-migration-script.sql --idempotent
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: migration-script
+        path: ./sql/product-catalogue-migration-script.sql
