@@ -2,8 +2,8 @@
 {
     internal class QueueConfiguration
     {
-        public string StorageConnectionString { get; set; }
+        public string StorageConnectionString { get; set; } = default!;
 
-        public string QueueName { get; set; }
+        public string QueueName { get; set; } = default!;
     }
 }

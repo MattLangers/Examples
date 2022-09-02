@@ -16,11 +16,11 @@ namespace Database
         {
         }
 
-        public DbSet<Product> Product { get; set; }
+        public DbSet<Product> Product { get; set; } = default!;
 
-        public DbSet<Models.ProductType> ProductType { get; set; }
+        public DbSet<Models.ProductType> ProductType { get; set; } = default!;
 
-        public DbSet<ProductPublished> ProductPublished { get; set; }
+        public DbSet<ProductPublished> ProductPublished { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

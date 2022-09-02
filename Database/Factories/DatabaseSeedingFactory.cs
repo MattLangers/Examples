@@ -21,12 +21,16 @@ namespace Database.Factories
 
             foreach (var value in values)
             {
+#pragma warning disable CS8604 // Possible null reference argument.
+#pragma warning disable CS8601 // Possible null reference assignment.
                 products.Add(new Product()
                 {
                     Id = Guid.Parse(value.GetLabel()),
                     Name = value.GetEnumMemberValue(),
                     ProductTypeId = (int)mapEnumToEnum.MapProductToProductType(value)
                 });
+#pragma warning restore CS8601 // Possible null reference assignment.
+#pragma warning restore CS8604 // Possible null reference argument.
             }
 
             return products;
@@ -40,11 +44,13 @@ namespace Database.Factories
 
             foreach (var value in values)
             {
+#pragma warning disable CS8601 // Possible null reference assignment.
                 productTypes.Add(new ProductType()
                 {
                     Id = (int)value,
                     Name = FastEnum.GetName(value),
                 });
+#pragma warning restore CS8601 // Possible null reference assignment.
             }
 
             return productTypes;

@@ -1,12 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Database;
-using Database.Models;
-using Database.SpecificationPattern;
-using Database.SpecificationPattern.Specifications;
 using Microsoft.AspNetCore.Mvc;
 using Database.Search;
 using API.Middleware;
 using API.Models.Factories;
+using Database.Factories;
+using Database.Models.DTO;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +14,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ProductCatalogue"), b => b.MigrationsAssembly("API")));
 builder.Services.AddScoped<IProductSearchInputModelFactory, ProductSearchInputModelFactory>();
 builder.Services.AddScoped<IDatabaseSearchOrchestrator, DatabaseSearchOrchestrator>();
+builder.Services.AddScoped<IProductDtoFactory, ProductDtoFactory>();
 
 var app = builder.Build();
 
@@ -36,7 +36,7 @@ app.MapGet("/products", (
 {
     var inputModel = factory.Create(id, poductTypeId, name);
     return databaseSearchOrchestrator.SearchProducts(inputModel)
-            is List<Product> product
+            is List<ProductDto> product
                 ? Results.Ok(product)
                 : Results.NotFound();
 });

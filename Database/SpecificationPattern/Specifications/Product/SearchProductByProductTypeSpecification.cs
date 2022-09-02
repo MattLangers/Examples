@@ -7,6 +7,7 @@ namespace Database.SpecificationPattern.Specifications
         public SearchProductByProductTypeSpecification(ProductSearchInputModel productSearchInputModel)
         {
             Criteria = p => p.ProductType.Id == productSearchInputModel.ProductTypeId;
+            Includes.Add(i => i.ProductType);
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using API.Models.InputModels;
-using Database.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Database.SpecificationPattern.Specifications
@@ -9,6 +8,7 @@ namespace Database.SpecificationPattern.Specifications
         public SearchProductByNameSpecification(ProductSearchInputModel productSearchInputModel)
         {
             Criteria = p => EF.Functions.Like(p.Name, $"%{productSearchInputModel.Name}%");
+            Includes.Add(i => i.ProductType);
         }
     }
 }

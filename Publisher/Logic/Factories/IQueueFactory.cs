@@ -1,7 +1,4 @@
-﻿using Azure.Storage.Queues;
-using Database.Models.DTO;
-
-namespace Publisher.Logic.Factories
+﻿namespace Publisher.Logic.Factories
 {
     internal interface IQueueFactory
     {

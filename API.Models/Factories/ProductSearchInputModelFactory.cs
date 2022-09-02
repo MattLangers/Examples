@@ -4,7 +4,7 @@ namespace API.Models.Factories
 {
     public class ProductSearchInputModelFactory : IProductSearchInputModelFactory
     {
-        public ProductSearchInputModel Create(string id, int? productTypeId, string name)
+        public ProductSearchInputModel Create(string? id, int? productTypeId, string? name)
         {
             var hasSearchPropertiesDefined = false;
             var hasGuild = Guid.TryParse(id, out var guidResult);

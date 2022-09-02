@@ -1,5 +1,4 @@
-﻿using Database.Models;
-using Database.Models.DTO;
+﻿using Database.Models.DTO;
 
 namespace Database
 {
