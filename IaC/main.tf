@@ -37,7 +37,7 @@ resource "azurerm_sql_server" "product_catalogue" {
   administrator_login_password = "${var.sql_instance_administrator_login_password}"
 }
 
-resource "azurerm_mssql_database" "sqldb" {
+resource "azurerm_mssql_database" "product_catalogue" {
   name           = "${var.environment_prefix}_${var.resource_group_name}"
   server_id      = azurerm_sql_server.product_catalogue.id
   collation      = "SQL_Latin1_General_CP1_CI_AS"

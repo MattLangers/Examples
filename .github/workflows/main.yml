@@ -1,4 +1,4 @@
-name: .NET
+name: orchestration
 
 on:
   push:
@@ -8,35 +8,23 @@ on:
 
 jobs:
   build:
+    uses: ./.github/workflows/build-test-base.yml
+    with:
+      artifactNameAPI: product-catalogue
+      artifactNameSql: migration-script
+      artifactNameTerraform: terraform
+      artifactNamePostman: postman
 
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v3
-    
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v2
-      with:
-        dotnet-version: 6.0.x
-        
-    - name: Restore dependencies
-      run: dotnet restore
-      
-    - name: Build
-      run: dotnet build --no-restore
-      
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
-
-    - name: Install EF Tool
-      run: |
-          dotnet new tool-manifest
-          dotnet tool install dotnet-ef
-
-    - name: Generate scripts
-      run: dotnet ef migrations script --project ./API/ --output ./sql/product-catalogue-migration-script.sql --idempotent
-
-    - uses: actions/upload-artifact@v3
-      with:
-        name: migration-script
-        path: ./sql/product-catalogue-migration-script.sql
+  IaC:
+    needs: build
+    uses: ./.github/workflows/infastructure-deploy-destroy.yml
+    with:
+      artifactNameAPI: product-catalogue
+      artifactNameSql: migration-script
+      artifactNameTerraform: terraform
+    secrets:
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      AZURE_sql_instance_administrator_login_username: ${{ secrets.AZURE_sql_instance_administrator_login_username }}
+      AZURE_sql_instance_administrator_login_password: ${{ secrets.AZURE_sql_instance_administrator_login_password }}

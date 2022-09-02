@@ -14,8 +14,10 @@ variable "resource_group_name" {
 
 variable "sql_instance_administrator_login_username" {
   default     = "username"
+  sensitive   = true
 }
 
 variable "sql_instance_administrator_login_password" {
   default     = "password"
+  sensitive   = true
 }
