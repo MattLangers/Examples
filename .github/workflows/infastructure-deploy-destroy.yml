@@ -74,9 +74,9 @@ jobs:
         id: apply
         run: |
           terraform apply main.tfplan
-          ::set-output name={app_name}::{$(terraform output app_name)}
-          ::set-output name={sql_instance_name}::{$(terraform output sql_instance_name)}
-          ::set-output name={sql_database_name}::{$(terraform output sql_database_name)}
+          echo "::set-output name={app_name}::{$(terraform output app_name)}"
+          echo "::set-output name={sql_instance_name}::{$(terraform output sql_instance_name)}"
+          echo "::set-output name={sql_database_name}::{$(terraform output sql_database_name)}"
         working-directory: "./artifacts/${{inputs.artifactNameTerraform}}"
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
