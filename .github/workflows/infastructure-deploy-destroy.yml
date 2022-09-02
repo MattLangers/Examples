@@ -12,6 +12,9 @@ on:
       artifactNameTerraform:
         required: true
         type: string
+      environment:
+        required: true
+        type: string
     secrets:
       AZURE_CLIENT_ID:
         required: true
@@ -19,9 +22,11 @@ on:
         required: true
       AZURE_SUBSCRIPTION_ID:
         required: true
-      AZURE_sql_instance_administrator_login_username:
+      AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME:
         required: true
-      AZURE_sql_instance_administrator_login_password:
+      AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD:
+        required: true
+      AZURE_SQL_INSTANCE_NAME:
         required: true
 
 jobs:
@@ -47,6 +52,8 @@ jobs:
           
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2.0.0
+        with:
+          terraform_wrapper: false
 
       - name: Terraform Init
         id: init
@@ -61,8 +68,8 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan -out main.tfplan -no-color -var sql_instance_administrator_login_username="${{ secrets.AZURE_sql_instance_administrator_login_username }}" -var sql_instance_administrator_login_password="${{ secrets.AZURE_sql_instance_administrator_login_password }}"
-        working-directory: "./artifacts/${{inputs.artifactNameTerraform}}"
+        run: terraform plan -out main.tfplan -no-color -var sql_instance_administrator_login_username="${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME }}" -var sql_instance_administrator_login_password="${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD }}" -var environment_prefix="${{ inputs.environment }}" -var sql_instance_name="${{ secrets.AZURE_SQL_INSTANCE_NAME }}"
+        working-directory: "./artifacts/${{ inputs.artifactNameTerraform }}"
         continue-on-error: true
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
@@ -72,11 +79,7 @@ jobs:
 
       - name: Terraform Apply
         id: apply
-        run: |
-          terraform apply main.tfplan
-          echo "::set-output name={app_name}::{$(terraform output app_name)}"
-          echo "::set-output name={sql_instance_name}::{$(terraform output sql_instance_name)}"
-          echo "::set-output name={sql_database_name}::{$(terraform output sql_database_name)}"
+        run: terraform apply main.tfplan
         working-directory: "./artifacts/${{inputs.artifactNameTerraform}}"
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
@@ -84,6 +87,8 @@ jobs:
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
           ARM_USE_OIDC: true
 
+      - run: echo ${{ steps.apply.outputs.app_name }}
+      
       - name: 'Run Azure webapp deploy action using publish profile credentials'
         uses: azure/webapps-deploy@v2
         with: 
@@ -94,7 +99,7 @@ jobs:
         id: setSqlConnection
         run: |
           $connectionStringJson = '[{"name": "ProductCatalogue","value": "connectionstring","slotSetting": false}]'
-          $connectionString = $(az sql db show-connection-string -s tcp:${{ steps.apply.outputs.sql_instance_name}} -n ${{ steps.apply.outputs.sql_database_name}} -c ado.net).Replace("<password>", "${{ secrets.AZURE_sql_instance_administrator_login_password }}").Replace("<username>", "${{ secrets.AZURE_sql_instance_administrator_login_username }}")
+          $connectionString = $(az sql db show-connection-string -s tcp:${{ steps.apply.outputs.sql_instance_name}} -n ${{ steps.apply.outputs.sql_database_name}} -c ado.net).Replace("<password>", "${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD }}").Replace("<username>", "${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME }}")
           $connectionStringJson = $connectionStringJson.Replace("connectionstring", $connectionString)
           set-output name=connectionString::$($connectionString)
           set-output name=connectionStringJson::$($connectionStringJson)

@@ -52,13 +52,13 @@ namespace Publisher.Tests.Logic.PublisherOrchestration.Start
         }
 
         [Test]
-        public async Task IProductsDAL_VerifyAll()
+        public void IProductsDAL_VerifyAll()
         {
             autoMocker.VerifyAll();
         }
 
         [Test]
-        public async Task MockQueueClientWrapper_VerifyAll()
+        public void MockQueueClientWrapper_VerifyAll()
         {
             mockQueueClientWrapper.VerifyAll();
         }

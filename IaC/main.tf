@@ -29,7 +29,7 @@ resource "azurerm_app_service" "product_catalogue" {
 }
 
 resource "azurerm_sql_server" "product_catalogue" {
-  name                         = "g4i0tk1ulwpxtrqpds5ur87gb-lxd9ak"
+  name                         = "${var.sql_instance_name}"
   resource_group_name          = azurerm_resource_group.product_catalogue.name
   location                     = azurerm_resource_group.product_catalogue.location
   version                      = "12.0"
@@ -38,7 +38,7 @@ resource "azurerm_sql_server" "product_catalogue" {
 }
 
 resource "azurerm_mssql_database" "product_catalogue" {
-  name           = "${var.environment_prefix}_${var.resource_group_name}"
+  name           = "${var.resource_group_name}_${var.environment_prefix}"
   server_id      = azurerm_sql_server.product_catalogue.id
   collation      = "SQL_Latin1_General_CP1_CI_AS"
   license_type   = "LicenseIncluded"

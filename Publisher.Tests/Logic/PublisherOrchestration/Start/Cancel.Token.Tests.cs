@@ -46,13 +46,13 @@ namespace Publisher.Tests.Logic.PublisherOrchestration.Start
         }
 
         [Test]
-        public async Task IProductsDAL_VerifyAll()
+        public void IProductsDAL_VerifyAll()
         {
             autoMocker.VerifyAll();
         }
 
         [Test]
-        public async Task MockQueueClientWrapper_SendMessageAsync_Verify_Never_Called()
+        public void MockQueueClientWrapper_SendMessageAsync_Verify_Never_Called()
         {
             mockQueueClientWrapper.Verify(m => m.SendMessageAsync(It.IsAny<string>()), Times.Never);
         }

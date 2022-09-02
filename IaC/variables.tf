@@ -21,3 +21,7 @@ variable "sql_instance_administrator_login_password" {
   default     = "password"
   sensitive   = true
 }
+
+variable "sql_instance_name" {
+  default     = "sqlinstancename"
+}
