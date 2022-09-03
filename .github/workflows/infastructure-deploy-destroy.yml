@@ -1,0 +1,137 @@
+name: IaC
+
+on:
+  workflow_call:
+    inputs:
+      artifactNameAPI:
+        required: true
+        type: string
+      artifactNameSql:
+        required: true
+        type: string
+      artifactNameTerraform:
+        required: true
+        type: string
+      environment:
+        required: true
+        type: string
+    secrets:
+      AZURE_CLIENT_ID:
+        required: true
+      AZURE_TENANT_ID:
+        required: true
+      AZURE_SUBSCRIPTION_ID:
+        required: true
+      AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME:
+        required: true
+      AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD:
+        required: true
+      AZURE_SQL_INSTANCE_NAME:
+        required: true
+
+jobs:
+  infastructure:
+    permissions:
+      id-token: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          path: artifacts
+
+      - name: 'Az CLI login'
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2.0.0
+        with:
+          terraform_wrapper: false
+
+      - name: Terraform Init
+        id: init
+        working-directory: "./artifacts/${{inputs.artifactNameTerraform}}"
+        run: terraform init
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_USE_OIDC: true
+
+      - name: Terraform Plan
+        id: plan
+        working-directory: "./artifacts/${{ inputs.artifactNameTerraform }}"
+        run: terraform plan -out main.tfplan -no-color -var sql_instance_administrator_login_username="${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME }}" -var sql_instance_administrator_login_password="${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD }}" -var environment_prefix="${{ inputs.environment }}" -var sql_instance_name="${{ secrets.AZURE_SQL_INSTANCE_NAME }}"
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_USE_OIDC: true
+
+      - name: Terraform Apply
+        id: apply
+        working-directory: "./artifacts/${{inputs.artifactNameTerraform}}"
+        run: |
+          terraform apply main.tfplan
+
+          resource_group_name=$(terraform output resource_group_name)
+          echo "::set-output name=resource_group_name::$resource_group_name"
+
+          app_name=$(terraform output app_name)
+          echo "::set-output name=app_name::$app_name"
+
+          sql_instance_name=$(terraform output sql_instance_name)
+          echo "::set-output name=sql_instance_name::$sql_instance_name"
+
+          sql_database_name=$(terraform output sql_database_name)
+          echo "::set-output name=sql_database_name::$sql_database_name"
+        
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_USE_OIDC: true
+
+      - name: Deploy API
+        uses: azure/webapps-deploy@v2
+        with: 
+          app-name: ${{ steps.apply.outputs.app_name }}
+          package: "./artifacts/${{inputs.artifactNameAPI}}"
+
+      - name: setup connection string
+        id: setSqlConnection
+        run: |
+          $connectionStringJson = '[{"name": "ProductCatalogue","value": "connectionstring","slotSetting": false}]'
+          $connectionString = $(az sql db show-connection-string -s tcp:${{ steps.apply.outputs.sql_instance_name }} -n ${{ steps.apply.outputs.sql_database_name }} -c ado.net).Replace("<password>", "${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD }}").Replace("<username>", "${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME }}")
+          $connectionStringJson = $connectionStringJson.Replace("connectionstring", $connectionString)
+          set-output name=connectionString::$($connectionString)
+          set-output name=connectionStringJson::$($connectionStringJson)
+
+      - name: Set Web App ACR authentication
+        uses: Azure/appservice-settings@v1
+        with:
+          app-name: ${{ steps.apply.outputs.app_name }}
+          connection-strings-json: ${{ steps.setSqlConnection.outputs.connectionStringJson }}
+    
+      - name: Azure SQL Deploy
+        uses: Azure/sql-action@v1
+        with:
+          server-name: ${{ steps.apply.outputs.sql_instance_name }}
+          connection-string: ${{ steps.setSqlConnection.outputs.connectionString}}
+          sql-file: "./artifacts/${{inputs.artifactNameSql}}/product-catalogue-migration-script.sql"
+
+      - name: Terraform destroy
+        id: destroy
+        run: terraform destroy -auto-approve
+        working-directory: "./artifacts/${{inputs.artifactNameTerraform}}"
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_USE_OIDC: true
+  
+      - name: 'Logout az'
+        run: az logout
