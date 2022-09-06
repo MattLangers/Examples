@@ -9,7 +9,7 @@ terraform {
       resource_group_name  = "common"
       storage_account_name = "rk2camfja37geqj8x4kpzb09"
       container_name       = "pctfstatedev"
-      key                  = "terraform.main.tfstate"
+      key                  = "terraform.fwr.tfstate"
   }
 }
 

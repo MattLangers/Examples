@@ -26,7 +26,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v2
       with:
@@ -52,6 +52,11 @@ jobs:
     - name: publish
       run: dotnet publish -c ${{inputs.buildsetting}} -o ./api/published/
 
+    - name: zip artifact
+      run: |
+        cd ./api/published/
+        zip -r api.zip .
+
     - uses: actions/upload-artifact@v3
       with:
         name: ${{inputs.artifactNameSql}}
@@ -60,7 +65,7 @@ jobs:
     - uses: actions/upload-artifact@v3
       with:
         name: ${{inputs.artifactNameAPI}}
-        path: ./api/published/
+        path: ./api/published/api.zip
 
     - uses: actions/upload-artifact@v3
       with:
@@ -70,4 +75,4 @@ jobs:
     - uses: actions/upload-artifact@v3
       with:
         name: ${{inputs.artifactNamePostman}}
-        path: './Product Catalogue.postman_collection.json'
+        path: './postman/'

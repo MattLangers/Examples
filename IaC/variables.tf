@@ -9,7 +9,7 @@ variable "resource_group_location" {
 }
 
 variable "resource_group_name" {
-  default     = "product_catalogue"
+  default     = "productCatalogue"
 }
 
 variable "sql_instance_administrator_login_username" {

@@ -39,6 +39,9 @@ jobs:
         with:
           path: artifacts
 
+      - run: ls -R
+        working-directory: "./artifacts"
+
       - name: 'Az CLI login'
         uses: azure/login@v1
         with:
@@ -95,34 +98,71 @@ jobs:
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
           ARM_USE_OIDC: true
 
-      - name: Deploy API
-        uses: azure/webapps-deploy@v2
-        with: 
-          app-name: ${{ steps.apply.outputs.app_name }}
-          package: "./artifacts/${{inputs.artifactNameAPI}}"
+      - name: Init Terraform Firewall rules
+        working-directory: "./artifacts/${{inputs.artifactNameTerraform}}/firewall-rules"
+        run: terraform init
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_USE_OIDC: true
 
-      - name: setup connection string
+      - name: Plan Terraform Firewall rules
+        working-directory: "./artifacts/${{inputs.artifactNameTerraform}}/firewall-rules"
+        run: terraform plan -out main.tfplan -no-color
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_USE_OIDC: true
+
+      - name: Apply Terraform Firewall rules
+        working-directory: "./artifacts/${{inputs.artifactNameTerraform}}/firewall-rules"
+        run: terraform apply main.tfplan
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_USE_OIDC: true
+
+      - name: List webapp details
+        run: | 
+          az webapp list --query "[].{hostName: defaultHostName, name: name}"
+      
+      ## its not possible to deploy to a B1 webapp using azure/webapps-deploy@v2
+      - name: Deploy web app source code
+        working-directory: "./artifacts/${{inputs.artifactNameAPI}}"
+        run: | 
+          az webapp deployment source config-zip -g ${{ steps.apply.outputs.resource_group_name }} -n ${{ steps.apply.outputs.app_name }} --src api.zip
+      
+      - name: Configure connection string
         id: setSqlConnection
         run: |
-          $connectionStringJson = '[{"name": "ProductCatalogue","value": "connectionstring","slotSetting": false}]'
-          $connectionString = $(az sql db show-connection-string -s tcp:${{ steps.apply.outputs.sql_instance_name }} -n ${{ steps.apply.outputs.sql_database_name }} -c ado.net).Replace("<password>", "${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD }}").Replace("<username>", "${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME }}")
-          $connectionStringJson = $connectionStringJson.Replace("connectionstring", $connectionString)
-          set-output name=connectionString::$($connectionString)
-          set-output name=connectionStringJson::$($connectionStringJson)
+          $connection_string = $(az sql db show-connection-string -s ${{ steps.apply.outputs.sql_instance_name }} -n ${{ steps.apply.outputs.sql_database_name }} -c ado.net)
+          $connection_string = $connection_string.Replace("<password>", "${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD }}")
+          $connection_string = $connection_string.Replace("<username>", "${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME }}")
+          Write-Output "::set-output name=connection_string::'$($connection_string)'"
+        shell: pwsh
 
-      - name: Set Web App ACR authentication
-        uses: Azure/appservice-settings@v1
-        with:
-          app-name: ${{ steps.apply.outputs.app_name }}
-          connection-strings-json: ${{ steps.setSqlConnection.outputs.connectionStringJson }}
+      - name: Setup connection string for webapp
+        run: | 
+          az webapp config connection-string set -g ${{ steps.apply.outputs.resource_group_name }} -n ${{ steps.apply.outputs.app_name }} -t SQLAzure \
+          --settings ProductCatalogue='${{ steps.setSqlConnection.outputs.connection_string }}'
     
       - name: Azure SQL Deploy
-        uses: Azure/sql-action@v1
+        uses: azure/sql-action@v1.3
         with:
-          server-name: ${{ steps.apply.outputs.sql_instance_name }}
-          connection-string: ${{ steps.setSqlConnection.outputs.connectionString}}
+          connection-string: '${{ steps.setSqlConnection.outputs.connection_string }}'
           sql-file: "./artifacts/${{inputs.artifactNameSql}}/product-catalogue-migration-script.sql"
 
+      - uses: matt-ball/newman-action@master
+        name: Postman integration tests
+        working-directory: "./artifacts/Postman"
+        with:
+          collection: Product Catalogue.postman_collection.json
+          environment: Product Catalogue.postman_environment.json
+          envVar: '[{ "key": "product_catalogue_url", "value": "https://mrmclangleydevproductcatalogue.azurewebsites.net" }]'
+          
       - name: Terraform destroy
         id: destroy
         run: terraform destroy -auto-approve
