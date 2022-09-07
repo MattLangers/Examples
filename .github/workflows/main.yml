@@ -6,16 +6,16 @@ on:
 
 jobs:
   build:
-    uses: ./.github/workflows/build-test-base.yml
+    uses: ./.github/workflows/build-unit-test-package.yml
     with:
       artifactNameAPI: product-catalogue
       artifactNameSql: migration-script
       artifactNameTerraform: terraform
       artifactNamePostman: postman
 
-  IaC:
+  iac:
     needs: build
-    uses: ./.github/workflows/infastructure-deploy-destroy.yml
+    uses: ./.github/workflows/infrastructure-create.yml
     with:
       artifactNameAPI: product-catalogue
       artifactNameSql: migration-script
@@ -28,3 +28,20 @@ jobs:
       AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME: ${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME }}
       AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD: ${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD }}
       AZURE_SQL_INSTANCE_NAME: ${{ secrets.AZURE_SQL_INSTANCE_NAME }}
+      AZURE_SQL_DATABASE_PRODUCTCATALOGUE_CONNECTION_STRING: ${{ secrets.AZURE_SQL_DATABASE_PRODUCTCATALOGUE_CONNECTION_STRING }}
+
+  integration_tests:
+    needs: iac
+    uses: ./.github/workflows/integration-tests.yml
+    with:
+      artifactNamePostman: postman
+
+  iac_destroy:
+    needs: integration_tests
+    uses: ./.github/workflows/infrastructure-destroy.yml
+    with:
+      artifactNameTerraform: terraform
+    secrets:
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}

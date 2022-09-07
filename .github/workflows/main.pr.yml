@@ -1,0 +1,14 @@
+name: orchestration
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-unit-test-package.yml
+    with:
+      artifactNameAPI: product-catalogue
+      artifactNameSql: migration-script
+      artifactNameTerraform: terraform
+      artifactNamePostman: postman

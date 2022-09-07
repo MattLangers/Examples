@@ -28,9 +28,11 @@ on:
         required: true
       AZURE_SQL_INSTANCE_NAME:
         required: true
+      AZURE_SQL_DATABASE_PRODUCTCATALOGUE_CONNECTION_STRING:
+        required: true
 
 jobs:
-  infastructure:
+  infrastructure_create:
     permissions:
       id-token: write
     runs-on: ubuntu-latest
@@ -38,9 +40,6 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           path: artifacts
-
-      - run: ls -R
-        working-directory: "./artifacts"
 
       - name: 'Az CLI login'
         uses: azure/login@v1
@@ -54,7 +53,7 @@ jobs:
         with:
           terraform_wrapper: false
 
-      - name: Terraform Init
+      - name: Terraform Init Main
         id: init
         working-directory: "./artifacts/${{inputs.artifactNameTerraform}}"
         run: terraform init
@@ -64,7 +63,7 @@ jobs:
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
           ARM_USE_OIDC: true
 
-      - name: Terraform Plan
+      - name: Terraform Plan Main
         id: plan
         working-directory: "./artifacts/${{ inputs.artifactNameTerraform }}"
         run: terraform plan -out main.tfplan -no-color -var sql_instance_administrator_login_username="${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME }}" -var sql_instance_administrator_login_password="${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD }}" -var environment_prefix="${{ inputs.environment }}" -var sql_instance_name="${{ secrets.AZURE_SQL_INSTANCE_NAME }}"
@@ -74,7 +73,7 @@ jobs:
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
           ARM_USE_OIDC: true
 
-      - name: Terraform Apply
+      - name: Terraform Apply Main
         id: apply
         working-directory: "./artifacts/${{inputs.artifactNameTerraform}}"
         run: |
@@ -124,54 +123,40 @@ jobs:
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
           ARM_USE_OIDC: true
-
-      - name: List webapp details
-        run: | 
-          az webapp list --query "[].{hostName: defaultHostName, name: name}"
       
-      ## its not possible to deploy to a B1 webapp using azure/webapps-deploy@v2
+      ## A B1 webapp doesn't have slots so I don't think its possible to deploy to a B1 webapp using azure/webapps-deploy@v2
       - name: Deploy web app source code
         working-directory: "./artifacts/${{inputs.artifactNameAPI}}"
         run: | 
           az webapp deployment source config-zip -g ${{ steps.apply.outputs.resource_group_name }} -n ${{ steps.apply.outputs.app_name }} --src api.zip
       
-      - name: Configure connection string
+      - name: Acquire connection strings
         id: setSqlConnection
         run: |
-          $connection_string = $(az sql db show-connection-string -s ${{ steps.apply.outputs.sql_instance_name }} -n ${{ steps.apply.outputs.sql_database_name }} -c ado.net)
-          $connection_string = $connection_string.Replace("<password>", "${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD }}")
-          $connection_string = $connection_string.Replace("<username>", "${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME }}")
-          Write-Output "::set-output name=connection_string::'$($connection_string)'"
+          $raw_connection_string = $(az sql db show-connection-string -s ${{ steps.apply.outputs.sql_instance_name }} -n ${{ steps.apply.outputs.sql_database_name }} -c ado.net)
+          
+          $connection_string_tcp = $raw_connection_string.Replace("<password>", "${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD }}")
+          $connection_string_tcp = $connection_string_tcp.Replace("<username>", "${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME }}")
+          Write-Output "::set-output name=connection_string_tcp::'$($connection_string_tcp)'"
+          
+          $manual_connection_string = $raw_connection_string.Replace("<password>", "${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD }}")
+          $manual_connection_string = $manual_connection_string.Replace("<username>", "${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME }}")
+          $manual_connection_string = $manual_connection_string.Replace("Server=tcp:", "Server=")
+          $manual_connection_string = $manual_connection_string.Replace(",1433", "")
+          
+          Write-Output "::set-output name=manual_connection_string::'$($manual_connection_string)'"
         shell: pwsh
 
       - name: Setup connection string for webapp
         run: | 
           az webapp config connection-string set -g ${{ steps.apply.outputs.resource_group_name }} -n ${{ steps.apply.outputs.app_name }} -t SQLAzure \
-          --settings ProductCatalogue='${{ steps.setSqlConnection.outputs.connection_string }}'
+          --settings ProductCatalogue='${{ steps.setSqlConnection.outputs.connection_string_tcp }}'
     
       - name: Azure SQL Deploy
         uses: azure/sql-action@v1.3
         with:
-          connection-string: '${{ steps.setSqlConnection.outputs.connection_string }}'
+          connection-string: ${{ secrets.AZURE_SQL_DATABASE_PRODUCTCATALOGUE_CONNECTION_STRING }}
           sql-file: "./artifacts/${{inputs.artifactNameSql}}/product-catalogue-migration-script.sql"
-
-      - uses: matt-ball/newman-action@master
-        name: Postman integration tests
-        working-directory: "./artifacts/Postman"
-        with:
-          collection: Product Catalogue.postman_collection.json
-          environment: Product Catalogue.postman_environment.json
-          envVar: '[{ "key": "product_catalogue_url", "value": "https://mrmclangleydevproductcatalogue.azurewebsites.net" }]'
-          
-      - name: Terraform destroy
-        id: destroy
-        run: terraform destroy -auto-approve
-        working-directory: "./artifacts/${{inputs.artifactNameTerraform}}"
-        env:
-          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          ARM_USE_OIDC: true
   
       - name: 'Logout az'
         run: az logout

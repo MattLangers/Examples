@@ -38,7 +38,7 @@ resource "azurerm_mssql_server" "product_catalogue" {
 }
 
 resource "azurerm_mssql_database" "product_catalogue" {
-  name           = "${var.resource_group_name}_${var.environment_prefix}"
+  name           = "productCatalogue${var.environment_prefix}"
   server_id      = azurerm_mssql_server.product_catalogue.id
   collation      = "SQL_Latin1_General_CP1_CI_AS"
   license_type   = "LicenseIncluded"

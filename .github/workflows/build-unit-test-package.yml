@@ -21,7 +21,7 @@ on:
         type: string
 
 jobs:
-  build_base:
+  build_test_package:
     runs-on: ubuntu-latest
 
     steps:
@@ -75,4 +75,4 @@ jobs:
     - uses: actions/upload-artifact@v3
       with:
         name: ${{inputs.artifactNamePostman}}
-        path: './postman/'
+        path: './Postman/'
