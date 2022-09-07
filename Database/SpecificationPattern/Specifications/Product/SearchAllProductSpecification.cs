@@ -1,6 +1,4 @@
-﻿using API.Models.InputModels;
-
-namespace Database.SpecificationPattern.Specifications.Product
+﻿namespace Database.SpecificationPattern.Specifications.Product
 {
     public class SearchAllProductSpecification : BaseSpecification<Models.Product>
     {

@@ -15,6 +15,7 @@ builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(b
 builder.Services.AddScoped<IProductSearchInputModelFactory, ProductSearchInputModelFactory>();
 builder.Services.AddScoped<IDatabaseSearchOrchestrator, DatabaseSearchOrchestrator>();
 builder.Services.AddScoped<IProductDtoFactory, ProductDtoFactory>();
+builder.Services.AddScoped<ISearchProductSpecificationFactory, SearchProductSpecificationFactory>();
 
 var app = builder.Build();
 
