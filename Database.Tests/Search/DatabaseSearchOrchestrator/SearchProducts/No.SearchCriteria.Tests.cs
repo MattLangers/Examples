@@ -36,7 +36,7 @@ namespace Database.Tests.Search.DatabaseSearchOrchestrator.SearchProducts
 
             autoMocker.Use<ISearchProductSpecificationFactory>(m => m.CreateSearchForAllProducts() == new SearchAllProductSpecification());
 
-            autoMocker.GetMock<IProductsToDtoMapper>().Setup(m => m.Map(It.Is<IQueryable<Product>>(m => m.Contains(product)))).Returns(expectedResult);
+            autoMocker.Use<IProductsToDtoMapper>(m => m.Map(It.Is<IQueryable<Product>>(m => m.Contains(product))) == expectedResult);
 
             result = autoMocker.CreateInstance<Database.Search.DatabaseSearchOrchestrator>().SearchProducts(productSearchInputModel);
         }
