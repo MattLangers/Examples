@@ -2,8 +2,6 @@
 using Database.Factories;
 using Database.Models.DTO;
 using Database.SpecificationPattern;
-using Database.SpecificationPattern.Specifications;
-using Database.SpecificationPattern.Specifications.Product;
 using Microsoft.Extensions.Logging;
 
 namespace Database.Search
@@ -12,16 +10,19 @@ namespace Database.Search
     {
         private readonly ILogger logger;
         private readonly DatabaseContext context;
-        private readonly IProductDtoFactory productDtoFactory;
+        private readonly IProductsToDtoMapper productsToDtoMapper;
+        private readonly ISearchProductSpecificationFactory searchProductSpecificationFactory;
 
         public DatabaseSearchOrchestrator(
             ILogger<DatabaseSearchOrchestrator> logger,
             DatabaseContext context,
-            IProductDtoFactory productDtoFactory)
+            IProductsToDtoMapper productsToDtoMapper,
+            ISearchProductSpecificationFactory searchProductSpecificationFactory)
         {
             this.context = context;
             this.logger = logger;
-            this.productDtoFactory = productDtoFactory;
+            this.productsToDtoMapper = productsToDtoMapper;
+            this.searchProductSpecificationFactory = searchProductSpecificationFactory;
         }
 
         public IList<ProductDto> SearchProducts(ProductSearchInputModel productSearchInputModel)
@@ -34,68 +35,41 @@ namespace Database.Search
 
             if (hasGuid && hasProductTypeId && hasName)
             {
-                return FactoryCreate(products.Specify(SearchByGuid(productSearchInputModel)).Specify(SearchByProductId(productSearchInputModel)).Specify(SearchByName(productSearchInputModel)));
+                return productsToDtoMapper.Map(products.Specify(searchProductSpecificationFactory.CreateSearchByGuid(productSearchInputModel)).Specify(searchProductSpecificationFactory.CreateSearchByProductType(productSearchInputModel)).Specify(searchProductSpecificationFactory.CreateSearchByName(productSearchInputModel)));
             }
 
             if (hasGuid && hasProductTypeId && !hasName)
             {
-                return FactoryCreate(products.Specify(SearchByGuid(productSearchInputModel)).Specify(SearchByProductId(productSearchInputModel)));
+                return productsToDtoMapper.Map(products.Specify(searchProductSpecificationFactory.CreateSearchByGuid(productSearchInputModel)).Specify(searchProductSpecificationFactory.CreateSearchByProductType(productSearchInputModel)));
             }
 
             if (!hasGuid && hasProductTypeId && hasName)
             {
-                return FactoryCreate(products.Specify(SearchByProductId(productSearchInputModel)).Specify(SearchByName(productSearchInputModel)));
+                return productsToDtoMapper.Map(products.Specify(searchProductSpecificationFactory.CreateSearchByProductType(productSearchInputModel)).Specify(searchProductSpecificationFactory.CreateSearchByName(productSearchInputModel)));
             }
 
             if (!hasGuid && hasProductTypeId && !hasName)
             {
-                return FactoryCreate(products.Specify(SearchByProductId(productSearchInputModel)));
+                return productsToDtoMapper.Map(products.Specify(searchProductSpecificationFactory.CreateSearchByProductType(productSearchInputModel)));
             }
 
             if (hasGuid && !hasProductTypeId && !hasName)
             {
-                return FactoryCreate(products.Specify(SearchByGuid(productSearchInputModel)));
+                return productsToDtoMapper.Map(products.Specify(searchProductSpecificationFactory.CreateSearchByGuid(productSearchInputModel)));
             }
 
             if (!hasGuid && !hasProductTypeId && hasName)
             {
-                return FactoryCreate(products.Specify(SearchByName(productSearchInputModel)));
+                return productsToDtoMapper.Map(products.Specify(searchProductSpecificationFactory.CreateSearchByName(productSearchInputModel)));
             }
 
             if (hasGuid && !hasProductTypeId && hasName)
             {
-                return FactoryCreate(products.Specify(SearchByGuid(productSearchInputModel)).Specify(SearchByName(productSearchInputModel)));
+                return productsToDtoMapper.Map(products.Specify(searchProductSpecificationFactory.CreateSearchByGuid(productSearchInputModel)).Specify(searchProductSpecificationFactory.CreateSearchByName(productSearchInputModel)));
             }
 
             logger.LogInformation($"There are no search parameters defined");
-            return FactoryCreate(products.Specify(new SearchAllProductSpecification()));
-        }
-
-        private IList<ProductDto> FactoryCreate(IQueryable<Models.Product> products)
-        {
-            var result = new List<ProductDto>();
-
-            foreach (var product in products)
-            {
-                result.Add(productDtoFactory.Create(product.Id, product.Name, product.CreationDate, product.ProductType.Id, product.ProductType.Name));
-            }
-
-            return result;
-        }
-
-        static SearchProductByGuidSpecification SearchByGuid(ProductSearchInputModel inputModel)
-        {
-            return new SearchProductByGuidSpecification(inputModel);
-        }
-
-        static SearchProductByProductTypeSpecification SearchByProductId(ProductSearchInputModel inputModel)
-        {
-            return new SearchProductByProductTypeSpecification(inputModel);
-        }
-
-        static SearchProductByNameSpecification SearchByName(ProductSearchInputModel inputModel)
-        {
-            return new SearchProductByNameSpecification(inputModel);
+            return productsToDtoMapper.Map(products.Specify(searchProductSpecificationFactory.CreateSearchForAllProducts()));
         }
     }
 }
