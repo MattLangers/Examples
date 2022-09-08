@@ -16,6 +16,7 @@ builder.Services.AddScoped<IProductSearchInputModelFactory, ProductSearchInputMo
 builder.Services.AddScoped<IDatabaseSearchOrchestrator, DatabaseSearchOrchestrator>();
 builder.Services.AddScoped<IProductDtoFactory, ProductDtoFactory>();
 builder.Services.AddScoped<ISearchProductSpecificationFactory, SearchProductSpecificationFactory>();
+builder.Services.AddScoped<IProductsToDtoMapper, ProductsToDtoMapper>();
 
 var app = builder.Build();
 
