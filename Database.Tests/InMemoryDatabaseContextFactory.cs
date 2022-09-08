@@ -5,9 +5,7 @@ namespace Database.Tests
 {
     public class InMemoryDatabaseContextFactory
     {
-        private readonly static Guid guid = Guid.NewGuid();
-
-        private readonly DbContextOptionsBuilder<DatabaseContext> dbContextOptionsBuilder = new DbContextOptionsBuilder<DatabaseContext>().UseInMemoryDatabase(guid.ToString("N"));
+        private readonly DbContextOptionsBuilder<DatabaseContext> dbContextOptionsBuilder = new DbContextOptionsBuilder<DatabaseContext>().UseInMemoryDatabase(Guid.NewGuid().ToString("N"));
 
         private DatabaseContext databaseContext;
 
