@@ -25,11 +25,11 @@ products onto a queue, so consumers can process these outside of the main API th
 
 ## Highlights
 
-* I have created a SQL schema, using entity framework core, code first
-* I have used the specification software pattern to search for products
+* I have created a [SQL schema](/Database/Models/), using entity framework core, code first
+* I have used the [specification software pattern](/Database/SpecificationPattern/) to [search](/Database/Search/DatabaseSearchOrchestrator.cs) for products
 * Unit-testing:
   * Use Moq.AutoMock to instantiate unit under test: saves time as there is no need to create mocks, and if a constructor call signature change there is no additional work to fix broken tests
-  * Use  [Nunit.Framework.ValuesAttribute](https://github.com/MattLangers/Portfolio/blob/c3ffa861bea1df0132df632212f3abe9d2f94e52/Database.Tests/Enums/MapEnumToEnum/MapProductToProductType/EnsureAllProductsAreMapped.Tests.cs#L11) to allow a test to scale with the Enum we are testing - protection if a new enum value is added and the engineer doesn't see the need to extend mapping logic.
+  * Use  [Nunit.Framework.ValuesAttribute](/Database.Tests/Enums/MapEnumToEnum/MapProductToProductType/EnsureAllProductsAreMapped.Tests.cs#L11) to allow a test to scale with the Enum we are testing - protection if a new enum value is added and the engineer doesn't see the need to extend mapping logic.
 * Middleware: Exception handling to capture any exceptions that bubble up to the route of the API
 * Github pipelines for Continuous integration / deployment
 * IaC: Terraform files to create cloud resources for this project
@@ -41,11 +41,11 @@ products onto a queue, so consumers can process these outside of the main API th
 ## Honest appraisal
 
 * Specification pattern:
-  * I am a bit unhappy with the amount of if statements in the [database search orchestration layer](https://github.com/MattLangers/Portfolio/blob/c3ffa861bea1df0132df632212f3abe9d2f94e52/Database/Search/DatabaseSearchOrchestrator.cs#L24). This needs refactoring and code coverage.
+  * Can this be extended to be able to use EntityFrameworkQueryableExtensions.ThenInclude method: I need to spend some time investigating this further.
 * Overall the unit-test coverage should be better.
 * Infrastructure:
-  * I would consider using Azure AD to harden the security - for accessing the database.
-  * If we wanted to create different environments from this source code, some runtime variables would need to be reviewed.
+  * I would consider using Azure AD to harden the security - we could use an AD identity for the application when running in the cloud, to restrict access to the database.
+  * If we wanted to create different environments from this source code, some of the terraform runtime variables would need to be reviewed.
 * Observability should be better: need to create more logs for analysis.
 * At present its only myself working on this repository, at some point a branching strategy should be adopted - for example: GitFlow
 

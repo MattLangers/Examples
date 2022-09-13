@@ -5,7 +5,7 @@ namespace Publisher.Logic.Factories
 {
     internal class JsonFactory : IJsonFactory
     {
-        public string CreateJson(ProductDto productDto)
+        public string CreateJson(ProductDtoForPublishing productDto)
         {
             return JsonSerializer.Serialize(productDto);
         }

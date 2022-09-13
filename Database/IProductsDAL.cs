@@ -4,8 +4,8 @@ namespace Database
 {
     public interface IProductsDAL
     {
-        Task<HashSet<ProductDto>> GetUnPublishedProducts();
+        Task<HashSet<ProductDtoForPublishing>> GetUnPublishedProducts();
 
-        Task ProductPublished(ProductDto productGuid);
+        Task ProductPublished(ProductDtoForPublishing productGuid);
     }
 }

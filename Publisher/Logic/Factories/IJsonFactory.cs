@@ -4,6 +4,6 @@ namespace Publisher.Logic.Factories
 {
     internal interface IJsonFactory
     {
-        string CreateJson(ProductDto productDto);
+        string CreateJson(ProductDtoForPublishing productDto);
     }
 }
