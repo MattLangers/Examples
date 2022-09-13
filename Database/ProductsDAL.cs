@@ -13,6 +13,11 @@ namespace Database
             _dbContext = dbContext;
         }
 
+        public Task<List<ProductTypeDtoWithDateCreated>> GetProductTypeDtos()
+        {
+            return _dbContext.Set<ProductType>().Select(p => new ProductTypeDtoWithDateCreated() { Id = p.Id, CreationDate = p.CreationDate, Name = p.Name }).ToListAsync();
+        }
+
         public Task<HashSet<ProductDtoForPublishing>> GetUnPublishedProducts()
         {
             return Task.Run(() =>

@@ -1,6 +1,6 @@
 ﻿namespace Database.Models.DTO
 {
-    public sealed class ProductTypeDto
+    public class ProductTypeDto
     {
         public int Id { get; set; }
 
