@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace API.Middleware
 {
-    public class ExceptionHandlerMiddleware
+    public sealed class ExceptionHandlerMiddleware
     {
         private readonly RequestDelegate _next;
         private readonly ILogger<ExceptionHandlerMiddleware> logger;

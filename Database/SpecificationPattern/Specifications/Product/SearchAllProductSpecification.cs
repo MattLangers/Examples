@@ -1,6 +1,6 @@
 ﻿namespace Database.SpecificationPattern.Specifications.Product
 {
-    public class SearchAllProductSpecification : BaseSpecification<Models.Product>
+    public sealed class SearchAllProductSpecification : BaseSpecification<Models.Product>
     {
         public SearchAllProductSpecification()
         {

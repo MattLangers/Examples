@@ -13,15 +13,15 @@ using System.Threading.Tasks;
 namespace Publisher.Tests.Logic.PublisherOrchestration.Start
 {
     [TestFixture]
-    public class PublisherOrchestration_Start_Cancel_Token_Tests
+    public sealed class PublisherOrchestration_Start_Cancel_Token_Tests
     {
         private readonly static Guid guidForProduct1 = new Guid();
         private readonly static Guid guidForProduct2 = new Guid();
 
-        private readonly static ProductDto productDto1 = new ProductDto() { Id = guidForProduct1 };
-        private readonly static ProductDto productDto2 = new ProductDto() { Id = guidForProduct2 };
+        private readonly static ProductDtoForPublishing productDto1 = new ProductDtoForPublishing() { Id = guidForProduct1 };
+        private readonly static ProductDtoForPublishing productDto2 = new ProductDtoForPublishing() { Id = guidForProduct2 };
         
-        private readonly HashSet<ProductDto> products = new HashSet<ProductDto>()
+        private readonly HashSet<ProductDtoForPublishing> products = new HashSet<ProductDtoForPublishing>()
         {
             productDto1, productDto2
         };

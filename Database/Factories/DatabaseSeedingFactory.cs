@@ -5,7 +5,7 @@ using ProductType = Database.Models.ProductType;
 
 namespace Database.Factories
 {
-    internal class DatabaseSeedingFactory : IDatabaseSeedingFactory
+    internal sealed class DatabaseSeedingFactory : IDatabaseSeedingFactory
     {
         private readonly IMapEnumToEnum mapEnumToEnum;
 

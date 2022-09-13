@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Database.Search
 {
-    public class DatabaseSearchOrchestrator : IDatabaseSearchOrchestrator
+    public sealed class DatabaseSearchOrchestrator : IDatabaseSearchOrchestrator
     {
         private readonly ILogger logger;
         private readonly DatabaseContext context;
@@ -27,45 +27,34 @@ namespace Database.Search
 
         public IList<ProductDto> SearchProducts(ProductSearchInputModel productSearchInputModel)
         {
-            var products = context.Product;
+            var products = context.Product.AsQueryable();
 
             var hasGuid = productSearchInputModel.Id != null;
             var hasProductTypeId = productSearchInputModel.ProductTypeId > 0;
             var hasName = !string.IsNullOrWhiteSpace(productSearchInputModel.Name);
 
-            if (hasGuid && hasProductTypeId && hasName)
+            if (hasGuid)
             {
-                return productsToDtoMapper.Map(products.Specify(searchProductSpecificationFactory.CreateSearchByGuid(productSearchInputModel)).Specify(searchProductSpecificationFactory.CreateSearchByProductType(productSearchInputModel)).Specify(searchProductSpecificationFactory.CreateSearchByName(productSearchInputModel)));
+                logger.LogInformation("Create search for guid");
+                products = products.Specify(searchProductSpecificationFactory.CreateSearchByGuid(productSearchInputModel));
             }
 
-            if (hasGuid && hasProductTypeId && !hasName)
+            if (hasProductTypeId)
             {
-                return productsToDtoMapper.Map(products.Specify(searchProductSpecificationFactory.CreateSearchByGuid(productSearchInputModel)).Specify(searchProductSpecificationFactory.CreateSearchByProductType(productSearchInputModel)));
+                logger.LogInformation("Create search for product type");
+                products = products.Specify(searchProductSpecificationFactory.CreateSearchByProductType(productSearchInputModel));
             }
 
-            if (!hasGuid && hasProductTypeId && hasName)
+            if (hasName)
             {
-                return productsToDtoMapper.Map(products.Specify(searchProductSpecificationFactory.CreateSearchByProductType(productSearchInputModel)).Specify(searchProductSpecificationFactory.CreateSearchByName(productSearchInputModel)));
+                logger.LogInformation("Create search for name");
+                products = products.Specify(searchProductSpecificationFactory.CreateSearchByName(productSearchInputModel));
             }
 
-            if (!hasGuid && hasProductTypeId && !hasName)
+            if(hasGuid || hasProductTypeId || hasName)
             {
-                return productsToDtoMapper.Map(products.Specify(searchProductSpecificationFactory.CreateSearchByProductType(productSearchInputModel)));
-            }
-
-            if (hasGuid && !hasProductTypeId && !hasName)
-            {
-                return productsToDtoMapper.Map(products.Specify(searchProductSpecificationFactory.CreateSearchByGuid(productSearchInputModel)));
-            }
-
-            if (!hasGuid && !hasProductTypeId && hasName)
-            {
-                return productsToDtoMapper.Map(products.Specify(searchProductSpecificationFactory.CreateSearchByName(productSearchInputModel)));
-            }
-
-            if (hasGuid && !hasProductTypeId && hasName)
-            {
-                return productsToDtoMapper.Map(products.Specify(searchProductSpecificationFactory.CreateSearchByGuid(productSearchInputModel)).Specify(searchProductSpecificationFactory.CreateSearchByName(productSearchInputModel)));
+                logger.LogInformation("Return products for search");
+                return productsToDtoMapper.Map(products);
             }
 
             logger.LogInformation($"There are no search parameters defined");

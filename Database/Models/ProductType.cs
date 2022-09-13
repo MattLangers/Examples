@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Database.Models
 {
-    public class ProductType
+    public sealed class ProductType
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]

@@ -1,6 +1,6 @@
 ﻿namespace API.Models.InputModels
 {
-    public class ProductSearchInputModel
+    public sealed class ProductSearchInputModel
     {
         public Guid? Id { get; init; }
 

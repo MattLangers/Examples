@@ -2,7 +2,7 @@
 
 namespace API.Models.Factories
 {
-    public class ProductSearchInputModelFactory : IProductSearchInputModelFactory
+    public sealed class ProductSearchInputModelFactory : IProductSearchInputModelFactory
     {
         public ProductSearchInputModel Create(string? id, int? productTypeId, string? name)
         {

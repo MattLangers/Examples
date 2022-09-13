@@ -1,11 +1,16 @@
-﻿using Database.Models.DTO;
+﻿using API.Models.InputModels;
+using Database.Models.DTO;
 
 namespace Database
 {
     public interface IProductsDAL
     {
-        Task<HashSet<ProductDto>> GetUnPublishedProducts();
+        Task<Guid> CreateProduct(CreateProductInputModel inputModel);
 
-        Task ProductPublished(ProductDto productGuid);
+        Task<List<ProductTypeDtoWithDateCreated>> GetProductTypeDtos();
+
+        Task<HashSet<ProductDtoForPublishing>> GetUnPublishedProducts();
+
+        Task ProductPublished(ProductDtoForPublishing productGuid);
     }
 }

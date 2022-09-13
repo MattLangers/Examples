@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Database.Tests
 {
-    public class InMemoryDatabaseContextFactory
+    public sealed class InMemoryDatabaseContextFactory
     {
         private readonly DbContextOptionsBuilder<DatabaseContext> dbContextOptionsBuilder = new DbContextOptionsBuilder<DatabaseContext>().UseInMemoryDatabase(Guid.NewGuid().ToString("N"));
 
