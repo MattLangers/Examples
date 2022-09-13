@@ -2,15 +2,17 @@
 
 ## Introduction
 
-I have created this portfolio repository, to help provide future colleagues an example of my programming abilities as a .net developer. I should take this moment to highlight this is not a finished product and there are some areas that I would not consider production ready.
+I have created this portfolio to help provide future colleagues an example of my programming abilities 
+as a .net developer. I should take this moment to highlight that this is not a finished product and there 
+are some areas that I would not consider production ready.
 
-I decided to create a product catalogue for a sweats company, which is a
-.net 6 lightweight API. I have also included a console application, that will publish new
-products onto a queue, so consumers can process these outside of the main API thread.
+I decided to create a product catalogue for a sweats company which is a .net 6 lightweight API. I have also 
+included a console application, that can be used to publish new products onto a queue, the idea is that a 
+consumer of these products can process these outside of the main API thread.
 
 ## Why
 
-* I've have over 20 years experience building applications, some monolithic and others distributed micro-services:
+* I've have 10+ years experience building applications, some monolithic and others distributed microservices:
   * API's
   * Multi-tenant full stack .net applications
   * Console applications
@@ -21,7 +23,8 @@ products onto a queue, so consumers can process these outside of the main API th
   * publishers/consumers working with queues
   * continuous integration and delivery using many different platforms: github, azure devops, appveyor
   * writing unit/integration/smoke tests and integrating these into the software delivery lifecycle.
-* I wanted to build something that is lightweight in effort, that provides you with a good example of my abilities. I thought this fictitious application would be a good place to start, to allow you to asses my coding style and approach.
+* I wanted to build something that is lightweight in effort, that provides you with a good example of my abilities. 
+I thought this fictitious application would be a good place to start, to allow you to asses my coding style and approach.
 
 ## Highlights
 
@@ -41,7 +44,7 @@ products onto a queue, so consumers can process these outside of the main API th
 ## Honest appraisal
 
 * Specification pattern:
-  * Can this be extended to be able to use EntityFrameworkQueryableExtensions.ThenInclude method: I need to spend some time investigating this further.
+  * Can this be extended to be able to use EntityFrameworkQueryableExtensions.ThenInclude method: I need to spend some extra time investigating this further.
 * Overall the unit-test coverage should be better.
 * Infrastructure:
   * I would consider using Azure AD to harden the security - we could use an AD identity for the application when running in the cloud, to restrict access to the database.
@@ -60,7 +63,9 @@ the database on your local machine
 update-database
 ```
 
-### Publisher requires the azurite emulator to be running
+### Publisher 
+
+#### On your local environment the publisher requires the azurite emulator to be running
 
 When running the publisher locally, you will need to startup the azurite emulator,
 follow these steps:
