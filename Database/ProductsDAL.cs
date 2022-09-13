@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Database
 {
-    public class ProductsDAL : IProductsDAL
+    public sealed class ProductsDAL : IProductsDAL
     {
         private readonly DatabaseContext _dbContext;
 

@@ -9,7 +9,7 @@ using Moq.AutoMock;
 
 namespace Database.Tests.Search.DatabaseSearchOrchestrator.SearchProducts
 {
-    public class DatabaseSearchOrchestrator_SearchProducts_By_Guid_With_No_Match_Tests
+    public sealed class DatabaseSearchOrchestrator_SearchProducts_By_Guid_With_No_Match_Tests
     {
         private readonly static Guid guid = Guid.NewGuid();
 

@@ -1,6 +1,6 @@
 ﻿namespace Database.Enums
 {
-    public class MapEnumToEnum : IMapEnumToEnum
+    public sealed class MapEnumToEnum : IMapEnumToEnum
     {
         public ProductType MapProductToProductType(Products product) => product switch
         {

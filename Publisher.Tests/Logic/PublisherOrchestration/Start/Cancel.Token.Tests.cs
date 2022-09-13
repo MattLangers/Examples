@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace Publisher.Tests.Logic.PublisherOrchestration.Start
 {
     [TestFixture]
-    public class PublisherOrchestration_Start_Cancel_Token_Tests
+    public sealed class PublisherOrchestration_Start_Cancel_Token_Tests
     {
         private readonly static Guid guidForProduct1 = new Guid();
         private readonly static Guid guidForProduct2 = new Guid();

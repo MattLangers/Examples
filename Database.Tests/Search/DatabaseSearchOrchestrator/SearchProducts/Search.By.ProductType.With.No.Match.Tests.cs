@@ -9,7 +9,7 @@ using Moq.AutoMock;
 
 namespace Database.Tests.Search.DatabaseSearchOrchestrator.SearchProducts
 {
-    public class DatabaseSearchOrchestrator_SearchProducts_ProductType_With_Match_No_Tests
+    public sealed class DatabaseSearchOrchestrator_SearchProducts_ProductType_With_Match_No_Tests
     {
         private const int ProductTypeId = 111;
 

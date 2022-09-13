@@ -2,7 +2,7 @@
 
 namespace Database.Factories
 {
-    public class ProductDtoFactory : IProductDtoFactory
+    public sealed class ProductDtoFactory : IProductDtoFactory
     {
         public ProductDto Create(Guid id, string Name, DateTime creationDate, int productTypeId, string productTypeName)
         {

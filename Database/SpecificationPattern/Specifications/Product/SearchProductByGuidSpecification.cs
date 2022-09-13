@@ -2,7 +2,7 @@
 
 namespace Database.SpecificationPattern.Specifications.Product
 {
-    public class SearchProductByGuidSpecification : BaseSpecification<Models.Product>
+    public sealed class SearchProductByGuidSpecification : BaseSpecification<Models.Product>
     {
         public SearchProductByGuidSpecification(ProductSearchInputModel productSearchInputModel)
         {

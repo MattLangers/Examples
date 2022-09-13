@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace Publisher.Tests.Logic.PublisherOrchestration.Start
 {
     [TestFixture]
-    public class PublisherOrchestration_Start_Multiple_Product_Tests
+    public sealed class PublisherOrchestration_Start_Multiple_Product_Tests
     {
         private const string productAsJsonMessage1 = "productAsJsonMessage1";
         private const string productAsJsonMessage2 = "productAsJsonMessage2";

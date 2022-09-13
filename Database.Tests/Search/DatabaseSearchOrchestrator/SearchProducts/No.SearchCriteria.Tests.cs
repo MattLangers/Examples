@@ -9,7 +9,7 @@ using Moq.AutoMock;
 
 namespace Database.Tests.Search.DatabaseSearchOrchestrator.SearchProducts
 {
-    public class DatabaseSearchOrchestrator_SearchProducts_No_SearchCriteria_Tests
+    public sealed class DatabaseSearchOrchestrator_SearchProducts_No_SearchCriteria_Tests
     {
         private readonly static Product product = new() { Name = "Name" };
 

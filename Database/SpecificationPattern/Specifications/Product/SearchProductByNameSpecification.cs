@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Database.SpecificationPattern.Specifications
 {
-    public class SearchProductByNameSpecification : BaseSpecification<Models.Product>
+    public sealed class SearchProductByNameSpecification : BaseSpecification<Models.Product>
     {
         public SearchProductByNameSpecification(ProductSearchInputModel productSearchInputModel)
         {

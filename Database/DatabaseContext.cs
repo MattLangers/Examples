@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Database
 {
-    public class DatabaseContext : DbContext
+    public sealed class DatabaseContext : DbContext
     {
         /* TODO: Can these dependencies be satisfied via dependency injection rather than newing up? */
         private readonly IDatabaseSeedingFactory databaseSeedingFactory = new DatabaseSeedingFactory(new MapEnumToEnum());

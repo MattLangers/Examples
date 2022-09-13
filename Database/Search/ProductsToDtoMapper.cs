@@ -4,7 +4,7 @@ using Database.Models.DTO;
 
 namespace Database.Search
 {
-    public class ProductsToDtoMapper : IProductsToDtoMapper
+    public sealed class ProductsToDtoMapper : IProductsToDtoMapper
     {
         private readonly IProductDtoFactory productDtoFactory;
 

@@ -3,7 +3,7 @@ using Database.Enums;
 
 namespace Database.Tests.Enums.MapEnumToEnum.MapProductToProductType
 {
-    public class EnsureAllProductsAreMappedTests
+    public sealed class EnsureAllProductsAreMappedTests
     {
         private readonly Database.Enums.MapEnumToEnum mapEnumToEnum = new AutoMocker().CreateInstance<Database.Enums.MapEnumToEnum>();
 

@@ -4,7 +4,7 @@ using Database.SpecificationPattern.Specifications.Product;
 
 namespace Database.Factories
 {
-    public class SearchProductSpecificationFactory : ISearchProductSpecificationFactory
+    public sealed class SearchProductSpecificationFactory : ISearchProductSpecificationFactory
     {
         public SearchProductByGuidSpecification CreateSearchByGuid(ProductSearchInputModel productSearchInputModel)
         {

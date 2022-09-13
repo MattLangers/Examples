@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Database.Search
 {
-    public class DatabaseSearchOrchestrator : IDatabaseSearchOrchestrator
+    public sealed class DatabaseSearchOrchestrator : IDatabaseSearchOrchestrator
     {
         private readonly ILogger logger;
         private readonly DatabaseContext context;
