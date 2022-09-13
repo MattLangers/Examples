@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace Publisher.Logic.Factories
 {
-    internal class JsonFactory : IJsonFactory
+    public class JsonFactory : IJsonFactory
     {
         public string CreateJson(ProductDtoForPublishing productDto)
         {

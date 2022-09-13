@@ -6,10 +6,327 @@
 	},
 	"item": [
 		{
-			"name": "Search Products",
+			"name": "Products",
 			"item": [
 				{
-					"name": "Search by product-type: no products found",
+					"name": "Search Products",
+					"item": [
+						{
+							"name": "Search by product-type: no products found",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", () => {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Content type header is application/json\", () => {\r",
+											"    pm.expect(pm.response.headers.get(\"Content-type\")).to.eq(\"application/json; charset=utf-8\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"JSON response to have objects within\", () =>{\r",
+											"    pm.expect(pm.response.json().length).to.be.eq(0);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{product_catalogue_url}}/products?product-type=999999",
+									"host": [
+										"{{product_catalogue_url}}"
+									],
+									"path": [
+										"products"
+									],
+									"query": [
+										{
+											"key": "product-type",
+											"value": "999999"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Search by product-type: products found",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", () => {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Content type header is application/json\", () => {\r",
+											"    pm.expect(pm.response.headers.get(\"Content-type\")).to.eq(\"application/json; charset=utf-8\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"JSON response to have objects within\", () =>{\r",
+											"    pm.expect(pm.response.json().length).to.be.greaterThan(0);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{product_catalogue_url}}/products?product-type=2",
+									"host": [
+										"{{product_catalogue_url}}"
+									],
+									"path": [
+										"products"
+									],
+									"query": [
+										{
+											"key": "product-type",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Search by id: no products found",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", () => {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Content type header is application/json\", () => {\r",
+											"    pm.expect(pm.response.headers.get(\"Content-type\")).to.eq(\"application/json; charset=utf-8\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"JSON response to have objects within\", () =>{\r",
+											"    pm.expect(pm.response.json().length).to.be.eq(0);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{product_catalogue_url}}/products?id=7E0B6C21-8263-4668-812E-2EE443D71006",
+									"host": [
+										"{{product_catalogue_url}}"
+									],
+									"path": [
+										"products"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "7E0B6C21-8263-4668-812E-2EE443D71006"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Search by id: products found",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", () => {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Content type header is application/json\", () => {\r",
+											"    pm.expect(pm.response.headers.get(\"Content-type\")).to.eq(\"application/json; charset=utf-8\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"JSON response to have objects within\", () =>{\r",
+											"    pm.expect(pm.response.json().length).to.be.greaterThan(0);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{product_catalogue_url}}/products?id=822bea15-489a-49ac-bc05-32cc6a05e2ec",
+									"host": [
+										"{{product_catalogue_url}}"
+									],
+									"path": [
+										"products"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "822bea15-489a-49ac-bc05-32cc6a05e2ec"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Search by name: no products found",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", () => {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Content type header is application/json\", () => {\r",
+											"    pm.expect(pm.response.headers.get(\"Content-type\")).to.eq(\"application/json; charset=utf-8\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"JSON response to have objects within\", () =>{\r",
+											"    pm.expect(pm.response.json().length).to.be.eq(0);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{product_catalogue_url}}/products?name=Jelly Babiesz",
+									"host": [
+										"{{product_catalogue_url}}"
+									],
+									"path": [
+										"products"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "Jelly Babiesz"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Search by name: no products found",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", () => {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Content type header is application/json\", () => {\r",
+											"    pm.expect(pm.response.headers.get(\"Content-type\")).to.eq(\"application/json; charset=utf-8\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"JSON response to have objects within\", () =>{\r",
+											"    pm.expect(pm.response.json().length).to.be.greaterThan(0);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{product_catalogue_url}}/products?product-type=2",
+									"host": [
+										"{{product_catalogue_url}}"
+									],
+									"path": [
+										"products"
+									],
+									"query": [
+										{
+											"key": "product-type",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Search by name and product-type: products found",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", () => {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Content type header is application/json\", () => {\r",
+											"    pm.expect(pm.response.headers.get(\"Content-type\")).to.eq(\"application/json; charset=utf-8\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"JSON response to have objects within\", () =>{\r",
+											"    pm.expect(pm.response.json().length).to.be.eq(1);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{product_catalogue_url}}/products?product-type=2&name=Dolly",
+									"host": [
+										"{{product_catalogue_url}}"
+									],
+									"path": [
+										"products"
+									],
+									"query": [
+										{
+											"key": "product-type",
+											"value": "2"
+										},
+										{
+											"key": "name",
+											"value": "Dolly"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get Products",
 					"event": [
 						{
 							"listen": "test",
@@ -24,7 +341,28 @@
 									"});\r",
 									"\r",
 									"pm.test(\"JSON response to have objects within\", () =>{\r",
-									"    pm.expect(pm.response.json().length).to.be.eq(0);\r",
+									"    pm.expect(pm.response.json().length).to.be.above(0);\r",
+									"});\r",
+									"\r",
+									"const schema = {\r",
+									"    \"type\": \"array\",\r",
+									"    \"items\":{\r",
+									"        \"type\": \"object\",\r",
+									"        \"properties\":{\r",
+									"            \"id\": { \"type\": \"string\" },\r",
+									"            \"name\": { \"type\": \"string\" },\r",
+									"            \"creationDate\": { \"type\": \"string\" },\r",
+									"            \"productType\": { \"type\": \"object\", \"properties\": {\r",
+									"                    \"id\": { \"type\": \"integer\" },\r",
+									"                    \"name\": { \"type\": \"string\" },\r",
+									"            } },\r",
+									"        },\r",
+									"        \"required\": [\"id\", \"name\", \"creationDate\", \"productType\"]\r",
+									"    },\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Validate Schema\", () =>{\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -35,40 +373,26 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{product_catalogue_url}}/products?product-type=999999",
+							"raw": "{{product_catalogue_url}}/products",
 							"host": [
 								"{{product_catalogue_url}}"
 							],
 							"path": [
 								"products"
-							],
-							"query": [
-								{
-									"key": "product-type",
-									"value": "999999"
-								}
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Search by product-type: products found",
+					"name": "Create products: Bad Request - name",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
 									"pm.test(\"Status code is 200\", () => {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Content type header is application/json\", () => {\r",
-									"    pm.expect(pm.response.headers.get(\"Content-type\")).to.eq(\"application/json; charset=utf-8\");\r",
-									"});\r",
-									"\r",
-									"pm.test(\"JSON response to have objects within\", () =>{\r",
-									"    pm.expect(pm.response.json().length).to.be.greaterThan(0);\r",
+									"    pm.response.to.have.status(400);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -76,43 +400,38 @@
 						}
 					],
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Name\",\r\n  \"productTypeId\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "{{product_catalogue_url}}/products?product-type=2",
+							"raw": "{{product_catalogue_url}}/product",
 							"host": [
 								"{{product_catalogue_url}}"
 							],
 							"path": [
-								"products"
-							],
-							"query": [
-								{
-									"key": "product-type",
-									"value": "2"
-								}
+								"product"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Search by id: no products found",
+					"name": "Create products: Bad Request - productId",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
 									"pm.test(\"Status code is 200\", () => {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Content type header is application/json\", () => {\r",
-									"    pm.expect(pm.response.headers.get(\"Content-type\")).to.eq(\"application/json; charset=utf-8\");\r",
-									"});\r",
-									"\r",
-									"pm.test(\"JSON response to have objects within\", () =>{\r",
-									"    pm.expect(pm.response.json().length).to.be.eq(0);\r",
+									"    pm.response.to.have.status(400);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -120,43 +439,38 @@
 						}
 					],
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"\",\r\n  \"productTypeId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "{{product_catalogue_url}}/products?id=7E0B6C21-8263-4668-812E-2EE443D71006",
+							"raw": "{{product_catalogue_url}}/product",
 							"host": [
 								"{{product_catalogue_url}}"
 							],
 							"path": [
-								"products"
-							],
-							"query": [
-								{
-									"key": "id",
-									"value": "7E0B6C21-8263-4668-812E-2EE443D71006"
-								}
+								"product"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Search by id: products found",
+					"name": "Create products: Successfull request",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
 									"pm.test(\"Status code is 200\", () => {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Content type header is application/json\", () => {\r",
-									"    pm.expect(pm.response.headers.get(\"Content-type\")).to.eq(\"application/json; charset=utf-8\");\r",
-									"});\r",
-									"\r",
-									"pm.test(\"JSON response to have objects within\", () =>{\r",
-									"    pm.expect(pm.response.json().length).to.be.greaterThan(0);\r",
+									"    pm.response.to.have.status(400);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -164,113 +478,24 @@
 						}
 					],
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
-						"url": {
-							"raw": "{{product_catalogue_url}}/products?id=822bea15-489a-49ac-bc05-32cc6a05e2ec",
-							"host": [
-								"{{product_catalogue_url}}"
-							],
-							"path": [
-								"products"
-							],
-							"query": [
-								{
-									"key": "id",
-									"value": "822bea15-489a-49ac-bc05-32cc6a05e2ec"
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"\",\r\n  \"productTypeId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
 								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Search by name: no products found",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", () => {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Content type header is application/json\", () => {\r",
-									"    pm.expect(pm.response.headers.get(\"Content-type\")).to.eq(\"application/json; charset=utf-8\");\r",
-									"});\r",
-									"\r",
-									"pm.test(\"JSON response to have objects within\", () =>{\r",
-									"    pm.expect(pm.response.json().length).to.be.eq(0);\r",
-									"});"
-								],
-								"type": "text/javascript"
 							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
+						},
 						"url": {
-							"raw": "{{product_catalogue_url}}/products?name=Jelly Babiesz",
+							"raw": "{{product_catalogue_url}}/product",
 							"host": [
 								"{{product_catalogue_url}}"
 							],
 							"path": [
-								"products"
-							],
-							"query": [
-								{
-									"key": "name",
-									"value": "Jelly Babiesz"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Search by name: no products found",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", () => {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Content type header is application/json\", () => {\r",
-									"    pm.expect(pm.response.headers.get(\"Content-type\")).to.eq(\"application/json; charset=utf-8\");\r",
-									"});\r",
-									"\r",
-									"pm.test(\"JSON response to have objects within\", () =>{\r",
-									"    pm.expect(pm.response.json().length).to.be.eq(1);\r",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{product_catalogue_url}}/products?product-type=2&name=Dolly",
-							"host": [
-								"{{product_catalogue_url}}"
-							],
-							"path": [
-								"products"
-							],
-							"query": [
-								{
-									"key": "product-type",
-									"value": "2"
-								},
-								{
-									"key": "name",
-									"value": "Dolly"
-								}
+								"product"
 							]
 						}
 					},
@@ -279,163 +504,65 @@
 			]
 		},
 		{
-			"name": "Search by name and product-type: products found",
-			"event": [
+			"name": "Product Types",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200\", () => {\r",
-							"    pm.response.to.have.status(200);\r",
-							"});\r",
-							"\r",
-							"pm.test(\"Content type header is application/json\", () => {\r",
-							"    pm.expect(pm.response.headers.get(\"Content-type\")).to.eq(\"application/json; charset=utf-8\");\r",
-							"});\r",
-							"\r",
-							"pm.test(\"JSON response to have objects within\", () =>{\r",
-							"    pm.expect(pm.response.json().length).to.be.greaterThan(0);\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{product_catalogue_url}}/products?product-type=2",
-					"host": [
-						"{{product_catalogue_url}}"
-					],
-					"path": [
-						"products"
-					],
-					"query": [
+					"name": "Get Product types",
+					"event": [
 						{
-							"key": "product-type",
-							"value": "2"
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"pm.globals.get(\"variable_key\");\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content type header is application/json\", () => {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-type\")).to.eq(\"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"const schema = {\r",
+									"    \"type\": \"array\",\r",
+									"    \"items\":{\r",
+									"        \"type\": \"object\",\r",
+									"        \"properties\":{\r",
+									"            \"id\": { \"type\": \"number\" },\r",
+									"            \"name\": { \"type\": \"string\" },\r",
+									"            \"creationDate\": { \"type\": \"string\" },\r",
+									"        },\r",
+									"        \"required\": [\"id\", \"name\", \"creationDate\"]\r",
+									"    },\r",
+									"}\r",
+									"\r",
+									"pm.test(\"JSON response to have objects within\", () =>{\r",
+									"    pm.expect(pm.response.json().length).to.be.above(0);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate Schema\", () =>{\r",
+									"    pm.response.to.have.jsonSchema(schema, true);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
 						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Product types",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200\", () => {\r",
-							"pm.globals.get(\"variable_key\");\r",
-							"    pm.response.to.have.status(200);\r",
-							"});\r",
-							"\r",
-							"pm.test(\"Content type header is application/json\", () => {\r",
-							"    pm.expect(pm.response.headers.get(\"Content-type\")).to.eq(\"application/json; charset=utf-8\");\r",
-							"});\r",
-							"\r",
-							"const schema = {\r",
-							"    \"type\": \"array\",\r",
-							"    \"items\":{\r",
-							"        \"type\": \"object\",\r",
-							"        \"properties\":{\r",
-							"            \"id\": { \"type\": \"number\" },\r",
-							"            \"name\": { \"type\": \"string\" },\r",
-							"            \"creationDate\": { \"type\": \"string\" },\r",
-							"        },\r",
-							"        \"required\": [\"id\", \"name\", \"creationDate\"]\r",
-							"    },\r",
-							"}\r",
-							"\r",
-							"pm.test(\"JSON response to have objects within\", () =>{\r",
-							"    pm.expect(pm.response.json().length).to.be.above(0);\r",
-							"});\r",
-							"\r",
-							"pm.test(\"Validate Schema\", () =>{\r",
-							"    pm.response.to.have.jsonSchema(schema, true);\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{product_catalogue_url}}/product-types",
-					"host": [
-						"{{product_catalogue_url}}"
 					],
-					"path": [
-						"product-types"
-					]
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{product_catalogue_url}}/product-types",
+							"host": [
+								"{{product_catalogue_url}}"
+							],
+							"path": [
+								"product-types"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Products",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200\", () => {\r",
-							"    pm.response.to.have.status(200);\r",
-							"});\r",
-							"\r",
-							"pm.test(\"Content type header is application/json\", () => {\r",
-							"    pm.expect(pm.response.headers.get(\"Content-type\")).to.eq(\"application/json; charset=utf-8\");\r",
-							"});\r",
-							"\r",
-							"pm.test(\"JSON response to have objects within\", () =>{\r",
-							"    pm.expect(pm.response.json().length).to.be.above(0);\r",
-							"});\r",
-							"\r",
-							"const schema = {\r",
-							"    \"type\": \"array\",\r",
-							"    \"items\":{\r",
-							"        \"type\": \"object\",\r",
-							"        \"properties\":{\r",
-							"            \"id\": { \"type\": \"string\" },\r",
-							"            \"name\": { \"type\": \"string\" },\r",
-							"            \"creationDate\": { \"type\": \"string\" },\r",
-							"            \"productType\": { \"type\": \"object\", \"properties\": {\r",
-							"                    \"id\": { \"type\": \"integer\" },\r",
-							"                    \"name\": { \"type\": \"string\" },\r",
-							"            } },\r",
-							"        },\r",
-							"        \"required\": [\"id\", \"name\", \"creationDate\", \"productType\"]\r",
-							"    },\r",
-							"}\r",
-							"\r",
-							"pm.test(\"Validate Schema\", () =>{\r",
-							"    pm.response.to.have.jsonSchema(schema);\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{product_catalogue_url}}/products",
-					"host": [
-						"{{product_catalogue_url}}"
-					],
-					"path": [
-						"products"
-					]
-				}
-			},
-			"response": []
+			]
 		}
 	]
 }

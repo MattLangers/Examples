@@ -1,4 +1,5 @@
-﻿using Database.Models;
+﻿using API.Models.InputModels;
+using Database.Models;
 using Database.Models.DTO;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,6 +12,14 @@ namespace Database
         public ProductsDAL(DatabaseContext dbContext)
         {
             _dbContext = dbContext;
+        }
+
+        public async Task<Guid> CreateProduct(CreateProductInputModel inputModel)
+        {
+            var product = new Product() { ProductTypeId = inputModel.ProductTypeId, Name = inputModel.Name };
+            _dbContext.Set<Product>().Add(product);
+            await _dbContext.SaveChangesAsync();
+            return product.Id;
         }
 
         public Task<List<ProductTypeDtoWithDateCreated>> GetProductTypeDtos()

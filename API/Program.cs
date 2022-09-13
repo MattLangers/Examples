@@ -6,6 +6,7 @@ using API.Middleware;
 using API.Models.Factories;
 using Database.Factories;
 using Database.Models.DTO;
+using API.Models.InputModels;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,7 @@ builder.Services.AddScoped<IProductDtoFactory, ProductDtoFactory>();
 builder.Services.AddScoped<ISearchProductSpecificationFactory, SearchProductSpecificationFactory>();
 builder.Services.AddScoped<IProductsToDtoMapper, ProductsToDtoMapper>();
 builder.Services.AddScoped<IProductsDAL, ProductsDAL>();
+builder.Services.AddScoped<IOutputModelFactory, OutputModelFactory>();
 
 var app = builder.Build();
 
@@ -42,6 +44,15 @@ app.MapGet("/products", (
                 : Results.NotFound();
 });
 
+app.MapPost("/product", async (
+    ILogger<Program> logger,
+    IProductsDAL productsDAL,
+    IOutputModelFactory outputModelFactory,
+    [FromBody]CreateProductInputModel inputModel) =>
+{
+    return await CreateProduct(logger, productsDAL, outputModelFactory, inputModel);
+});
+
 app.MapGet("/product-types", async (ILogger<Program> logger, IProductsDAL productsDAL) =>
 {
     logger.LogInformation("Get all product types request");
@@ -51,3 +62,22 @@ app.MapGet("/product-types", async (ILogger<Program> logger, IProductsDAL produc
 app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 app.Run();
+
+static async Task<IResult> CreateProduct(
+    ILogger<Program> logger,
+    IProductsDAL productsDAL, 
+    IOutputModelFactory outputModelFactory, 
+    CreateProductInputModel inputModel)
+{
+    /* Unable to keep this logic in the main path of the request end-point as visual studio was 
+     * rendering an error in the designer */
+    logger.LogInformation($"Create product request: {inputModel.Name}, {inputModel.ProductTypeId}");
+    if (string.IsNullOrEmpty(inputModel.Name) || inputModel.ProductTypeId == 0)
+    {
+        logger.LogInformation("Returning a bad request response");
+        return Results.BadRequest();
+    }
+
+    var productGuid = await productsDAL.CreateProduct(inputModel);
+    return Results.Ok(outputModelFactory.Create(productGuid));
+}
