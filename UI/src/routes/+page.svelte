@@ -1,7 +1,20 @@
-<script>
+<script lang="ts">
     import { text } from "svelte/internal";
     import "../app.css";
+    import { onMount } from "svelte";
+    import type { Product } from '../models/product'
+
+    const endpoint = "https://localhost:7003/products";
+
+    let products: Product[] = [];
+
+    onMount(async function () {
+        const response = await fetch(endpoint);
+        const data = await response.json();
+        products = data;
+    });
 </script>
+
 
 <header class="bg-white text-black p-3 border border-solid border-gray-100">
     <div class="flex justify-between items-center p-3">
@@ -25,25 +38,33 @@
         </div>
     </div>
 </header>
+
 <div class="w-full flex flex-col sm:flex-row flex-wrap sm:flex-nowrap py-4 flex-grow">
     <!-- fixed-width -->
     <div class="w-fixed w-full flex-shrink flex-grow-0 px-4">
         <div class="sticky top-0 p-4 w-full h-full">
-            left
+            <!-- left -->
         </div>
     </div>
-    <main class="w-full flex-grow pt-1 px-3">
-        <div class="block p-6 rounded-lg shadow-lg bg-white max-w-sm">
-            <h5 class="text-gray-900 text-xl leading-tight font-medium mb-2">Product title</h5>
-            <p class="text-gray-700 text-base mb-4">
-              Product type
-            </p>
-        </div>
+    <main class="w-full flex-grow px-3">
+        {#each products as product}
+            <div class="p-2">
+                <div class="block p-6 rounded-lg shadow-lg bg-white max-w-sm">
+                    <h5 class="text-gray-900 text-xl leading-tight font-medium mb-2">{product.name}</h5>
+                    <p class="text-gray-700 text-base mb-4">
+                        Product type: {product.productType.name}
+                    </p>
+                    <p class="text-gray-700 text-base">
+                        Product id: {product.id}
+                    </p>
+                </div>
+            </div>
+        {/each}
     </main>
     <div class="w-fixed w-full flex-shrink flex-grow-0 px-2">
         <!-- fixed-width -->
         <div class="flex sm:flex-col px-2">
-            right
+            <!-- right -->
         </div>
     </div>
 </div>
