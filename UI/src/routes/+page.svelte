@@ -2,18 +2,43 @@
     import "../app.css";
     import { onMount } from "svelte";
     import type { Product } from '../models/product'
+	import type { ProductType } from "src/models/productType";
+	import { each } from "svelte/internal";
 
-    const endpoint = "https://localhost:7003/products";
+    const apiUrl = "https://localhost:7003/products";
 
     let products: Product[] = [];
+    let productTypes: ProductType[] = [];
 
-    onMount(async function () {
-        const response = await fetch(endpoint);
+    let productTypeSelected: ProductType;
+
+    var getProducts = async function (productType?: ProductType): Promise<void> {
+        
+        let url = (
+            apiUrl
+        );
+
+        if(productType !== undefined){
+            url = (
+                apiUrl + '?' +
+                new URLSearchParams({ "product-type": productType.id.toString() }).toString()
+            );
+        }
+        
+        const response = await fetch(url);
+        products = await response.json();
+        console.log(products);
+    }
+
+    var getProductTypes = async function (): Promise<void> {
+        
+        const response = await fetch('https://localhost:7003/product-types');
         const data = await response.json();
-        products = data;
-    });
-</script>
+        productTypes = data;
+    }
 
+    onMount(() => { getProducts(), getProductTypes()});
+</script>
 
 <header class="bg-white text-black p-3 border border-solid border-gray-100">
     <div class="flex justify-between items-center p-3">
@@ -22,8 +47,37 @@
                 ML
             </a>
         </div>
-        <div>
-            <input type="text" name="product_search" id="product_search" value="" placeholder="search product catalogue" class="form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
+        <div class="flex">
+            <div>
+                <input type="text" name="product_search" id="product_search" value="" placeholder="search product catalogue" class="form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
+            </div>
+            <div>
+                <div class="flex justify-center">
+                    <div class="mb-3 xl:w-50">
+                      <select class="form-select appearance-none
+                        block
+                        w-full
+                        px-3
+                        py-1.5
+                        text-base
+                        font-normal
+                        text-gray-700
+                        bg-white bg-clip-padding bg-no-repeat
+                        border border-solid border-gray-300
+                        rounded
+                        transition
+                        ease-in-out
+                        m-0
+                        focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" aria-label="Product types"
+                        bind:value={productTypeSelected}  on:change={() => { getProducts(productTypeSelected)}}>
+                          <option selected>Product type</option>
+                          {#each productTypes as productType}
+                            <option value="{productType}">{productType.name}</option>
+                          {/each}
+                      </select>
+                    </div>
+                  </div>
+            </div>
         </div>
         <div>
             <nav class="min-w-full">
