@@ -1,6 +1,6 @@
 <script>
     import { text } from "svelte/internal";
-import "../app.css";
+    import "../app.css";
 </script>
 
 <header class="bg-white text-black p-3 border border-solid border-gray-100">
@@ -25,3 +25,28 @@ import "../app.css";
         </div>
     </div>
 </header>
+<div class="w-full flex flex-col sm:flex-row flex-wrap sm:flex-nowrap py-4 flex-grow">
+    <!-- fixed-width -->
+    <div class="w-fixed w-full flex-shrink flex-grow-0 px-4">
+        <div class="sticky top-0 p-4 w-full h-full">
+            left
+        </div>
+    </div>
+    <main class="w-full flex-grow pt-1 px-3">
+        <div class="block p-6 rounded-lg shadow-lg bg-white max-w-sm">
+            <h5 class="text-gray-900 text-xl leading-tight font-medium mb-2">Product title</h5>
+            <p class="text-gray-700 text-base mb-4">
+              Product type
+            </p>
+        </div>
+    </main>
+    <div class="w-fixed w-full flex-shrink flex-grow-0 px-2">
+        <!-- fixed-width -->
+        <div class="flex sm:flex-col px-2">
+            right
+        </div>
+    </div>
+</div>
+<footer class="bg-white mt-auto">
+    
+</footer>
