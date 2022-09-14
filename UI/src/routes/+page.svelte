@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { text } from "svelte/internal";
     import "../app.css";
     import { onMount } from "svelte";
     import type { Product } from '../models/product'
