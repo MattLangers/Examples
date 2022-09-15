@@ -57,9 +57,12 @@ I thought this fictitious application would be a good place to start, to allow y
   * If we wanted to create different environments from this source code, some of the terraform runtime variables would need to be reviewed.
 * Observability should be better: need to create more logs for analysis.
 * At present its only myself working on this repository, at some point a branching strategy should be adopted - for example: GitFlow
-* UI: The current effort is good enough for a first pass, the search functionality is working but what follows is a list of work items remaining:
-  * Create products
+* UI: The current effort is good enough for a first pass, the search functionality is working but this area requires more work before it can be considered complete:
+  * Create products page
   * Hamburger right hand nav
+  * Parameterize the API url in the Playwright tests
+  * Create static website in the continuous deployment part of GitHub actions to deploy the static files
+    * run playwright tests against static website and persist results
 
 ## Instructions
 
