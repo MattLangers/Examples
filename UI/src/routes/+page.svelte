@@ -32,7 +32,6 @@
         
         const response = await fetch(url);
         products = await response.json();
-        console.log(products);
     }
 
     var getProductTypes = async function (): Promise<void> {
@@ -79,7 +78,9 @@
                             dark:focus:border-blue-500" 
                     placeholder="Search" required>
             </div>
-            <select class="form-select 
+            <select 
+                    id="product-type"
+                    class="form-select 
                             appearance-none
                             bg-gray-50
                             block
@@ -153,8 +154,9 @@
         </div>
     </div>
     <main class="w-full flex-grow px-3">
+        <span>Product count: <span id="product-count">{products.length}</span></span>
         {#each products as product}
-            <div class="p-2">
+            <div class="p-2 product-shell">
                 <div class="block p-6 rounded-lg shadow-lg bg-white max-w-sm">
                     <h5 class="text-gray-900 text-xl leading-tight font-medium mb-2">{product.name}</h5>
                     <p class="text-gray-700 text-base mb-4">

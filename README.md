@@ -2,12 +2,12 @@
 
 ## Introduction
 
-I have created this portfolio to help provide future colleagues an example of my programming abilities 
-as a .net developer. I should take this moment to highlight that this is not a finished product and there 
+I have created this portfolio to help provide future colleagues an example of my programming abilities
+as a .net developer. I should take this moment to highlight that this is not a finished product and there
 are some areas that I would not consider production ready.
 
-I decided to create a product catalogue for a sweats company which is a .net 6 lightweight API. I have also 
-included a console application, that can be used to publish new products onto a queue, the idea is that a 
+I decided to create a product catalogue for a sweats company which is a .net 6 lightweight API. I have also
+included a console application, that can be used to publish new products onto a queue, the idea is that a
 consumer of these products can process these outside of the main API thread.
 
 ## Why
@@ -23,7 +23,7 @@ consumer of these products can process these outside of the main API thread.
   * publishers/consumers working with queues
   * continuous integration and delivery using many different platforms: github, azure devops, appveyor
   * writing unit/integration/smoke tests and integrating these into the software delivery lifecycle.
-* I wanted to build something that is lightweight in effort, that provides you with a good example of my abilities. 
+* I wanted to build something that is lightweight in effort, that provides you with a good example of my abilities.
 I thought this fictitious application would be a good place to start, to allow you to asses my coding style and approach.
 
 ## Highlights
@@ -35,11 +35,17 @@ I thought this fictitious application would be a good place to start, to allow y
   * Use  [Nunit.Framework.ValuesAttribute](/Database.Tests/Enums/MapEnumToEnum/MapProductToProductType/EnsureAllProductsAreMapped.Tests.cs#L11) to allow a test to scale with the Enum we are testing - protection if a new enum value is added and the engineer doesn't see the need to extend mapping logic.
 * Middleware: Exception handling to capture any exceptions that bubble up to the route of the API
 * Github pipelines for Continuous integration / deployment
-* IaC: Terraform files to create cloud resources for this project
+* IaC: [Terraform files](/IaC/) to create cloud resources for this project
+* CICD: [GitHub action files](/.github/workflows/) to manage continuous integration, creation of resources in azure (on-demand) & deployment of artifacts, run & persist postman integration tests, and the final step  to teardown azure resources.
+  * [FIle](.github/workflows/main.pr.yml) to orchestrate actions when a pull-request is submitted.
+  * [FIle](.github/workflows/main.yml) to orchestrate actions when a branch is merged into main.
 * Postman Requests with tests checking:
   * status code
   * Content-type is JSON
   * Schema
+  * Search functionality
+* SvelteKit UI
+  * I have been keeping an eye on SvelteKit for a while and I wanted to try out the framework. I'm not a frontend expert, but I know enough to dabble.  
 
 ## Honest appraisal
 
@@ -51,6 +57,9 @@ I thought this fictitious application would be a good place to start, to allow y
   * If we wanted to create different environments from this source code, some of the terraform runtime variables would need to be reviewed.
 * Observability should be better: need to create more logs for analysis.
 * At present its only myself working on this repository, at some point a branching strategy should be adopted - for example: GitFlow
+* UI: The current effort is good enough for a first pass, the search functionality is working but what follows is a list of work items remaining:
+  * Create products
+  * Hamburger right hand nav
 
 ## Instructions
 
@@ -63,7 +72,7 @@ the database on your local machine
 update-database
 ```
 
-### Publisher 
+### Publisher
 
 #### On your local environment the publisher requires the azurite emulator to be running
 
@@ -129,4 +138,19 @@ terraform apply main.tfplan
 
 ```terraform
 terraform destroy -auto-approve
+```
+
+### SvelteKit UI
+
+```powershell
+npm install
+npm run dev
+```
+
+#### UI End-to-end tests using Playwright
+
+Run the following command from the route of the UI folder
+
+```powershell
+npx playwright test
 ```
