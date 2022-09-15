@@ -3,27 +3,32 @@
     import { onMount } from "svelte";
     import type { Product } from '../models/product'
 	import type { ProductType } from "src/models/productType";
+	import type { QueryStringParams } from "src/models/query.string.params";
 	import { each } from "svelte/internal";
 
     const apiUrl = "https://localhost:7003/products";
 
     let products: Product[] = [];
     let productTypes: ProductType[] = [];
-
     let productTypeSelected: ProductType;
+    let searchText: string = "";
 
-    var getProducts = async function (productType?: ProductType): Promise<void> {
+    var getProducts = async function (productType?: ProductType, searchText?: string): Promise<void> {
+        
+        const querystringParameters: QueryStringParams = {};
+
+        if(searchText !== undefined){
+            querystringParameters.name = searchText;
+        }
+
+        if(productType !== undefined && productType.id !== undefined){
+            querystringParameters["product-type"] = productType.id;
+        }
         
         let url = (
-            apiUrl
+            apiUrl + '?' +
+            new URLSearchParams(querystringParameters).toString()
         );
-
-        if(productType !== undefined){
-            url = (
-                apiUrl + '?' +
-                new URLSearchParams({ "product-type": productType.id.toString() }).toString()
-            );
-        }
         
         const response = await fetch(url);
         products = await response.json();
@@ -47,37 +52,76 @@
                 ML
             </a>
         </div>
-        <div class="flex">
-            <div>
-                <input type="text" name="product_search" id="product_search" value="" placeholder="search product catalogue" class="form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
+        <div class="flex items-center">   
+            <label for="simple-search" class="sr-only">Search</label>
+            <div class="relative w-full">
+                <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                    <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
+                </div>
+                <input 
+                    bind:value="{searchText}"
+                    type="text" 
+                    id="simple-search" 
+                    class="bg-gray-50 
+                            border border-gray-300 
+                            text-gray-900 
+                            text-sm 
+                            rounded-lg 
+                            focus:ring-blue-500 
+                            focus:border-blue-500 
+                            block w-full 
+                            pl-10 p-2.5 
+                            dark:bg-white-700 
+                            dark:border-gray-300 
+                            dark:placeholder-gray-400 
+                            dark:text-gray 
+                            dark:focus:ring-blue-500 
+                            dark:focus:border-blue-500" 
+                    placeholder="Search" required>
             </div>
-            <div>
-                <div class="flex justify-center">
-                    <div class="mb-3 xl:w-50">
-                      <select class="form-select appearance-none
-                        block
-                        w-full
-                        px-3
-                        py-1.5
-                        text-base
-                        font-normal
-                        text-gray-700
-                        bg-white bg-clip-padding bg-no-repeat
-                        border border-solid border-gray-300
-                        rounded
-                        transition
-                        ease-in-out
-                        m-0
-                        focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" aria-label="Product types"
-                        bind:value={productTypeSelected}  on:change={() => { getProducts(productTypeSelected)}}>
-                          <option selected>Product type</option>
-                          {#each productTypes as productType}
-                            <option value="{productType}">{productType.name}</option>
-                          {/each}
-                      </select>
-                    </div>
-                  </div>
-            </div>
+            <select class="form-select 
+                            appearance-none
+                            bg-gray-50
+                            block
+                            px-4
+                            py-2
+                            text-base
+                            font-normal
+                            text-gray-700
+                            bg-white bg-clip-padding bg-no-repeat
+                            border border-gray-300
+                            rounded-lg
+                            transition
+                            ease-in-out
+                            ml-2
+                            focus:text-gray-700 
+                            focus:bg-white 
+                            focus:border-blue-600 
+                            focus:outline-none" 
+                    aria-label="Product types"
+                    bind:value={productTypeSelected}>
+                    <option selected>Product type</option>
+                    {#each productTypes as productType}
+                        <option value="{productType}">{productType.name}</option>
+                    {/each}
+            </select>
+            <button type="submit" 
+                    on:click={() => { getProducts(productTypeSelected, searchText)}}
+                    class="p-2.5 ml-2 
+                            text-sm font-medium 
+                            text-white bg-gray-700 
+                            rounded-lg border 
+                            border-gray-700 
+                            hover:bg-gray-800 
+                            focus:ring-4 
+                            focus:outline-none 
+                            focus:ring-gray-300 
+                            dark:bg-gray-500 
+                            dark:hover:bg-gray-600 
+                            dark:focus:ring-gray-700">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                <span class="sr-only">Search</span>
+            </button>
         </div>
         <div>
             <nav class="min-w-full">
@@ -95,8 +139,17 @@
 <div class="w-full flex flex-col sm:flex-row flex-wrap sm:flex-nowrap py-4 flex-grow">
     <!-- fixed-width -->
     <div class="w-fixed w-full flex-shrink flex-grow-0 px-4">
-        <div class="sticky top-0 p-4 w-full h-full">
-            <!-- left -->
+        <div class="sticky top-0 w-full h-full">
+            <div class="">
+                <div class="flex items-center rounded-md p-1.5 bg-green-400 text-white">
+                    <svg aria-hidden="true" class="mr-2.5 h-5 w-5 flex-none stroke-white" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
+                    View/Search products
+                </div>
+                <div class="flex items-center rounded-md p-1.5">
+                    <svg class="mr-2.5 h-5 w-5 flex-none stroke-slate-400" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    Create new product
+                </div>
+            </div>
         </div>
     </div>
     <main class="w-full flex-grow px-3">
