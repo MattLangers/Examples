@@ -21,7 +21,20 @@ builder.Services.AddScoped<IProductsToDtoMapper, ProductsToDtoMapper>();
 builder.Services.AddScoped<IProductsDAL, ProductsDAL>();
 builder.Services.AddScoped<IOutputModelFactory, OutputModelFactory>();
 
+var productCategoryAllowOrigins = "_productCategoryAllowOrigins";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: productCategoryAllowOrigins,
+                      policy =>
+                      {
+                          policy.WithOrigins("http://localhost:5173", "http://localhost:4173");
+                      });
+});
+
 var app = builder.Build();
+
+app.UseCors(productCategoryAllowOrigins);
 
 app.UseSwagger();
 app.UseSwaggerUI();
