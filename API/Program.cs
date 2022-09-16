@@ -27,8 +27,6 @@ var connectionString = builder.Configuration.GetConnectionString("ProductCatalog
 var corsAllowedOrigins = new List<string>();
 builder.Configuration.GetSection("Cors:AllowedOrigins").Bind(corsAllowedOrigins); ;
 
-var app = builder.Build();
-
 var productCategoryAllowOrigins = "_productCategoryAllowOrigins";
 
 builder.Services.AddCors(options =>
@@ -39,6 +37,8 @@ builder.Services.AddCors(options =>
                           policy.WithOrigins(corsAllowedOrigins.ToArray());
                       });
 });
+
+var app = builder.Build();
 
 app.UseCors(productCategoryAllowOrigins);
 
@@ -63,7 +63,7 @@ app.MapGet("/products", (
                 : Results.NotFound();
 });
 
-app.MapPost("/product", async (
+app.MapPost("/products", async (
     ILogger<Program> logger,
     IProductsDAL productsDAL,
     IOutputModelFactory outputModelFactory,

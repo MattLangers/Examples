@@ -412,12 +412,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{product_catalogue_url}}/product",
+							"raw": "{{product_catalogue_url}}/products",
 							"host": [
 								"{{product_catalogue_url}}"
 							],
 							"path": [
-								"product"
+								"products"
 							]
 						}
 					},
@@ -451,12 +451,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{product_catalogue_url}}/product",
+							"raw": "{{product_catalogue_url}}/products",
 							"host": [
 								"{{product_catalogue_url}}"
 							],
 							"path": [
-								"product"
+								"products"
 							]
 						}
 					},
@@ -470,7 +470,27 @@
 							"script": {
 								"exec": [
 									"pm.test(\"Status code is 200\", () => {\r",
-									"    pm.response.to.have.status(400);\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content type header is application/json\", () => {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-type\")).to.eq(\"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"const schema = {\r",
+									"    \"type\": \"object\",\r",
+									"    \"properties\":{\r",
+									"        \"id\": { \"type\": \"string\" }\r",
+									"    },\r",
+									"    \"required\": [\"id\"]\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Validate Schema\", () =>{\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.json().id).length.greaterThan(0)\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -482,7 +502,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"name\": \"\",\r\n  \"productTypeId\": 1\r\n}",
+							"raw": "{\r\n  \"name\": \"Postman test\",\r\n  \"productTypeId\": 1\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -490,12 +510,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{product_catalogue_url}}/product",
+							"raw": "{{product_catalogue_url}}/products",
 							"host": [
 								"{{product_catalogue_url}}"
 							],
 							"path": [
-								"product"
+								"products"
 							]
 						}
 					},

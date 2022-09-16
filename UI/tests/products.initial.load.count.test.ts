@@ -7,7 +7,7 @@ test("index page: initial page load product count", async ({ page }) => {
 		page.waitForResponse(
 			response => 
 				response.status() == 200 
-				&& response.url().includes("https://localhost:7003/products")
+				&& response.url().includes("/products")
 		)
 	]);
 
