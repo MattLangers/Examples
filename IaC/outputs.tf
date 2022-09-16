@@ -25,3 +25,7 @@ output "sql_database_name" {
   value = azurerm_mssql_database.product_catalogue.name
   sensitive   = true
 }
+
+output "static_website_name" {
+  value = product_catalogue.product_catalogue.name
+}

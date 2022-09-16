@@ -19,6 +19,9 @@ on:
       artifactNamePostman:
         required: true
         type: string
+      artifactStaticWebsite:
+        required: true
+        type: string
 
 jobs:
   build_test_package:
@@ -56,6 +59,11 @@ jobs:
       run: |
         cd ./api/published/
         zip -r api.zip .
+
+    - name: build static website
+      run: |
+        cd ./UI/
+        npm run build
 
     - uses: actions/upload-artifact@v3
       with:

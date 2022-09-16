@@ -24,7 +24,7 @@ namespace Database
 
         public Task<List<Models.DTO.ProductType>> GetProductTypeDtos()
         {
-            return _dbContext.Set<Models.DTO.ProductType>().Select(p => new Models.DTO.ProductType() { Id = p.Id, CreationDate = p.CreationDate, Name = p.Name }).ToListAsync();
+            return _dbContext.Set<Models.ProductType>().Select(p => new Models.DTO.ProductType() { Id = p.Id, CreationDate = p.CreationDate, Name = p.Name }).ToListAsync();
         }
 
         public Task<HashSet<ProductDtoForPublishing>> GetUnPublishedProducts()

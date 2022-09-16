@@ -8,10 +8,11 @@ jobs:
   build:
     uses: ./.github/workflows/build-unit-test-package.yml
     with:
-      artifactNameAPI: product-catalogue
+      artifactNameAPI: product-catalogue-api
       artifactNameSql: migration-script
       artifactNameTerraform: terraform
       artifactNamePostman: postman
+      artifactStaticWebsite: product-catalogue-ui
 
   iac:
     needs: build

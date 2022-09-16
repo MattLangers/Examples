@@ -7,7 +7,6 @@ using API.Models.Factories;
 using Database.Factories;
 using Database.Models.DTO;
 using API.Models.InputModels;
-using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 

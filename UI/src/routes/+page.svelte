@@ -5,8 +5,7 @@
 	import type { ProductType } from "src/models/productType";
 	import type { QueryStringParams } from "src/models/query.string.params";
 	import { each } from "svelte/internal";
-
-    const apiUrl = "https://localhost:7003/products";
+    import { variables } from '../variables';
 
     let products: Product[] = [];
     let productTypes: ProductType[] = [];
@@ -26,7 +25,7 @@
         }
         
         let url = (
-            apiUrl + '?' +
+            variables.api_URL + 'products?' +
             new URLSearchParams(querystringParameters).toString()
         );
         
@@ -36,7 +35,7 @@
 
     var getProductTypes = async function (): Promise<void> {
         
-        const response = await fetch('https://localhost:7003/product-types');
+        const response = await fetch(variables.api_URL + 'product-types');
         const data = await response.json();
         productTypes = data;
     }

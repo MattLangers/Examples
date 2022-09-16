@@ -45,3 +45,11 @@ resource "azurerm_mssql_database" "product_catalogue" {
   max_size_gb    = 2
   sku_name       = "Basic"
 }
+
+resource "azurerm_static_site" "product_catalogue" {
+  name                = "mrmclangley${var.environment_prefix}productcatalogue"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = var.resource_group_location
+  sku_tier            = "Free"
+  sku_size            = "Free"
+}
