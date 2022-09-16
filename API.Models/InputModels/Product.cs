@@ -1,6 +1,6 @@
 ﻿namespace API.Models.InputModels
 {
-    public sealed class CreateProductInputModel
+    public sealed class Product
     {
         public string Name { get; set; } = default!;
 

@@ -67,7 +67,7 @@ app.MapPost("/products", async (
     ILogger<Program> logger,
     IProductsDAL productsDAL,
     IOutputModelFactory outputModelFactory,
-    [FromBody]CreateProductInputModel inputModel) =>
+    [FromBody]Product inputModel) =>
 {
     return await CreateProduct(logger, productsDAL, outputModelFactory, inputModel);
 });
@@ -86,7 +86,7 @@ static async Task<IResult> CreateProduct(
     ILogger<Program> logger,
     IProductsDAL productsDAL, 
     IOutputModelFactory outputModelFactory, 
-    CreateProductInputModel inputModel)
+    Product inputModel)
 {
     /* Unable to keep this logic in the main path of the request end-point as visual studio was 
      * rendering an error in the designer */

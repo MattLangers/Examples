@@ -5,7 +5,7 @@ namespace Database
 {
     public interface IProductsDAL
     {
-        Task<Guid> CreateProduct(CreateProductInputModel inputModel);
+        Task<Guid> CreateProduct(Product inputModel);
 
         Task<List<ProductType>> GetProductTypeDtos();
 

@@ -15,7 +15,7 @@ namespace Database.Tests.Search.DatabaseSearchOrchestrator.SearchProducts
 
         private readonly static Models.ProductType productType = new Models.ProductType() { Name = "Name", Id = ProductTypeId };
 
-        private readonly static Product product = new() { Name = "Name", ProductType = productType };
+        private readonly static Models.Product product = new() { Name = "Name", ProductType = productType };
 
         private readonly ProductSearchInputModel productSearchInputModel = new ProductSearchInputModel() { ProductTypeId = 222 };
 
@@ -40,7 +40,7 @@ namespace Database.Tests.Search.DatabaseSearchOrchestrator.SearchProducts
 
             autoMocker.Use<ISearchProductSpecificationFactory>(m => m.CreateSearchByProductType(productSearchInputModel) == new SearchProductByProductTypeSpecification(productSearchInputModel));
 
-            autoMocker.Use<IProductsToDtoMapper>(m => m.Map(It.Is<IQueryable<Product>>(m => !m.Any())) == expectedResult);
+            autoMocker.Use<IProductsToDtoMapper>(m => m.Map(It.Is<IQueryable<Models.Product>>(m => !m.Any())) == expectedResult);
 
             result = autoMocker.CreateInstance<Database.Search.DatabaseSearchOrchestrator>().SearchProducts(productSearchInputModel);
         }

@@ -14,10 +14,10 @@ namespace Database
             _dbContext = dbContext;
         }
 
-        public async Task<Guid> CreateProduct(CreateProductInputModel inputModel)
+        public async Task<Guid> CreateProduct(API.Models.InputModels.Product inputModel)
         {
-            var product = new Product() { ProductTypeId = inputModel.ProductTypeId, Name = inputModel.Name };
-            _dbContext.Set<Product>().Add(product);
+            var product = new Models.Product() { ProductTypeId = inputModel.ProductTypeId, Name = inputModel.Name };
+            _dbContext.Set<Models.Product>().Add(product);
             await _dbContext.SaveChangesAsync();
             return product.Id;
         }
@@ -32,7 +32,7 @@ namespace Database
             return Task.Run(() =>
             {
                 /* TODO: should we be using Linq to buid the query */
-                return _dbContext.Set<Product>()
+                return _dbContext.Set<Models.Product>()
                 .FromSqlRaw("select p.* from Product p Left Join ProductPublished pb on p.Id = pb.Id Where pb.Id is NULL")
                 .Select(product => new ProductDtoForPublishing() { Id = product.Id, Name = product.Name, ProductTypeId = product.ProductType.Id })
                 .ToHashSet();
