@@ -22,9 +22,9 @@ namespace Database
             return product.Id;
         }
 
-        public Task<List<ProductTypeDtoWithDateCreated>> GetProductTypeDtos()
+        public Task<List<Models.DTO.ProductType>> GetProductTypeDtos()
         {
-            return _dbContext.Set<ProductType>().Select(p => new ProductTypeDtoWithDateCreated() { Id = p.Id, CreationDate = p.CreationDate, Name = p.Name }).ToListAsync();
+            return _dbContext.Set<Models.DTO.ProductType>().Select(p => new Models.DTO.ProductType() { Id = p.Id, CreationDate = p.CreationDate, Name = p.Name }).ToListAsync();
         }
 
         public Task<HashSet<ProductDtoForPublishing>> GetUnPublishedProducts()

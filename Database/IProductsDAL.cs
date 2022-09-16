@@ -7,7 +7,7 @@ namespace Database
     {
         Task<Guid> CreateProduct(CreateProductInputModel inputModel);
 
-        Task<List<ProductTypeDtoWithDateCreated>> GetProductTypeDtos();
+        Task<List<ProductType>> GetProductTypeDtos();
 
         Task<HashSet<ProductDtoForPublishing>> GetUnPublishedProducts();
 
