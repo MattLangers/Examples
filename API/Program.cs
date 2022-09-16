@@ -7,6 +7,7 @@ using API.Models.Factories;
 using Database.Factories;
 using Database.Models.DTO;
 using API.Models.InputModels;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,13 @@ builder.Services.AddScoped<IProductsToDtoMapper, ProductsToDtoMapper>();
 builder.Services.AddScoped<IProductsDAL, ProductsDAL>();
 builder.Services.AddScoped<IOutputModelFactory, OutputModelFactory>();
 
+var connectionString = builder.Configuration.GetConnectionString("ProductCatalogue");
+
+var corsAllowedOrigins = new List<string>();
+builder.Configuration.GetSection("Cors:AllowedOrigins").Bind(corsAllowedOrigins); ;
+
+var app = builder.Build();
+
 var productCategoryAllowOrigins = "_productCategoryAllowOrigins";
 
 builder.Services.AddCors(options =>
@@ -28,11 +36,9 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: productCategoryAllowOrigins,
                       policy =>
                       {
-                          policy.WithOrigins("http://localhost:5173", "http://localhost:4173");
+                          policy.WithOrigins(corsAllowedOrigins.ToArray());
                       });
 });
-
-var app = builder.Build();
 
 app.UseCors(productCategoryAllowOrigins);
 
