@@ -48,7 +48,7 @@ jobs:
         run: |
           npm install
           echo >> .env.production
-          echo VITE_PRODUCT_CATALOGUE_API_URL="https://mrmclangley${{ inputs.environment }}productcatalogue.web.core.windows.net" >> .env.production
+          echo VITE_PRODUCT_CATALOGUE_API_URL="https://mrmclangley${{ inputs.environment }}productcatalogue.azurewebsites.net" >> .env.production
           npm run build
           
       - name: zip artifact
@@ -97,8 +97,8 @@ jobs:
           resource_group_name=$(terraform output resource_group_name)
           echo "::set-output name=resource_group_name::$resource_group_name"
 
-          app_name=$(terraform output app_name)
-          echo "::set-output name=app_name::$app_name"
+          api_app_name=$(terraform output api_app_name)
+          echo "::set-output name=api_app_name::$api_app_name"
 
           sql_instance_name=$(terraform output sql_instance_name)
           echo "::set-output name=sql_instance_name::$sql_instance_name"
@@ -149,9 +149,9 @@ jobs:
       
       ## A B1 webapp doesn't have slots so I don't think its possible to deploy to a B1 webapp using azure/webapps-deploy@v2
       - name: Deploy web app source code
-        working-directory: "./artifacts/${{inputs.artifactNameAPI}}"
+        working-directory: artifacts/${{inputs.artifactNameAPI}}
         run: | 
-          az webapp deployment source config-zip -g ${{ steps.apply.outputs.resource_group_name }} -n ${{ steps.apply.outputs.app_name }} --src api.zip
+          az webapp deployment source config-zip -g ${{ steps.apply.outputs.resource_group_name }} -n ${{ steps.apply.outputs.api_app_name }} --src api.zip
       
       - name: Acquire connection strings
         id: setSqlConnection
@@ -172,7 +172,7 @@ jobs:
 
       - name: Setup connection string for webapp
         run: | 
-          az webapp config connection-string set -g ${{ steps.apply.outputs.resource_group_name }} -n ${{ steps.apply.outputs.app_name }} -t SQLAzure \
+          az webapp config connection-string set -g ${{ steps.apply.outputs.resource_group_name }} -n ${{ steps.apply.outputs.api_app_name }} -t SQLAzure \
           --settings ProductCatalogue='${{ steps.setSqlConnection.outputs.connection_string_tcp }}'
     
       - name: Azure SQL Deploy

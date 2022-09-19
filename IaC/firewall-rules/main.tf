@@ -11,7 +11,7 @@ data "terraform_remote_state" "pc" {
 
 resource "azurerm_mssql_firewall_rule" "sqlFirewallRules" {
   count            = length(data.terraform_remote_state.pc.outputs.app_outbound_ips)
-  name             = "${data.terraform_remote_state.pc.outputs.app_name}-firewall-${count.index}"
+  name             = "${data.terraform_remote_state.pc.outputs.api_app_name}-firewall-${count.index}"
   server_id        = data.terraform_remote_state.pc.outputs.sql_instance_id
   start_ip_address = "${element(data.terraform_remote_state.pc.outputs.app_outbound_ips, count.index)}"
   end_ip_address   = "${element(data.terraform_remote_state.pc.outputs.app_outbound_ips, count.index)}"
