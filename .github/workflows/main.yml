@@ -2,7 +2,7 @@ name: orchestration
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "*" ]
 
 jobs:
   build:
@@ -12,8 +12,7 @@ jobs:
       artifactNameSql: migration-script
       artifactNameTerraform: terraform
       artifactNamePostman: postman
-      artifactStaticWebsite: product-catalogue-ui
-
+      
   iac:
     needs: build
     uses: ./.github/workflows/infrastructure-create.yml

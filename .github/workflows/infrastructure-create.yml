@@ -37,9 +37,24 @@ jobs:
       id-token: write
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
+
       - uses: actions/download-artifact@v3
         with:
           path: artifacts
+          
+      - name: build static website
+        working-directory: ./UI
+        run: |
+          npm install
+          echo >> .env.production
+          echo VITE_PRODUCT_CATALOGUE_API_URL="https://mrmclangley${{ inputs.environment }}productcatalogue.web.core.windows.net" >> .env.production
+          npm run build
+          
+      - name: zip artifact
+        working-directory: "./UI/.svelte-kit/output"
+        run: | 
+          zip -r ui.zip .
 
       - name: 'Az CLI login'
         uses: azure/login@v1

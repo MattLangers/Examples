@@ -2,7 +2,7 @@ output "resource_group_name" {
   value = azurerm_resource_group.product_catalogue.name
 }
 
-output "app_name" {
+output "api_app_name" {
   value = azurerm_windows_web_app.product_catalogue.name
 }
 
