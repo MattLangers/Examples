@@ -12,12 +12,12 @@ jobs:
       artifactNameSql: migration-script
       artifactNameTerraform: terraform
       artifactNamePostman: postman
-      
+
   iac:
     needs: build
     uses: ./.github/workflows/infrastructure-create.yml
     with:
-      artifactNameAPI: product-catalogue
+      artifactNameAPI: product-catalogue-api
       artifactNameSql: migration-script
       artifactNameTerraform: terraform
       environment: dev
