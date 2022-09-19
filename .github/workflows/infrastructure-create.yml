@@ -49,13 +49,7 @@ jobs:
           npm install
           echo >> .env.production
           echo VITE_PRODUCT_CATALOGUE_API_URL="https://mrmclangley${{ inputs.environment }}productcatalogue.azurewebsites.net" >> .env.production
-          npm run build
           
-      - name: zip artifact
-        working-directory: "./UI/.svelte-kit/output"
-        run: | 
-          zip -r ui.zip .
-
       - name: 'Az CLI login'
         uses: azure/login@v1
         with:
@@ -142,13 +136,23 @@ jobs:
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
           ARM_USE_OIDC: true
 
-      - name: Deploy static web app source code
-        working-directory: "./UI/.svelte-kit/output"
-        run: | 
-          az staticwebapp update -n ${{ steps.apply.outputs.static_website_name }} --source ui.zip
+      - name: Get static website api key
+        id: staticWebConfig
+        run: |
+          api_key=$(az staticwebapp secrets list --name ${{ steps.apply.outputs.static_website_name }}) | ConvertFrom-Json | Select-Object  -Expand  properties | Select apiKey
+          echo "::set-output name=api_key::$api_key"
+
+      - name: Build and deploy static web app
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ steps.staticWebConfig.outputs.api_key }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          action: "upload"
+          app_location: "/UI"
+          output_location: ".svelte-kit/build"
       
       ## A B1 webapp doesn't have slots so I don't think its possible to deploy to a B1 webapp using azure/webapps-deploy@v2
-      - name: Deploy web app source code
+      - name: Deploy api source code
         working-directory: artifacts/${{inputs.artifactNameAPI}}
         run: | 
           az webapp deployment source config-zip -g ${{ steps.apply.outputs.resource_group_name }} -n ${{ steps.apply.outputs.api_app_name }} --src api.zip
