@@ -27,5 +27,5 @@ output "sql_database_name" {
 }
 
 output "static_website_name" {
-  value = product_catalogue.product_catalogue.name
+  value = azurerm_static_site.product_catalogue.name
 }
