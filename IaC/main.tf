@@ -49,7 +49,7 @@ resource "azurerm_mssql_database" "product_catalogue" {
 resource "azurerm_static_site" "product_catalogue" {
   name                = "mrmclangley${var.environment_prefix}productcatalogue"
   resource_group_name = azurerm_resource_group.product_catalogue.name
-  location            = var.resource_group_location
+  location            = "westeurope"
   sku_tier            = "Free"
   sku_size            = "Free"
 }
