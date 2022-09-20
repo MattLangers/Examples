@@ -45,3 +45,12 @@ resource "azurerm_mssql_database" "product_catalogue" {
   max_size_gb    = 2
   sku_name       = "Basic"
 }
+
+# location is not UKSouth as its not possible to create a static site in this location
+resource "azurerm_static_site" "product_catalogue" {
+  name                = "mrmclangley${var.environment_prefix}productcatalogue"
+  resource_group_name = azurerm_resource_group.product_catalogue.name
+  location            = "westeurope"
+  sku_tier            = "Free"
+  sku_size            = "Free"
+}

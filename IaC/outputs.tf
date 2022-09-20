@@ -2,7 +2,7 @@ output "resource_group_name" {
   value = azurerm_resource_group.product_catalogue.name
 }
 
-output "app_name" {
+output "api_app_name" {
   value = azurerm_windows_web_app.product_catalogue.name
 }
 
@@ -24,4 +24,8 @@ output "sql_instance_id" {
 output "sql_database_name" {
   value = azurerm_mssql_database.product_catalogue.name
   sensitive   = true
+}
+
+output "static_website_name" {
+  value = azurerm_static_site.product_catalogue.name
 }

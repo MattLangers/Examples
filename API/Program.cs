@@ -21,6 +21,11 @@ builder.Services.AddScoped<IProductsToDtoMapper, ProductsToDtoMapper>();
 builder.Services.AddScoped<IProductsDAL, ProductsDAL>();
 builder.Services.AddScoped<IOutputModelFactory, OutputModelFactory>();
 
+var connectionString = builder.Configuration.GetConnectionString("ProductCatalogue");
+
+var corsAllowedOrigins = new List<string>();
+builder.Configuration.GetRequiredSection("Cors:AllowedOrigins").Bind(corsAllowedOrigins); ;
+
 var productCategoryAllowOrigins = "_productCategoryAllowOrigins";
 
 builder.Services.AddCors(options =>
@@ -28,7 +33,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: productCategoryAllowOrigins,
                       policy =>
                       {
-                          policy.WithOrigins("http://localhost:5173", "http://localhost:4173");
+                          policy.WithOrigins(corsAllowedOrigins.ToArray());
                       });
 });
 
@@ -57,11 +62,11 @@ app.MapGet("/products", (
                 : Results.NotFound();
 });
 
-app.MapPost("/product", async (
+app.MapPost("/products", async (
     ILogger<Program> logger,
     IProductsDAL productsDAL,
     IOutputModelFactory outputModelFactory,
-    [FromBody]CreateProductInputModel inputModel) =>
+    [FromBody]Product inputModel) =>
 {
     return await CreateProduct(logger, productsDAL, outputModelFactory, inputModel);
 });
@@ -80,7 +85,7 @@ static async Task<IResult> CreateProduct(
     ILogger<Program> logger,
     IProductsDAL productsDAL, 
     IOutputModelFactory outputModelFactory, 
-    CreateProductInputModel inputModel)
+    Product inputModel)
 {
     /* Unable to keep this logic in the main path of the request end-point as visual studio was 
      * rendering an error in the designer */

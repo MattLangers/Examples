@@ -11,7 +11,7 @@ namespace Database.Tests.Search.DatabaseSearchOrchestrator.SearchProducts
 {
     public sealed class DatabaseSearchOrchestrator_SearchProducts_No_SearchCriteria_Tests
     {
-        private readonly static Product product = new() { Name = "Name" };
+        private readonly static Models.Product product = new() { Name = "Name" };
 
         private readonly ProductSearchInputModel productSearchInputModel = new ProductSearchInputModel();
 
@@ -36,7 +36,7 @@ namespace Database.Tests.Search.DatabaseSearchOrchestrator.SearchProducts
 
             autoMocker.Use<ISearchProductSpecificationFactory>(m => m.CreateSearchForAllProducts() == new SearchAllProductSpecification());
 
-            autoMocker.Use<IProductsToDtoMapper>(m => m.Map(It.Is<IQueryable<Product>>(m => m.Contains(product))) == expectedResult);
+            autoMocker.Use<IProductsToDtoMapper>(m => m.Map(It.Is<IQueryable<Models.Product>>(m => m.Contains(product))) == expectedResult);
 
             result = autoMocker.CreateInstance<Database.Search.DatabaseSearchOrchestrator>().SearchProducts(productSearchInputModel);
         }
