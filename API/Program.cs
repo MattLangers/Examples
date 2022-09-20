@@ -24,7 +24,7 @@ builder.Services.AddScoped<IOutputModelFactory, OutputModelFactory>();
 var connectionString = builder.Configuration.GetConnectionString("ProductCatalogue");
 
 var corsAllowedOrigins = new List<string>();
-builder.Configuration.GetSection("Cors:AllowedOrigins").Bind(corsAllowedOrigins); ;
+builder.Configuration.GetRequiredSection("Cors:AllowedOrigins").Bind(corsAllowedOrigins); ;
 
 var productCategoryAllowOrigins = "_productCategoryAllowOrigins";
 

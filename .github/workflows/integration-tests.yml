@@ -6,6 +6,13 @@ on:
       artifactNamePostman:
         required: true
         type: string
+    secrets:
+      AZURE_CLIENT_ID:
+        required: true
+      AZURE_TENANT_ID:
+        required: true
+      AZURE_SUBSCRIPTION_ID:
+        required: true
 
 jobs:
   postman:
@@ -33,11 +40,55 @@ jobs:
         run: mkdir -p testResults
 
       - name: Run POSTMAN collection
-        run: |
-          newman run 'artifacts/Product Catalogue.postman_collection.json' -e 'artifacts/Product Catalogue.postman_environment.json' -r htmlextra --reporter-htmlextra-export testResults/htmlreport.html --reporter-htmlextra-darkTheme  > testResults/runreport1.html
+        run: >
+          newman run 'artifacts/Product Catalogue.postman_collection.json' 
+          -e 'artifacts/Product Catalogue.postman_environment.json' 
+          -r htmlextra 
+          --reporter-htmlextra-export testResults/htmlreport.html 
+          --reporter-htmlextra-darkTheme  > testResults/runreport1.html
 
       - name: Output the run Details
         uses: actions/upload-artifact@v2
         with:
           name: postman.tests.result
           path: 'testResults'
+  playwright:
+    permissions:
+      id-token: write
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+            fetch-depth: 0
+
+      - name: 'Az CLI login'
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      
+      # TODO: Research how to pass in the static web site url (static_website_url) name via job outputs
+      - name: Setup and run playwright tests
+        working-directory: "UI"
+        run: > 
+          $(${{ needs.jobs.infrastructure_create.outputs.static_website_url }}) 
+          
+          New-Item .env.development -type file
+
+          $url =  'https://' + (az staticwebapp show --name mrmclangleydevproductcatalogue --query defaultHostname --output tsv) + '/'
+
+          $($url)
+          
+          Add-Content -Path .env.development -Value $('PLAYWRIGHT_BASE_URL='+$url)
+
+          Get-Content -Path .env.development
+
+          npm install
+          
+          npx playwright install   
+
+          npx playwright test
+  
+      - name: 'Logout az'
+        run: az logout

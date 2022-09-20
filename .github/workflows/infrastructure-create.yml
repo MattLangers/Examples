@@ -30,26 +30,37 @@ on:
         required: true
       AZURE_SQL_DATABASE_PRODUCTCATALOGUE_CONNECTION_STRING:
         required: true
+    outputs:
+      static_website_url:
+        value: ${{ jobs.infrastructure_create.outputs.static_website_url }}
 
 jobs:
   infrastructure_create:
     permissions:
       id-token: write
     runs-on: ubuntu-latest
+    outputs:
+      static_website_url: ${{ steps.staticWebSiteSettings.outputs.static_website_url }}
     steps:
       - uses: actions/checkout@v3
+        with:
+            fetch-depth: 0
 
       - uses: actions/download-artifact@v3
         with:
           path: artifacts
-          
+
       - name: build static website
         working-directory: ./UI
-        run: |
+        run: >
           npm install
+
           echo >> .env.production
-          echo VITE_PRODUCT_CATALOGUE_API_URL="https://mrmclangley${{ inputs.environment }}productcatalogue.azurewebsites.net" >> .env.production
           
+          echo VITE_PRODUCT_CATALOGUE_API_URL="https://mrmclangley${{ inputs.environment }}productcatalogue.azurewebsites.net/" >> .env.production
+          
+          npm run build
+
       - name: 'Az CLI login'
         uses: azure/login@v1
         with:
@@ -75,7 +86,11 @@ jobs:
       - name: Terraform Plan Main
         id: plan
         working-directory: "./artifacts/${{ inputs.artifactNameTerraform }}"
-        run: terraform plan -out main.tfplan -no-color -var sql_instance_administrator_login_username="${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME }}" -var sql_instance_administrator_login_password="${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD }}" -var environment_prefix="${{ inputs.environment }}" -var sql_instance_name="${{ secrets.AZURE_SQL_INSTANCE_NAME }}"
+        run: > 
+          terraform plan -out main.tfplan -no-color 
+          -var sql_instance_administrator_login_username="${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME }}" 
+          -var sql_instance_administrator_login_password="${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD }}" 
+          -var environment_prefix="${{ inputs.environment }}" -var sql_instance_name="${{ secrets.AZURE_SQL_INSTANCE_NAME }}"
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
@@ -138,46 +153,77 @@ jobs:
 
       - name: Get static website api key
         id: staticWebConfig
-        run: |
-          api_key=$(az staticwebapp secrets list --name ${{ steps.apply.outputs.static_website_name }}) | ConvertFrom-Json | Select-Object  -Expand  properties | Select apiKey
-          echo "::set-output name=api_key::$api_key"
+        run: >
+          $api_key=$(az staticwebapp secrets list --name ${{ steps.apply.outputs.static_website_name }} 
+          --query properties.apiKey 
+          --output tsv)
+
+          Write-Output "::add-mask $($api_key)"
+          
+          Write-Output "::set-output name=api_key::$($api_key)"
+        shell: pwsh
 
       - name: Build and deploy static web app
         uses: Azure/static-web-apps-deploy@v1
         with:
-          azure_static_web_apps_api_token: ${{ steps.staticWebConfig.outputs.api_key }}
+          azure_static_web_apps_api_token: "${{ steps.staticWebConfig.outputs.api_key }}"
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          app_location: "/UI"
-          output_location: ".svelte-kit/build"
+          app_location: "UI/build/static"
+          output_location: ""
+          skip_app_build: true
       
       ## A B1 webapp doesn't have slots so I don't think its possible to deploy to a B1 webapp using azure/webapps-deploy@v2
       - name: Deploy api source code
         working-directory: artifacts/${{inputs.artifactNameAPI}}
-        run: | 
-          az webapp deployment source config-zip -g ${{ steps.apply.outputs.resource_group_name }} -n ${{ steps.apply.outputs.api_app_name }} --src api.zip
+        run: > 
+          az webapp deployment source config-zip 
+          -g ${{ steps.apply.outputs.resource_group_name }} 
+          -n ${{ steps.apply.outputs.api_app_name }} --src api.zip
       
       - name: Acquire connection strings
         id: setSqlConnection
-        run: |
-          $raw_connection_string = $(az sql db show-connection-string -s ${{ steps.apply.outputs.sql_instance_name }} -n ${{ steps.apply.outputs.sql_database_name }} -c ado.net)
+        run: >
+          $raw_connection_string = $(az sql db show-connection-string 
+          -s ${{ steps.apply.outputs.sql_instance_name }} 
+          -n ${{ steps.apply.outputs.sql_database_name }} -c ado.net)
           
-          $connection_string_tcp = $raw_connection_string.Replace("<password>", "${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD }}")
-          $connection_string_tcp = $connection_string_tcp.Replace("<username>", "${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME }}")
+          $connection_string_tcp = 
+          $raw_connection_string.Replace("<password>", "${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD }}")
+          
+          $connection_string_tcp = 
+          $connection_string_tcp.Replace("<username>", "${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME }}")
+          
           Write-Output "::set-output name=connection_string_tcp::'$($connection_string_tcp)'"
           
-          $manual_connection_string = $raw_connection_string.Replace("<password>", "${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD }}")
-          $manual_connection_string = $manual_connection_string.Replace("<username>", "${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME }}")
+          $manual_connection_string = 
+          $raw_connection_string.Replace("<password>", "${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD }}")
+          
+          $manual_connection_string = 
+          $manual_connection_string.Replace("<username>", "${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME }}")
+          
           $manual_connection_string = $manual_connection_string.Replace("Server=tcp:", "Server=")
+          
           $manual_connection_string = $manual_connection_string.Replace(",1433", "")
           
-          Write-Output "::set-output name=manual_connection_string::'$($manual_connection_string)'"
+          Write-Output "::set-output name=manual_connection_string::$($manual_connection_string)"
         shell: pwsh
 
       - name: Setup connection string for webapp
-        run: | 
-          az webapp config connection-string set -g ${{ steps.apply.outputs.resource_group_name }} -n ${{ steps.apply.outputs.api_app_name }} -t SQLAzure \
+        id: staticWebSiteSettings
+        run: > 
+          az webapp config connection-string set -g ${{ steps.apply.outputs.resource_group_name }} 
+          -n ${{ steps.apply.outputs.api_app_name }} -t SQLAzure 
           --settings ProductCatalogue='${{ steps.setSqlConnection.outputs.connection_string_tcp }}'
+
+          $defaultHostName =  'https://' + (az staticwebapp show --name ${{ steps.apply.outputs.static_website_name }} 
+          --query defaultHostname --output tsv)
+
+          az webapp config appsettings set -g ${{ steps.apply.outputs.resource_group_name }}
+          -n ${{ steps.apply.outputs.api_app_name }} --settings Cors__AllowedOrigins__0=$defaultHostName
+          
+          Write-Output "::set-output name=static_website_url::$($defaultHostName)"
+        shell: pwsh
     
       - name: Azure SQL Deploy
         uses: azure/sql-action@v1.3

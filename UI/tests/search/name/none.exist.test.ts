@@ -2,7 +2,15 @@ import { expect, test } from '@playwright/test';
 
 
 test("index page: search name does not exist", async ({ page }) => {
-	await page.goto('/');
+	
+	await Promise.all([
+		page.waitForResponse(
+			response => 
+				response.status() == 200 
+				&& response.url().includes("/products")
+		),
+		await page.goto('/')
+	]);
 
 	const [response] = await Promise.all([
 		page.waitForResponse(
