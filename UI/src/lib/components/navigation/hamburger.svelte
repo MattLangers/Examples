@@ -1,13 +1,13 @@
 <script>
 	export let open = false
 </script>
-
+<div class="show_on_small_screens">
 <button class="text-gray-500 
                 hover:text-gray-700 
                 cursor-pointer 
                 mr-4 border-none 
                 focus:outline-none
-                " 
+                "
             class:open 
             on:click={() => open = !open}>
 
@@ -17,7 +17,7 @@
 		<line id="bottom" x1=0 y1=22 x2=32 y2=22/>
 	</svg>
 </button>
-
+</div>
 <style>
 	svg {
 		min-height: 24px;

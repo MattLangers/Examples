@@ -28,21 +28,31 @@
     </div>
 </header>
 
-<div class="w-full flex flex-col sm:flex-row flex-wrap sm:flex-nowrap py-4 flex-grow">
-    <!-- fixed-width -->
-    <div class="w-fixed w-full flex-shrink flex-grow-0 px-4">
+<div class="flex">
+    <div class="grow w-15 pt-2.5 hide_on_small_screens">
         <LeftHandNavigation></LeftHandNavigation>
     </div>
-    <main class="w-full flex-grow px-3">
-        <div class="grid grid-cols-2 gap-3">
+    <div class="grow h-14 pr-10">
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
             {#each products as product}
                 <ProductComponent product={product}></ProductComponent>
             {:else}
                 <Loader />
             {/each}
         </div>
+    </div>
+  </div>
+
+
+<div class="w-full flex flex-col sm:flex-row flex-wrap sm:flex-nowrap py-4 flex-grow">
+    <!-- fixed-width -->
+    <div class="w-fixed w-full flex-shrink flex-grow-0 px-4 hide_on_small_screens">
+        
+    </div>
+    <main class="w-full flex-grow px-3">
+        
     </main>
-    <div class="w-fixed w-full flex-shrink flex-grow-0 px-2">
+    <div class="w-fixed w-full flex-shrink flex-grow-0 px-2 hide_on_small_screens">
         <!-- fixed-width -->
         <div class="flex sm:flex-col px-2">
             <!-- right -->
