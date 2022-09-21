@@ -6,6 +6,9 @@
 	import type { QueryStringParams } from "src/models/query.string.params";
 	import { each } from "svelte/internal";
     import { variables } from '../variables';
+	import ProductComponent from "$lib/components/products/product.svelte";
+	import Footer from "$lib/components/footer/footer.svelte";
+	import Logo from "$lib/components/header/logo.svelte";
 
     let products: Product[] = [];
     let productTypes: ProductType[] = [];
@@ -45,11 +48,7 @@
 
 <header class="bg-white text-black p-3 border border-solid border-gray-100">
     <div class="flex justify-between items-center p-3">
-        <div>
-            <a href="/" class="font-black font-weight: 900" alt="Matthew Langley: product catalogue">
-                ML
-            </a>
-        </div>
+        <Logo></Logo>
         <div class="flex items-center">   
             <label for="simple-search" class="sr-only">Search</label>
             <div class="relative w-full">
@@ -155,17 +154,7 @@
     <main class="w-full flex-grow px-3">
         <span>Product count: <span id="product-count">{products.length}</span></span>
         {#each products as product}
-            <div class="p-2 product-shell">
-                <div class="block p-6 rounded-lg shadow-lg bg-white max-w-sm">
-                    <h5 class="text-gray-900 text-xl leading-tight font-medium mb-2">{product.name}</h5>
-                    <p class="text-gray-700 text-base mb-4">
-                        Product type: {product.productType.name}
-                    </p>
-                    <p class="text-gray-700 text-base">
-                        Product id: {product.id}
-                    </p>
-                </div>
-            </div>
+            <ProductComponent product={product}></ProductComponent>
         {/each}
     </main>
     <div class="w-fixed w-full flex-shrink flex-grow-0 px-2">
@@ -175,6 +164,4 @@
         </div>
     </div>
 </div>
-<footer class="bg-white mt-auto">
-    
-</footer>
+<Footer></Footer>
