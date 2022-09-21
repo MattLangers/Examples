@@ -40,7 +40,7 @@ jobs:
       id-token: write
     runs-on: ubuntu-latest
     outputs:
-      static_website_url: ${{ steps.staticWebSiteSettings.outputs.static_website_url }}
+      static_website_url: ${{ steps.static_website_settings.outputs.static_website_url }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -210,19 +210,19 @@ jobs:
         shell: pwsh
 
       - name: Setup connection string for webapp
-        id: staticWebSiteSettings
+        id: static_website_settings
         run: > 
           az webapp config connection-string set -g ${{ steps.apply.outputs.resource_group_name }} 
           -n ${{ steps.apply.outputs.api_app_name }} -t SQLAzure 
           --settings ProductCatalogue='${{ steps.setSqlConnection.outputs.connection_string_tcp }}'
 
-          $defaultHostName =  'https://' + (az staticwebapp show --name ${{ steps.apply.outputs.static_website_name }} 
+          $static_website_url =  'https://' + (az staticwebapp show --name ${{ steps.apply.outputs.static_website_name }} 
           --query defaultHostname --output tsv)
 
           az webapp config appsettings set -g ${{ steps.apply.outputs.resource_group_name }}
-          -n ${{ steps.apply.outputs.api_app_name }} --settings Cors__AllowedOrigins__0=$defaultHostName
+          -n ${{ steps.apply.outputs.api_app_name }} --settings Cors__AllowedOrigins__0=$static_website_url
           
-          Write-Output "::set-output name=static_website_url::$($defaultHostName)"
+          Write-Output "::set-output name=static_website_url::$($static_website_url)"
         shell: pwsh
     
       - name: Azure SQL Deploy
