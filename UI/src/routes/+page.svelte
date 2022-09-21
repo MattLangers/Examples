@@ -1,14 +1,15 @@
 <script lang="ts">
     import "../app.css";
     import { onMount } from "svelte";
-    import type { Product } from '../models/product'
-	import type { ProductType } from "src/models/productType";
-	import type { QueryStringParams } from "src/models/query.string.params";
+    import type { Product } from "$lib/models/product"
+	import type { ProductType } from "$lib/models/productType";
+	import type { QueryStringParams } from "$lib/models/query.string.params";
 	import { each } from "svelte/internal";
     import { variables } from '../variables';
 	import ProductComponent from "$lib/components/products/product.svelte";
 	import Footer from "$lib/components/footer/footer.svelte";
 	import Logo from "$lib/components/header/logo.svelte";
+	import LeftHandNavigation from "$lib/components/navigation/left.hand.nav.svelte";
 
     let products: Product[] = [];
     let productTypes: ProductType[] = [];
@@ -138,18 +139,7 @@
 <div class="w-full flex flex-col sm:flex-row flex-wrap sm:flex-nowrap py-4 flex-grow">
     <!-- fixed-width -->
     <div class="w-fixed w-full flex-shrink flex-grow-0 px-4">
-        <div class="sticky top-0 w-full h-full">
-            <div class="">
-                <div class="flex items-center rounded-md p-1.5 bg-green-400 text-white">
-                    <svg aria-hidden="true" class="mr-2.5 h-5 w-5 flex-none stroke-white" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
-                    View/Search products
-                </div>
-                <div class="flex items-center rounded-md p-1.5">
-                    <svg class="mr-2.5 h-5 w-5 flex-none stroke-slate-400" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                    Create new product
-                </div>
-            </div>
-        </div>
+        <LeftHandNavigation></LeftHandNavigation>
     </div>
     <main class="w-full flex-grow px-3">
         <span>Product count: <span id="product-count">{products.length}</span></span>
