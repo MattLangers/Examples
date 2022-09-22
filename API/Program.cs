@@ -33,7 +33,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: productCategoryAllowOrigins,
                       policy =>
                       {
-                          policy.WithOrigins(corsAllowedOrigins.ToArray());
+                          policy.WithOrigins(corsAllowedOrigins.ToArray()).AllowAnyHeader();
                       });
 });
 

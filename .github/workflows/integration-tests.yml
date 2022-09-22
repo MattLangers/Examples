@@ -6,13 +6,9 @@ on:
       artifactNamePostman:
         required: true
         type: string
-    secrets:
-      AZURE_CLIENT_ID:
+      static_website_url:
         required: true
-      AZURE_TENANT_ID:
-        required: true
-      AZURE_SUBSCRIPTION_ID:
-        required: true
+        type: string
 
 jobs:
   postman:
@@ -60,15 +56,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
             fetch-depth: 0
-
-      - name: 'Az CLI login'
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       
-      # TODO: Research how to pass in the static web site url (static_website_url) name via job outputs
       - name: Setup and run playwright tests
         working-directory: "UI"
         run: > 
@@ -76,19 +64,12 @@ jobs:
           
           New-Item .env.development -type file
 
-          $url =  'https://' + (az staticwebapp show --name mrmclangleydevproductcatalogue --query defaultHostname --output tsv) + '/'
-
-          $($url)
+          $(${{ inputs.static_website_url }})
           
-          Add-Content -Path .env.development -Value $('PLAYWRIGHT_BASE_URL='+$url)
-
-          Get-Content -Path .env.development
+          Add-Content -Path .env.development -Value $('PLAYWRIGHT_BASE_URL=${{ inputs.static_website_url }}/')
 
           npm install
           
           npx playwright install   
 
           npx playwright test
-  
-      - name: 'Logout az'
-        run: az logout
