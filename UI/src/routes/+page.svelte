@@ -11,6 +11,7 @@
 	import Loading from "$lib/components/search/loading.svelte";
 
     let products: Product[] = [];
+    let searchProductsCompleted = false;
     let open = false;
 </script>
 
@@ -20,7 +21,7 @@
     <div class="flex justify-between items-center p-3">
         <Logo></Logo>
         <div class="flex items-center fade_in_search_area">   
-            <Search bind:products/>
+            <Search bind:products bind:searchProductsCompleted/>
         </div>
         <div>
             <TopRightHandNav bind:sidebar={open}/>
@@ -34,11 +35,13 @@
     </div>
     <div class="grow h-14 pr-10">
         <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-            {#each products as product}
-                <ProductComponent product={product}></ProductComponent>
+            {#if searchProductsCompleted}
+                {#each products as product}
+                    <ProductComponent product={product}></ProductComponent>
+                {/each}
             {:else}
                 <Loading />
-            {/each}
+            {/if}
         </div>
     </div>
   </div>

@@ -6,6 +6,7 @@
 	import { onMount } from 'svelte';
 
 	export let products: Product[] = [];
+    export let searchProductsCompleted = false;
 
 	let searchText = '';
 	let productTypeSelected: ProductType;
@@ -13,9 +14,11 @@
 	let productTypes: ProductType[] = [];
 
 	var getProductTypes = async function (): Promise<void> {
-		const response = await fetch(variables.api_URL + 'product-types');
+		searchProductsCompleted = false;
+        const response = await fetch(variables.api_URL + 'product-types');
 		const data = await response.json();
 		productTypes = data;
+        searchProductsCompleted = true;
 	};
 
 	var getProducts = async function (productType?: ProductType, searchText?: string): Promise<void> {
