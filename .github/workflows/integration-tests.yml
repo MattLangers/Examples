@@ -60,11 +60,7 @@ jobs:
       - name: Setup and run playwright tests
         working-directory: "UI"
         run: > 
-          $(${{ needs.jobs.infrastructure_create.outputs.static_website_url }}) 
-          
           New-Item .env.development -type file
-
-          $(${{ inputs.static_website_url }})
           
           Add-Content -Path .env.development -Value $('PLAYWRIGHT_BASE_URL=${{ inputs.static_website_url }}/')
 
