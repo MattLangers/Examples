@@ -1,6 +1,13 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	export let open = false;
 	import { NavigationHelper } from './helpers/navigationHelper';
+
+	let currentPath = "";
+	onMount(() => {
+		currentPath = window.location.pathname;
+		console.log(currentPath);
+	});
 
 	let navs = new NavigationHelper().navigation;
 </script>
@@ -11,7 +18,7 @@
 			<h3>Navigation</h3>
 		</div>
 		{#each navs as navigation}
-			<div class="py-6 px-8">
+			<div class="py-6 px-8 {currentPath === navigation.href ? 'bg-green-400 text-white' : ''}">
 				<div class="-my-2 items-start space-y-2">
 					<a href={navigation.href} class="block">{navigation.name}</a>
 				</div>

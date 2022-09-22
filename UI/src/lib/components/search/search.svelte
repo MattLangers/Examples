@@ -4,20 +4,23 @@
 	import { variables } from '../../../variables';
 	import type { QueryStringParams } from '$lib/models/query.string.params';
 	import { onMount } from 'svelte';
-
+	import { productTypes as storeProductTypes } from "$lib/components/products/product.type.store"
 	export let products: Product[] = [];
     export let searchProductsCompleted = false;
 
 	let searchText = '';
 	let productTypeSelected: ProductType;
-
 	let productTypes: ProductType[] = [];
+
+	storeProductTypes.subscribe((productTypeValues) => {
+		productTypes = productTypeValues;
+	});
 
 	var getProductTypes = async function (): Promise<void> {
 		searchProductsCompleted = false;
         const response = await fetch(variables.api_URL + 'product-types');
 		const data = await response.json();
-		productTypes = data;
+		storeProductTypes.update((v) => v = data);
         searchProductsCompleted = true;
 	};
 

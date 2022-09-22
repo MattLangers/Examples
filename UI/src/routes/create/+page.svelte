@@ -1,14 +1,12 @@
 <script lang="ts">
-    import "../app.css";
+    import "../../app.css";
     import type { Product } from "$lib/models/product"
-	import ProductComponent from "$lib/components/products/product.card.svelte";
 	import Footer from "$lib/components/footer/footer.svelte";
 	import Logo from "$lib/components/header/logo.svelte";
 	import LeftHandNavigation from "$lib/components/navigation/left.hand.nav.svelte";
 	import Sidebar from "$lib/components/navigation/sidebar.svelte";
 	import TopRightHandNav from "$lib/components/navigation/top.right.hand.nav.svelte";
-	import Search from "$lib/components/search/search.svelte";
-	import Loading from "$lib/components/search/loading.svelte";
+    import CreateProduct from "$lib/components/products/create.product.svelte"
 
     let products: Product[] = [];
     let searchProductsCompleted = false;
@@ -20,8 +18,8 @@
 <header class="bg-white text-black p-3 border border-solid border-gray-100">
     <div class="flex justify-between items-center p-3">
         <Logo></Logo>
-        <div class="flex items-center fade_in_search_area">   
-            <Search bind:products bind:searchProductsCompleted/>
+        <div>   
+            <p class="text-xl font-bold">Create product</p>
         </div>
         <div>
             <TopRightHandNav bind:sidebar={open}/>
@@ -34,15 +32,7 @@
         <LeftHandNavigation></LeftHandNavigation>
     </div>
     <div class="grow h-14 pr-10">
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-            {#if searchProductsCompleted}
-                {#each products as product}
-                    <ProductComponent product={product}></ProductComponent>
-                {/each}
-            {:else}
-                <Loading />
-            {/if}
-        </div>
+        <CreateProduct />
     </div>
   </div>
 
