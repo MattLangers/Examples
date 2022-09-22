@@ -8,8 +8,6 @@
 	import TopRightHandNav from "$lib/components/navigation/top.right.hand.nav.svelte";
     import CreateProduct from "$lib/components/products/create.product.svelte"
 
-    let products: Product[] = [];
-    let searchProductsCompleted = false;
     let open = false;
 </script>
 

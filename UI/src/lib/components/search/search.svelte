@@ -32,7 +32,7 @@
 		}
 
 		if (productType !== undefined && productType.id !== undefined) {
-			querystringParameters['product-type'] = productType.id;
+			querystringParameters['product-type'] = productType.id.toString();
 		}
 
 		let url =
