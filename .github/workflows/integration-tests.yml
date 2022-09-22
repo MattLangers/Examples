@@ -64,7 +64,7 @@ jobs:
 
           Write-Output ${{ inputs.static_website_url }}
           
-          Add-Content -Path .env.development -Value 'PLAYWRIGHT_BASE_URL=${{ inputs.static_website_url }}/'
+          Add-Content -Path .env.development -Value 'PLAYWRIGHT_BASE_URL="${{ inputs.static_website_url }}/"'
 
           npm install
           
