@@ -26,7 +26,7 @@
 </header>
 
 <div class="flex">
-    <div class="grow w-15 pt-2.5 hide_on_small_screens">
+    <div class="w-15 pt-2.5 hide_on_small_screens">
         <LeftHandNavigation></LeftHandNavigation>
     </div>
     <div class="grow h-14 pr-10">

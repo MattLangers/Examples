@@ -5,6 +5,8 @@
 	import type { QueryStringParams } from '$lib/models/query.string.params';
 	import { onMount } from 'svelte';
 	import { productTypes as storeProductTypes } from "$lib/components/products/product.type.store"
+	import ProdcuctTypeSelectElement from '$lib/components/products/product.type.select.element.svelte';
+
 	export let products: Product[] = [];
     export let searchProductsCompleted = false;
 
@@ -48,7 +50,7 @@
 </script>
 
 <label for="simple-search" class="sr-only">Search</label>
-<div class="relative w-full">
+<div class="relative w-full mr-2">
 	<div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
 		<svg
 			aria-hidden="true"
@@ -66,7 +68,7 @@
 	<input
 		bind:value={searchText}
 		type="text"
-		id="simple-search"
+		id="search-box"
 		class="bg-gray-50 
                     border border-gray-300 
                     text-gray-900 
@@ -75,7 +77,7 @@
                     focus:ring-blue-500 
                     focus:border-blue-500 
                     block w-full 
-                    pl-10 p-2.5 
+                    pl-10 p-2 
                     dark:bg-white-700 
                     dark:border-gray-300 
                     dark:placeholder-gray-400 
@@ -86,35 +88,7 @@
 		required
 	/>
 </div>
-<select
-	id="product-type"
-	class="form-select 
-                    appearance-none
-                    bg-gray-50
-                    block
-                    px-4
-                    py-2
-                    text-base
-                    font-normal
-                    text-gray-700
-                    bg-white bg-clip-padding bg-no-repeat
-                    border border-gray-300
-                    rounded-lg
-                    transition
-                    ease-in-out
-                    ml-2
-                    focus:text-gray-700 
-                    focus:bg-white 
-                    focus:border-blue-600 
-                    focus:outline-none"
-	aria-label="Product types"
-	bind:value={productTypeSelected}
->
-	<option selected>Product type</option>
-	{#each productTypes as productType}
-		<option value={productType}>{productType.name}</option>
-	{/each}
-</select>
+<ProdcuctTypeSelectElement bind:productTypeSelected />
 <button
 	type="submit"
 	on:click={() => {

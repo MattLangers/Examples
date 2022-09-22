@@ -2,7 +2,6 @@
 	import ProdcuctTypeSelectElement from '$lib/components/products/product.type.select.element.svelte';
 	import type { ProductType } from '$lib/models/productType';
 	import { variables } from '../../../variables';
-	import Loading from '$lib/components/search/loading.svelte';
 
 	let productTypeSelected: ProductType;
 	let product_name = '';
@@ -44,19 +43,20 @@
 			type="text"
 			id="name"
 			class="bg-gray-50 
-                        border border-gray-300 
-                        text-gray-900 
-                        text-sm 
-                        rounded-lg 
-                        focus:ring-blue-500 
-                        focus:border-blue-500 
-                        pl-10 p-2.5 
-                        dark:bg-white-700 
-                        dark:border-gray-300 
-                        dark:placeholder-gray-400 
-                        dark:text-gray 
-                        dark:focus:ring-blue-500 
-                        dark:focus:border-blue-500"
+            border border-gray-300 
+            text-gray-900 
+            text-sm 
+            rounded-lg 
+            focus:ring-blue-500 
+            focus:border-blue-500 
+            block w-full 
+            pl-10 p-2 
+            dark:bg-white-700 
+            dark:border-gray-300 
+            dark:placeholder-gray-400 
+            dark:text-gray 
+            dark:focus:ring-blue-500 
+            dark:focus:border-blue-500"
 			placeholder="Product name"
 			autocomplete="product-name"
 		/>
