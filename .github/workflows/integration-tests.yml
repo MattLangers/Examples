@@ -1,4 +1,4 @@
-name: build-test-base
+name: integration_test_orchestration
 
 on:
   workflow_call:
@@ -48,6 +48,7 @@ jobs:
         with:
           name: postman.tests.result
           path: 'testResults'
+          
   playwright:
     permissions:
       id-token: write
@@ -64,8 +65,10 @@ jobs:
 
           Write-Output ${{ inputs.static_website_url }}
           
+          Add-Content -Path .env.development -Value 'VITE_PRODUCT_CATALOGUE_API_URL="https://localhost"'
+          
           Add-Content -Path .env.development -Value 'PLAYWRIGHT_BASE_URL="${{ inputs.static_website_url }}/"'
-
+          
           npm install
           
           npx playwright install   
