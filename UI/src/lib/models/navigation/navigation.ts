@@ -5,4 +5,5 @@ export type Navigation = {
 	href: string
     type: NavigationTypeEnum
 	image: NavigationImageEnum
+	class_name_for_tests: string 
 }

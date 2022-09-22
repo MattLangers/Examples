@@ -124,6 +124,4 @@
 	>
 	<span class="sr-only">Search</span>
 </button>
-<span id="product-count" class="pl-2.5 hide_on_small_screens fade_out_search_area"
-	>{products.length}</span
->
+<span id="product-count" class="pl-2.5">{products.length}</span>

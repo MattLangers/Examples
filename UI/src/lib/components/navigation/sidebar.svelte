@@ -19,7 +19,7 @@
 		{#each navs as navigation}
 			<div class="py-6 px-8 {currentPath === navigation.href ? 'bg-green-400 text-white' : ''}">
 				<div class="-my-2 items-start space-y-2">
-					<a href={navigation.href} class="block">{navigation.name}</a>
+					<a href={navigation.href} class="block {navigation.class_name_for_tests}">{navigation.name}</a>
 				</div>
 			</div>
 		{/each}

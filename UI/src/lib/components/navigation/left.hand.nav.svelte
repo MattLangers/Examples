@@ -14,11 +14,11 @@
 </script>
 
 <div class="top-0 h-full">
-    <div>
+    <div id="left-hand-nav">
         {#each navs as navigation}
             <div class="flex items-center rounded-md p-1.5 {currentPath === navigation.href ? 'bg-green-400 text-white' : ''}">
                 <svelte:component this={navigationImageHelper.GiveMeImage(navigation.image)} />
-                <a href="{navigation.href}">{navigation.name}</a>
+                <a href="{navigation.href}" class="{navigation.class_name_for_tests}">{navigation.name}</a>
             </div>
         {/each}
     </div>
