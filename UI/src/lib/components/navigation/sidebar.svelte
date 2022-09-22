@@ -6,7 +6,6 @@
 	let currentPath = "";
 	onMount(() => {
 		currentPath = window.location.pathname;
-		console.log(currentPath);
 	});
 
 	let navs = new NavigationHelper().navigation;

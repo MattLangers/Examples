@@ -21,9 +21,11 @@
 	var getProductTypes = async function (): Promise<void> {
 		searchProductsCompleted = false;
         const response = await fetch(variables.api_URL + 'product-types');
-		const data = await response.json();
-		storeProductTypes.update((v) => v = data);
+		const data = await response.json().then(data => data as ProductType[]);
+		data.unshift({name: "Please select", id: 0})
+		storeProductTypes.update((v) => v = <never[]>data);
         searchProductsCompleted = true;
+		productTypeSelected = productTypes[0];
 	};
 
 	var getProducts = async function (productType?: ProductType, searchText?: string): Promise<void> {

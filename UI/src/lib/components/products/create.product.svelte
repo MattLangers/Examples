@@ -2,10 +2,16 @@
 	import ProdcuctTypeSelectElement from '$lib/components/products/product.type.select.element.svelte';
 	import type { ProductType } from '$lib/models/productType';
 	import { variables } from '../../../variables';
+	import { productTypes as storeProductTypes } from '$lib/components/products/product.type.store';
 
 	let productTypeSelected: ProductType;
 	let product_name = '';
 	let creatingProduct = false;
+    let productTypes: ProductType[] = [];
+
+	storeProductTypes.subscribe((productTypeValues) => {
+		productTypes = productTypeValues;
+	});
 
 	async function handleSubmit() {
 		if (product_name.length > 0 && productTypeSelected.id > 0) {
@@ -20,6 +26,7 @@
 
 	function CompletedCreationRequest() {
 		product_name = '';
+        productTypeSelected = productTypes[0];
 	}
 
 	var createProduct = async function (name: string, productTypeId: number): Promise<boolean> {
@@ -36,35 +43,34 @@
 	};
 </script>
 
-<div class="grid grid-cols-4 pl-5 pt-5 items-center">
+<div class="flex flex-wrap pl-5 pt-5 items-center">
 	<div class="">
 		<input
 			bind:value={product_name}
 			type="text"
 			id="name"
 			class="bg-gray-50 
-            border border-gray-300 
-            text-gray-900 
-            text-sm 
-            rounded-lg 
-            focus:ring-blue-500 
-            focus:border-blue-500 
-            block w-full 
-            pl-10 p-2 
-            dark:bg-white-700 
-            dark:border-gray-300 
-            dark:placeholder-gray-400 
-            dark:text-gray 
-            dark:focus:ring-blue-500 
-            dark:focus:border-blue-500"
+                        border border-gray-300 
+                        text-gray-900 
+                        text-sm 
+                        rounded-lg 
+                        focus:ring-blue-500 
+                        focus:border-blue-500 
+                        p-2.5 
+                        dark:bg-white-700 
+                        dark:border-gray-300 
+                        dark:placeholder-gray-400 
+                        dark:text-gray 
+                        dark:focus:ring-blue-500 
+                        dark:focus:border-blue-500"
 			placeholder="Product name"
 			autocomplete="product-name"
 		/>
 	</div>
-	<div>
+	<div class="ml-2">
 		<ProdcuctTypeSelectElement bind:productTypeSelected />
 	</div>
-	<div>
+	<div class="ml-2">
 		{#if creatingProduct}
 			<button
 				type="button"
