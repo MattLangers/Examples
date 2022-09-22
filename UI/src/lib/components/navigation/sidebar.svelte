@@ -1,29 +1,33 @@
 <script lang="ts">
-	export let open = false
-	import { NavigationHelper } from "./helpers/navigationHelper";
-	import { NavigationImageHelper } from "$lib/components/navigation/helpers/navigationImageHelper"
-	
-	const navigationImageHelper = new NavigationImageHelper();
-    let navs = new NavigationHelper().navigation
+	export let open = false;
+	import { NavigationHelper } from './helpers/navigationHelper';
+
+	let navs = new NavigationHelper().navigation;
 </script>
 
-<aside class="absolute w-full h-full bg-gray-200 border-r-2 shadow-lg" class:open>
-	<div class="grid grid-cols-2 p-10 w-20">
+<aside class="absolute h-full bg-white border-r-2 shadow-lg" class:open>
+	<nav class="divide-y divide-slate-900/10 text-base leading-7 text-slate-900">
+		<div class="py-6 px-8">
+			<h3>Navigation</h3>
+		</div>
 		{#each navs as navigation}
-			<div class=""><svelte:component this={navigationImageHelper.GiveMeImage(navigation.image)} /></div>
-			<div class=""><a href="{navigation.href}" class="block">{navigation.name}</a></div>
+			<div class="py-6 px-8">
+				<div class="-my-2 items-start space-y-2">
+					<a href={navigation.href} class="block">{navigation.name}</a>
+				</div>
+			</div>
 		{/each}
-	</div>
+	</nav>
 </aside>
 
 <style>
 	aside {
-		left: -100%;
+		right: 100%;
 		transition: left 0.3s ease-in-out;
 		height: 100%;
 	}
-	
+
 	.open {
-		left: 0
+		right: 0;
 	}
 </style>

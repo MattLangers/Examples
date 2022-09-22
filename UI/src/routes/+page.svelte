@@ -8,7 +8,7 @@
 	import Sidebar from "$lib/components/navigation/sidebar.svelte";
 	import TopRightHandNav from "$lib/components/navigation/top.right.hand.nav.svelte";
 	import Search from "$lib/components/search/search.svelte";
-	import Loader from "$lib/components/search/loader.svelte";
+	import Loading from "$lib/components/search/loading.svelte";
 
     let products: Product[] = [];
     let open = false;
@@ -19,7 +19,7 @@
 <header class="bg-white text-black p-3 border border-solid border-gray-100">
     <div class="flex justify-between items-center p-3">
         <Logo></Logo>
-        <div class="flex items-center">   
+        <div class="flex items-center fade_in_search_area">   
             <Search bind:products/>
         </div>
         <div>
@@ -37,7 +37,7 @@
             {#each products as product}
                 <ProductComponent product={product}></ProductComponent>
             {:else}
-                <Loader />
+                <Loading />
             {/each}
         </div>
     </div>
