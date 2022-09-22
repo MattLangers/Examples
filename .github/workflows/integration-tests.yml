@@ -61,8 +61,10 @@ jobs:
         working-directory: "UI"
         run: > 
           New-Item .env.development -type file
+
+          Write-Output ${{ inputs.static_website_url }}
           
-          Add-Content -Path .env.development -Value $('PLAYWRIGHT_BASE_URL=${{ inputs.static_website_url }}/')
+          Add-Content -Path .env.development -Value 'PLAYWRIGHT_BASE_URL=${{ inputs.static_website_url }}/'
 
           npm install
           

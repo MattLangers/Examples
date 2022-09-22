@@ -219,6 +219,8 @@ jobs:
           $static_website_url =  'https://' + (az staticwebapp show --name ${{ steps.apply.outputs.static_website_name }} 
           --query defaultHostname --output tsv)
 
+          Write-Output static_website_url
+
           az webapp config appsettings set -g ${{ steps.apply.outputs.resource_group_name }}
           -n ${{ steps.apply.outputs.api_app_name }} --settings Cors__AllowedOrigins__0=$static_website_url
           
