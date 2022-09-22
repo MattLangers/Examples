@@ -1,4 +1,4 @@
-name: orchestration
+name: build_orchestration
 
 on:
   pull_request:
