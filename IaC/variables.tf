@@ -32,10 +32,6 @@ variable "sql_server_ad_admin_username" {
   default     = "sql_server_ad_admin_username"
 }
 
-variable "sql_server_ad_admin_password" {
-  default     = "sql_server_ad_admin_password"
-}
-
 variable "sql_server_ad_admin_object_id" {
   default     = "sql_server_ad_admin_object_id"
 }
