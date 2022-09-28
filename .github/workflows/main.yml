@@ -2,7 +2,7 @@ name: orchestration
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "0.0.6.azure.ad" ]
 
 jobs:
   build:
