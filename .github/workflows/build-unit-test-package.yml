@@ -10,7 +10,10 @@ on:
       artifactNameAPI:
         required: true
         type: string
-      artifactNameSql:
+      artifactNameSqlMigration:
+        required: true
+        type: string
+      artifactNameSqlAzureAdPermissions:
         required: true
         type: string
       artifactNameTerraform:
@@ -61,8 +64,13 @@ jobs:
 
     - uses: actions/upload-artifact@v3
       with:
-        name: ${{inputs.artifactNameSql}}
+        name: ${{inputs.artifactNameSqlMigration}}
         path: ./sql/product-catalogue-migration-script.sql
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: ${{inputs.artifactNameSqlAzureAdPermissions}}
+        path: ./Database/SQL/
 
     - uses: actions/upload-artifact@v3
       with:

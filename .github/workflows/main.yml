@@ -9,7 +9,8 @@ jobs:
     uses: ./.github/workflows/build-unit-test-package.yml
     with:
       artifactNameAPI: product-catalogue-api
-      artifactNameSql: migration-script
+      artifactNameSqlMigration: migration-script
+      artifactNameSqlAzureAdPermissions: azure-ad-permissions
       artifactNameTerraform: terraform
       artifactNamePostman: postman
 
@@ -18,7 +19,8 @@ jobs:
     uses: ./.github/workflows/infrastructure-create.yml
     with:
       artifactNameAPI: product-catalogue-api
-      artifactNameSql: migration-script
+      artifactNameSqlMigration: migration-script
+      artifactNameSqlAzureAdPermissions: azure-ad-permissions
       artifactNameTerraform: terraform
       environment: dev
     secrets:

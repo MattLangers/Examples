@@ -6,7 +6,10 @@ on:
       artifactNameAPI:
         required: true
         type: string
-      artifactNameSql:
+      artifactNameSqlMigration:
+        required: true
+        type: string
+      artifactNameSqlAzureAdPermissions:
         required: true
         type: string
       artifactNameTerraform:
@@ -155,7 +158,13 @@ jobs:
         uses: azure/sql-action@v1.3
         with:
           connection-string: ${{ secrets.AZURE_SQL_DATABASE_PRODUCTCATALOGUE_CONNECTION_STRING }}
-          sql-file: "./artifacts/${{inputs.artifactNameSql}}/product-catalogue-migration-script.sql"
+          sql-file: "./artifacts/${{inputs.artifactNameSqlMigration}}/product-catalogue-migration-script.sql"
+    
+      - name: Azure SQL Deploy
+        uses: azure/sql-action@v1.3
+        with:
+          connection-string: ${{ secrets.AZURE_SQL_DATABASE_PRODUCTCATALOGUE_CONNECTION_STRING }}
+          sql-file: "./artifacts/${{inputs.artifactNameSqlAzureAdPermissions}}/dev.user.sql"
   
       - name: 'Logout az'
         run: az logout
