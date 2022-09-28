@@ -56,7 +56,7 @@ resource "azurerm_mssql_server" "product_catalogue" {
 }
 
 resource "azurerm_mssql_firewall_rule" "product_catalogue" {
-  count            = length(azurerm_windows_web_app.product_catalogue.possible_outbound_ip_address_list)
+  count            = 19
   name             = "${azurerm_windows_web_app.product_catalogue.name}-firewall-${count.index}"
   server_id        = azurerm_mssql_server.product_catalogue.id
   start_ip_address = "${element(azurerm_windows_web_app.product_catalogue.possible_outbound_ip_address_list, count.index)}"
