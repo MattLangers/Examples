@@ -22,10 +22,6 @@ on:
         required: true
       AZURE_SUBSCRIPTION_ID:
         required: true
-      AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME:
-        required: true
-      AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD:
-        required: true
       AZURE_SQL_INSTANCE_NAME:
         required: true
       AZURE_SQL_DATABASE_PRODUCTCATALOGUE_CONNECTION_STRING:
