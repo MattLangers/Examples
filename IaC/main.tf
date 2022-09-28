@@ -55,6 +55,18 @@ resource "azurerm_mssql_server" "product_catalogue" {
   }
 }
 
+resource "azurerm_mssql_firewall_rule" "product_catalogue" {
+  count            = length(azurerm_windows_web_app.product_catalogue.possible_outbound_ip_address_list)
+  name             = "${azurerm_windows_web_app.product_catalogue.name}-firewall-${count.index}"
+  server_id        = azurerm_mssql_server.product_catalogue.id
+  start_ip_address = "${element(azurerm_windows_web_app.product_catalogue.possible_outbound_ip_address_list, count.index)}"
+  end_ip_address   = "${element(azurerm_windows_web_app.product_catalogue.possible_outbound_ip_address_list, count.index)}"
+
+  depends_on = [
+    azurerm_windows_web_app.product_catalogue
+  ]
+}
+
 resource "azurerm_mssql_database" "product_catalogue" {
   name           = "${var.sql_database_name}_${var.environment_prefix}"
   server_id      = azurerm_mssql_server.product_catalogue.id
@@ -74,5 +86,5 @@ resource "azurerm_static_site" "product_catalogue" {
 }
 
 locals {
-  connection_string = "Server=${var.sql_instance_name}.database.windows.net; Authentication=Active Directory Default; Database=${var.sql_database_name};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Persist Security Info=False;"
+  connection_string = "Server=${var.sql_instance_name}.database.windows.net; Database=${var.sql_database_name}_${var.environment_prefix};Authentication=Active Directory Default;TrustServerCertificate=True;"
 }

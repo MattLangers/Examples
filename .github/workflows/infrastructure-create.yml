@@ -106,12 +106,6 @@ jobs:
           api_app_name=$(terraform output api_app_name)
           echo "::set-output name=api_app_name::$api_app_name"
 
-          sql_instance_name=$(terraform output sql_instance_name)
-          echo "::set-output name=sql_instance_name::$sql_instance_name"
-
-          sql_database_name=$(terraform output sql_database_name)
-          echo "::set-output name=sql_database_name::$sql_database_name"
-
           static_website_name=$(terraform output static_website_name)
           echo "::set-output name=static_website_name::$static_website_name"
 
