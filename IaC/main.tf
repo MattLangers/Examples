@@ -18,12 +18,26 @@ resource "azurerm_windows_web_app" "product_catalogue" {
     service_plan_id     = azurerm_service_plan.product_catalogue.id
     https_only          = true
 
+    identity {
+      type = "SystemAssigned"
+    }
+
     site_config { 
       http2_enabled     = true
       application_stack {
         current_stack     = "dotnet"
         dotnet_version    = "v6.0"
       }
+    }
+
+    app_settings = {
+      "Cors__AllowedOrigins__0" = "http://${azurerm_static_site.product_catalogue.default_host_name}"
+    }
+
+    connection_string {
+      name = "ProductCatalogue"
+      value = local.connection_string
+      type = "SQLAzure"
     }
 }
 
@@ -32,13 +46,17 @@ resource "azurerm_mssql_server" "product_catalogue" {
   resource_group_name          = azurerm_resource_group.product_catalogue.name
   location                     = azurerm_resource_group.product_catalogue.location
   version                      = "12.0"
-  administrator_login          = "${var.sql_instance_administrator_login_username}"
-  administrator_login_password = "${var.sql_instance_administrator_login_password}"
   minimum_tls_version          = "1.2"
+
+  azuread_administrator {
+    login_username = var.sql_server_ad_admin_username
+    object_id      = var.sql_server_ad_admin_object_id
+    azuread_authentication_only  = true
+  }
 }
 
 resource "azurerm_mssql_database" "product_catalogue" {
-  name           = "productCatalogue${var.environment_prefix}"
+  name           = "${var.sql_database_name}_${var.environment_prefix}"
   server_id      = azurerm_mssql_server.product_catalogue.id
   collation      = "SQL_Latin1_General_CP1_CI_AS"
   license_type   = "LicenseIncluded"
@@ -53,4 +71,8 @@ resource "azurerm_static_site" "product_catalogue" {
   location            = "westeurope"
   sku_tier            = "Free"
   sku_size            = "Free"
+}
+
+locals {
+  connection_string = "Server=${var.sql_instance_name}.database.windows.net; Authentication=Active Directory Default; Database=${var.sql_database_name};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Persist Security Info=False;"
 }

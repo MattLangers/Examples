@@ -40,7 +40,7 @@ jobs:
       id-token: write
     runs-on: ubuntu-latest
     outputs:
-      static_website_url: ${{ steps.static_website_settings.outputs.static_website_url }}
+      static_website_url: ${{ steps.apply.outputs.static_website_url }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -88,8 +88,6 @@ jobs:
         working-directory: "./artifacts/${{ inputs.artifactNameTerraform }}"
         run: > 
           terraform plan -out main.tfplan -no-color 
-          -var sql_instance_administrator_login_username="${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME }}" 
-          -var sql_instance_administrator_login_password="${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD }}" 
           -var environment_prefix="${{ inputs.environment }}" -var sql_instance_name="${{ secrets.AZURE_SQL_INSTANCE_NAME }}"
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
@@ -117,34 +115,10 @@ jobs:
 
           static_website_name=$(terraform output static_website_name)
           echo "::set-output name=static_website_name::$static_website_name"
+
+          static_website_name_default_host_name=$(terraform output static_website_name_default_host_name)
+          echo "::set-output name=static_website_url::$static_website_name_default_host_name"
         
-        env:
-          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          ARM_USE_OIDC: true
-
-      - name: Init Terraform Firewall rules
-        working-directory: "./artifacts/${{inputs.artifactNameTerraform}}/firewall-rules"
-        run: terraform init
-        env:
-          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          ARM_USE_OIDC: true
-
-      - name: Plan Terraform Firewall rules
-        working-directory: "./artifacts/${{inputs.artifactNameTerraform}}/firewall-rules"
-        run: terraform plan -out main.tfplan -no-color
-        env:
-          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          ARM_USE_OIDC: true
-
-      - name: Apply Terraform Firewall rules
-        working-directory: "./artifacts/${{inputs.artifactNameTerraform}}/firewall-rules"
-        run: terraform apply main.tfplan
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
@@ -180,52 +154,6 @@ jobs:
           az webapp deployment source config-zip 
           -g ${{ steps.apply.outputs.resource_group_name }} 
           -n ${{ steps.apply.outputs.api_app_name }} --src api.zip
-      
-      - name: Acquire connection strings
-        id: setSqlConnection
-        run: >
-          $raw_connection_string = $(az sql db show-connection-string 
-          -s ${{ steps.apply.outputs.sql_instance_name }} 
-          -n ${{ steps.apply.outputs.sql_database_name }} -c ado.net)
-          
-          $connection_string_tcp = 
-          $raw_connection_string.Replace("<password>", "${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD }}")
-          
-          $connection_string_tcp = 
-          $connection_string_tcp.Replace("<username>", "${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME }}")
-          
-          Write-Output "::set-output name=connection_string_tcp::'$($connection_string_tcp)'"
-          
-          $manual_connection_string = 
-          $raw_connection_string.Replace("<password>", "${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD }}")
-          
-          $manual_connection_string = 
-          $manual_connection_string.Replace("<username>", "${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME }}")
-          
-          $manual_connection_string = $manual_connection_string.Replace("Server=tcp:", "Server=")
-          
-          $manual_connection_string = $manual_connection_string.Replace(",1433", "")
-          
-          Write-Output "::set-output name=manual_connection_string::$($manual_connection_string)"
-        shell: pwsh
-
-      - name: Setup connection string for webapp
-        id: static_website_settings
-        run: > 
-          az webapp config connection-string set -g ${{ steps.apply.outputs.resource_group_name }} 
-          -n ${{ steps.apply.outputs.api_app_name }} -t SQLAzure 
-          --settings ProductCatalogue='${{ steps.setSqlConnection.outputs.connection_string_tcp }}'
-
-          $static_website_url =  'https://' + (az staticwebapp show --name ${{ steps.apply.outputs.static_website_name }} 
-          --query defaultHostname --output tsv)
-
-          Write-Output static_website_url
-
-          az webapp config appsettings set -g ${{ steps.apply.outputs.resource_group_name }}
-          -n ${{ steps.apply.outputs.api_app_name }} --settings Cors__AllowedOrigins__0=$static_website_url
-          
-          Write-Output "::set-output name=static_website_url::$($static_website_url)"
-        shell: pwsh
     
       - name: Azure SQL Deploy
         uses: azure/sql-action@v1.3
