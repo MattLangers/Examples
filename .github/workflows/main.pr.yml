@@ -6,9 +6,12 @@ on:
 
 jobs:
   build:
-    uses: ./.github/workflows/build-unit-test-package.yml
+    uses: ./.github/workflows/build.unit.test.package.yml
     with:
       artifactNameAPI: product-catalogue-api
-      artifactNameSql: migration-script
+      artifactNameSqlMigration: migration-script
+      artifactNameSqlAzureAdPermissions: azure-ad-permissions
       artifactNameTerraform: terraform
       artifactNamePostman: postman
+      artifactNameStaticWebsite: product-catalogue-static-ui
+      environment: dev
