@@ -105,17 +105,21 @@ jobs:
         run: |
           terraform apply main.tfplan
 
-          resource_group_name=$(terraform output resource_group_name)
-          echo "::set-output name=resource_group_name::$resource_group_name"
+          $resource_group_name=$(terraform output resource_group_name)
+          Write-Output "::set-output name=resource_group_name::$($resource_group_name)"
 
-          api_app_name=$(terraform output api_app_name)
-          echo "::set-output name=api_app_name::$api_app_name"
+          $api_app_name=$(terraform output api_app_name)
+          Write-Output "::set-output name=api_app_name::$($api_app_name)"
 
-          static_website_name=$(terraform output static_website_name)
-          echo "::set-output name=static_website_name::$static_website_name"
+          $static_website_name=$(terraform output static_website_name)
+          Write-Output "::set-output name=static_website_name::$($static_website_name)"
 
-          static_website_name_default_host_name=$(terraform output static_website_name_default_host_name)
-          echo "::set-output name=static_website_url::$static_website_name_default_host_name"
+          $static_website_url=$(terraform output static_website_default_host_name)
+          $static_website_url="https://${static_website_url}".replace('"', "")
+          
+          echo "${static_website_url}"
+          Write-Output "::set-output name=static_website_url::$($static_website_url)"
+        shell: pwsh
         
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}

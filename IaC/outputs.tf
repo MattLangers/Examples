@@ -10,6 +10,6 @@ output "static_website_name" {
   value = azurerm_static_site.product_catalogue.name
 }
 
-output "static_website_name_default_host_name" {
+output "static_website_default_host_name" {
   value = azurerm_static_site.product_catalogue.default_host_name
 }
