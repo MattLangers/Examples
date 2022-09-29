@@ -53,7 +53,9 @@ I thought this fictitious application would be a good place to start, to allow y
   * Can this be extended to be able to use EntityFrameworkQueryableExtensions.ThenInclude method: I need to spend some extra time investigating this further.
 * Overall the unit-test coverage should be better.
 * Infrastructure:
-  * I would consider using Azure AD to harden the security - we could use an AD identity for the application when running in the cloud, to restrict access to the database.
+  * The API is accessing the database using a managed identity (azure AD), this security hardening means we:
+    * Don't have any username and passwords in our application configuration.
+    * Securing access to our Azure databases.
   * If we wanted to create different environments from this source code, some of the terraform runtime variables would need to be reviewed.
 * Observability should be better: need to create more logs for analysis.
 * At present its only myself working on this repository, at some point a branching strategy should be adopted - for example: GitFlow

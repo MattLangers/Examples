@@ -36,6 +36,12 @@ on:
     outputs:
       static_website_url:
         value: ${{ jobs.infrastructure_create.outputs.static_website_url }}
+      static_webapp_api_key: 
+        value: ${{ jobs.infrastructure_create.outputs.static_webapp_api_key }}
+      api_app_name: 
+        value: ${{ jobs.infrastructure_create.outputs.api_app_name }}
+      resource_group_name: 
+        value: ${{ jobs.infrastructure_create.outputs.resource_group_name }}
 
 jobs:
   infrastructure_create:
@@ -44,6 +50,9 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       static_website_url: ${{ steps.apply.outputs.static_website_url }}
+      static_webapp_api_key: ${{ steps.get_config_key.outputs.api_key }}
+      api_app_name: ${{ steps.apply.outputs.api_app_name }}
+      resource_group_name: ${{ steps.apply.outputs.resource_group_name }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -52,17 +61,6 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           path: artifacts
-
-      - name: build static website
-        working-directory: ./UI
-        run: >
-          npm install
-
-          echo >> .env.production
-          
-          echo VITE_PRODUCT_CATALOGUE_API_URL="https://mrmclangley${{ inputs.environment }}productcatalogue.azurewebsites.net/" >> .env.production
-          
-          npm run build
 
       - name: 'Az CLI login'
         uses: azure/login@v1
@@ -126,7 +124,7 @@ jobs:
           ARM_USE_OIDC: true
 
       - name: Get static website api key
-        id: staticWebConfig
+        id: get_config_key
         run: >
           $api_key=$(az staticwebapp secrets list --name ${{ steps.apply.outputs.static_website_name }} 
           --query properties.apiKey 
@@ -136,36 +134,3 @@ jobs:
           
           Write-Output "::set-output name=api_key::$($api_key)"
         shell: pwsh
-
-      - name: Build and deploy static web app
-        uses: Azure/static-web-apps-deploy@v1
-        with:
-          azure_static_web_apps_api_token: "${{ steps.staticWebConfig.outputs.api_key }}"
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          action: "upload"
-          app_location: "UI/build/static"
-          output_location: ""
-          skip_app_build: true
-      
-      ## A B1 webapp doesn't have slots so I don't think its possible to deploy to a B1 webapp using azure/webapps-deploy@v2
-      - name: Deploy api source code
-        working-directory: artifacts/${{inputs.artifactNameAPI}}
-        run: > 
-          az webapp deployment source config-zip 
-          -g ${{ steps.apply.outputs.resource_group_name }} 
-          -n ${{ steps.apply.outputs.api_app_name }} --src api.zip
-    
-      - name: Azure SQL Deploy
-        uses: azure/sql-action@v1.3
-        with:
-          connection-string: ${{ secrets.AZURE_SQL_DATABASE_PRODUCTCATALOGUE_CONNECTION_STRING }}
-          sql-file: "./artifacts/${{inputs.artifactNameSqlMigration}}/product-catalogue-migration-script.sql"
-    
-      - name: Azure SQL Deploy
-        uses: azure/sql-action@v1.3
-        with:
-          connection-string: ${{ secrets.AZURE_SQL_DATABASE_PRODUCTCATALOGUE_CONNECTION_STRING }}
-          sql-file: "./artifacts/${{inputs.artifactNameSqlAzureAdPermissions}}/dev.user.sql"
-  
-      - name: 'Logout az'
-        run: az logout

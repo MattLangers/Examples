@@ -22,6 +22,12 @@ on:
       artifactNamePostman:
         required: true
         type: string
+      artifactNameStaticWebsite:
+        required: true
+        type: string
+      environment:
+        required: true
+        type: string
 
 jobs:
   build_test_package:
@@ -61,6 +67,22 @@ jobs:
       run: |
         cd ./api/published/
         zip -r api.zip .
+
+    - name: build static website
+      working-directory: ./UI
+      run: >
+        npm install
+
+        echo >> .env.production
+        
+        echo VITE_PRODUCT_CATALOGUE_API_URL="https://mrmclangley${{ inputs.environment }}productcatalogue.azurewebsites.net/" >> .env.production
+        
+        npm run build
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: ${{inputs.artifactNameStaticWebsite}}
+        path: ./UI/build/static
 
     - uses: actions/upload-artifact@v3
       with:

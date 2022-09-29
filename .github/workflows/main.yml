@@ -6,17 +6,19 @@ on:
 
 jobs:
   build:
-    uses: ./.github/workflows/build-unit-test-package.yml
+    uses: ./.github/workflows/build.unit.test.package.yml
     with:
       artifactNameAPI: product-catalogue-api
       artifactNameSqlMigration: migration-script
       artifactNameSqlAzureAdPermissions: azure-ad-permissions
       artifactNameTerraform: terraform
       artifactNamePostman: postman
+      artifactNameStaticWebsite: product-catalogue-static-ui
+      environment: dev
 
   iac:
     needs: build
-    uses: ./.github/workflows/infrastructure-create.yml
+    uses: ./.github/workflows/infrastructure.create.yml
     with:
       artifactNameAPI: product-catalogue-api
       artifactNameSqlMigration: migration-script
@@ -32,16 +34,34 @@ jobs:
       AZURE_SQL_SERVER_AD_ADMIN_OBJECT_ID: ${{ secrets.AZURE_SQL_SERVER_AD_ADMIN_OBJECT_ID }}
       AZURE_SQL_SERVER_AD_ADMIN_USERNAME: ${{ secrets.AZURE_SQL_SERVER_AD_ADMIN_USERNAME }}
 
-  integration_tests:
+  deploy:
     needs: iac
-    uses: ./.github/workflows/integration-tests.yml
+    uses: ./.github/workflows/deploy.yml
+    with:
+      artifactNameSqlMigration: migration-script
+      artifactNameSqlAzureAdPermissions: azure-ad-permissions
+      artifactNameAPI: product-catalogue-api
+      artifactNameStaticWebsite: product-catalogue-static-ui
+      api_app_name: ${{ needs.iac.outputs.api_app_name }}
+      resource_group_name: ${{ needs.iac.outputs.resource_group_name }}
+    secrets:
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      AZURE_SQL_INSTANCE_NAME: ${{ secrets.AZURE_SQL_INSTANCE_NAME }}
+      AZURE_ACCESS_TOKEN: ${{ secrets.AZURE_ACCESS_TOKEN }}
+      static_webapp_api_key: ${{ needs.iac.outputs.static_webapp_api_key }}
+
+  integration_tests:
+    needs: deploy
+    uses: ./.github/workflows/integration.tests.yml
     with:
       artifactNamePostman: postman
       static_website_url: ${{ needs.iac.outputs.static_website_url }}
 
   iac_destroy:
     needs: integration_tests
-    uses: ./.github/workflows/infrastructure-destroy.yml
+    uses: ./.github/workflows/infrastructure.destroy.yml
     with:
       artifactNameTerraform: terraform
     secrets:

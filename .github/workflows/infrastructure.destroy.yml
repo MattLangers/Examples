@@ -15,7 +15,7 @@ on:
         required: true
 
 jobs:
-  infrastructure_destroy:
+  destroy:
     permissions:
       id-token: write
     runs-on: ubuntu-latest

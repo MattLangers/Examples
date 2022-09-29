@@ -31,7 +31,7 @@ resource "azurerm_windows_web_app" "product_catalogue" {
     }
 
     app_settings = {
-      "Cors__AllowedOrigins__0" = "http://${azurerm_static_site.product_catalogue.default_host_name}"
+      "Cors__AllowedOrigins__0" = "https://${azurerm_static_site.product_catalogue.default_host_name}"
     }
 
     connection_string {
