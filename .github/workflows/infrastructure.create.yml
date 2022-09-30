@@ -3,15 +3,6 @@ name: IaC
 on:
   workflow_call:
     inputs:
-      artifactNameAPI:
-        required: true
-        type: string
-      artifactNameSqlMigration:
-        required: true
-        type: string
-      artifactNameSqlAzureAdPermissions:
-        required: true
-        type: string
       artifactNameTerraform:
         required: true
         type: string
@@ -70,8 +61,9 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2.0.0
+        uses: hashicorp/setup-terraform@v2
         with:
+          terraform_version: 1.2.8
           terraform_wrapper: false
 
       - name: Terraform Init Main
@@ -105,21 +97,18 @@ jobs:
         run: |
           terraform apply main.tfplan
 
-          $resource_group_name=$(terraform output resource_group_name)
-          Write-Output "::set-output name=resource_group_name::$($resource_group_name)"
+          resource_group_name=$(terraform output -raw resource_group_name)
+          echo "::set-output name=resource_group_name::$resource_group_name"
 
-          $api_app_name=$(terraform output api_app_name)
-          Write-Output "::set-output name=api_app_name::$($api_app_name)"
+          api_app_name=$(terraform output -raw api_app_name)
+          echo "::set-output name=api_app_name::$api_app_name"
 
-          $static_website_name=$(terraform output static_website_name)
-          Write-Output "::set-output name=static_website_name::$($static_website_name)"
+          static_website_name=$(terraform output -raw static_website_name)
+          echo "::set-output name=static_website_name::$static_website_name"
 
-          $static_website_url=$(terraform output static_website_default_host_name)
-          $static_website_url="https://${static_website_url}".replace('"', "")
-          
-          echo "${static_website_url}"
-          Write-Output "::set-output name=static_website_url::$($static_website_url)"
-        shell: pwsh
+          static_website_url=$(terraform output -raw static_website_default_host_name)
+          static_website_url="https://$static_website_url"
+          echo "::set-output name=static_website_url::$static_website_url"
         
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}

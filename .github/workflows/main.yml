@@ -20,9 +20,6 @@ jobs:
     needs: build
     uses: ./.github/workflows/infrastructure.create.yml
     with:
-      artifactNameAPI: product-catalogue-api
-      artifactNameSqlMigration: migration-script
-      artifactNameSqlAzureAdPermissions: azure-ad-permissions
       artifactNameTerraform: terraform
       environment: dev
     secrets:

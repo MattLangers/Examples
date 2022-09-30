@@ -60,20 +60,18 @@ jobs:
       - name: create sql user with permissions
         working-directory: ${{github.workspace}}/artifacts/${{inputs.artifactNameSqlAzureAdPermissions}}
         run: |
-          $db_access_token = "${{ secrets.AZURE_ACCESS_TOKEN }}"
           $database_name = "product_catalogue_dev"
           $server_name = "${{ secrets.AZURE_SQL_INSTANCE_NAME }}"
           Get-ChildItem
-          Invoke-Sqlcmd -InputFile "dev.user.sql" -ServerInstance "$($server_name).database.windows.net" -Database $database_name -AccessToken $db_access_token
+          Invoke-Sqlcmd -InputFile "dev.user.sql" -ServerInstance "$($server_name).database.windows.net" -Database $database_name -AccessToken ${{ secrets.AZURE_ACCESS_TOKEN }}
           
       - name: Run migrations sql script
         working-directory: ${{github.workspace}}/artifacts/${{inputs.artifactNameSqlMigration}}
         run: |
-          $db_access_token = "${{ secrets.AZURE_ACCESS_TOKEN }}"
           $database_name = "product_catalogue_dev"
           $server_name = "${{ secrets.AZURE_SQL_INSTANCE_NAME }}"
           Get-ChildItem
-          Invoke-Sqlcmd -InputFile "product-catalogue-migration-script.sql" -ServerInstance "$($server_name).database.windows.net" -Database $database_name -AccessToken $db_access_token
+          Invoke-Sqlcmd -InputFile "product-catalogue-migration-script.sql" -ServerInstance "$($server_name).database.windows.net" -Database $database_name -AccessToken ${{ secrets.AZURE_ACCESS_TOKEN }}
 
       - name: Delete firewall rule
         run: |
