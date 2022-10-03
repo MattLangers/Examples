@@ -11,11 +11,11 @@ namespace Database.Tests.Search.DatabaseSearchOrchestrator.SearchProducts
 {
     public sealed class DatabaseSearchOrchestrator_SearchProducts_By_Guid_With_Match_Tests
     {
-        private readonly static Guid guid = Guid.NewGuid();
+        private static readonly Guid guid = Guid.NewGuid();
 
-        private readonly static Models.Product product = new() { Name = "Name", Id = guid };
+        private static readonly Models.Product product = new() { Name = "Name", Id = guid };
 
-        private readonly ProductSearchInputModel productSearchInputModel = new ProductSearchInputModel() {  Id = guid };
+        private readonly ProductSearchInputModel productSearchInputModel = new ProductSearchInputModel() { Id = guid };
 
         private readonly IList<ProductDto> expectedResult = new List<ProductDto>();
 

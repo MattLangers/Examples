@@ -11,7 +11,7 @@ namespace Database.Tests.Search.DatabaseSearchOrchestrator.SearchProducts
 {
     public sealed class DatabaseSearchOrchestrator_SearchProducts_By_Name_With_No_Match_Tests
     {
-        private readonly static Models.Product product = new() { Name = "no match" };
+        private static readonly Models.Product product = new() { Name = "no match" };
 
         private readonly ProductSearchInputModel productSearchInputModel = new ProductSearchInputModel() { Name = "na", HasSearchPropertiesDefined = true };
 

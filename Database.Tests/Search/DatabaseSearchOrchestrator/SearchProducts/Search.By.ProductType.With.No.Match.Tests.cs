@@ -13,9 +13,9 @@ namespace Database.Tests.Search.DatabaseSearchOrchestrator.SearchProducts
     {
         private const int ProductTypeId = 111;
 
-        private readonly static Models.ProductType productType = new Models.ProductType() { Name = "Name", Id = ProductTypeId };
+        private static readonly Models.ProductType productType = new Models.ProductType() { Name = "Name", Id = ProductTypeId };
 
-        private readonly static Models.Product product = new() { Name = "Name", ProductType = productType };
+        private static readonly Models.Product product = new() { Name = "Name", ProductType = productType };
 
         private readonly ProductSearchInputModel productSearchInputModel = new ProductSearchInputModel() { ProductTypeId = 222 };
 
