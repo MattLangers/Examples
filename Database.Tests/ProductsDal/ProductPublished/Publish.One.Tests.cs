@@ -7,15 +7,11 @@ using Database.SpecificationPattern.Specifications.Product;
 using Moq;
 using Moq.AutoMock;
 
-namespace Database.Tests.ProductsDal.ProductPublished
+namespace Database.Tests.ProductsDal.ProductsPublished
 {
-    public sealed class ProductsDal_ProductPublished_Cancelled_Tests
+    public sealed class ProductsDal_ProductsPublished_One_Published_Tests
     {
         private static readonly Guid guid = Guid.NewGuid();
-
-        private static readonly ProductDtoForPublishing product = new() { Id = guid };
-
-        private readonly CancellationTokenSource cancelationServiceToken = new CancellationTokenSource();
 
         private readonly AutoMocker autoMocker = new AutoMocker();
 
@@ -30,15 +26,13 @@ namespace Database.Tests.ProductsDal.ProductPublished
 
             autoMocker.Use(databaseContext);
 
-            cancelationServiceToken.Cancel();
-
-            await autoMocker.CreateInstance<ProductsDAL>().ProductPublished(product, cancelationServiceToken.Token);
+            await autoMocker.CreateInstance<ProductsDAL>().ProductsPublished(new List<Guid>() { guid });
         }
 
         [Test]
-        public void Expect_ProductPublished_To_Contain_No_Elements()
+        public void Expect_ProductPublished_To_Contain_Elements()
         {
-            Assert.IsFalse(databaseContext.ProductPublished.Any());
+            Assert.That(databaseContext.ProductPublished.Single().Id, Is.EqualTo(guid));
         }
 
         [OneTimeTearDown]

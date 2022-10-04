@@ -16,7 +16,8 @@ IConfiguration config = new ConfigurationBuilder()
     .Build();
 
 var host = Host.CreateDefaultBuilder(args)
-    .ConfigureServices((hostContext, services) => {
+    .ConfigureServices((hostContext, services) =>
+    {
         var configuration = new QueueConfiguration();
         hostContext.Configuration.GetSection("QueueConfiguration").Bind(configuration);
 

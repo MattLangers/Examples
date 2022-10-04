@@ -17,12 +17,11 @@ namespace Publisher.Tests.Logic.PublisherOrchestration.Start
         private const string productAsJsonMessage1 = "productAsJsonMessage1";
         private const string productAsJsonMessage2 = "productAsJsonMessage2";
 
-        private readonly static Guid guidForProduct1 = new Guid();
-        private readonly static Guid guidForProduct2 = new Guid();
+        private static readonly Guid guidForProduct1 = new Guid();
+        private static readonly Guid guidForProduct2 = new Guid();
+        private static readonly ProductDtoForPublishing productDto1 = new ProductDtoForPublishing() { Id = guidForProduct1 };
+        private static readonly ProductDtoForPublishing productDto2 = new ProductDtoForPublishing() { Id = guidForProduct2 };
 
-        private readonly static ProductDtoForPublishing productDto1 = new ProductDtoForPublishing() { Id = guidForProduct1 };
-        private readonly static ProductDtoForPublishing productDto2 = new ProductDtoForPublishing() { Id = guidForProduct2 };
-        
         private readonly HashSet<ProductDtoForPublishing> products = new HashSet<ProductDtoForPublishing>()
         {
             productDto1, productDto2
@@ -36,17 +35,16 @@ namespace Publisher.Tests.Logic.PublisherOrchestration.Start
         public async Task Setup()
         {
             autoMocker.GetMock<IProductsDAL>().Setup(m => m.GetUnPublishedProducts()).Returns(Task.Run(() => products));
-            
+
             autoMocker.GetMock<IQueueFactory>().Setup(m => m.CreateQueueClient()).Returns(Task.Run(() => mockQueueClientWrapper.Object));
-            
+
             autoMocker.GetMock<IJsonFactory>().Setup(m => m.CreateJson(productDto1)).Returns(productAsJsonMessage1);
             autoMocker.GetMock<IJsonFactory>().Setup(m => m.CreateJson(productDto2)).Returns(productAsJsonMessage2);
 
             mockQueueClientWrapper.Setup(m => m.SendMessageAsync(productAsJsonMessage1)).Returns(Task.Run(() => { }));
             mockQueueClientWrapper.Setup(m => m.SendMessageAsync(productAsJsonMessage2)).Returns(Task.Run(() => { }));
 
-            autoMocker.GetMock<IProductsDAL>().Setup(m => m.ProductPublished(productDto1)).Returns(Task.Run(() => { }));
-            autoMocker.GetMock<IProductsDAL>().Setup(m => m.ProductPublished(productDto2)).Returns(Task.Run(() => { }));
+            autoMocker.GetMock<IProductsDAL>().Setup(m => m.ProductsPublished(It.Is<List<Guid>>(l => l.Contains(guidForProduct1) && l.Contains(guidForProduct2)))).Returns(Task.Run(() => { }));
 
             await autoMocker.CreateInstance<Publisher.Logic.PublisherOrchestration>().Start();
         }

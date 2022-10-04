@@ -2,6 +2,6 @@
 {
     internal interface IQueueClientWrapper
     {
-        Task SendMessageAsync(string jsonMessage, CancellationToken cancellationToken);
+        Task SendMessageAsync(string jsonMessage);
     }
 }
