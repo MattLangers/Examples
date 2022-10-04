@@ -39,8 +39,8 @@ namespace Publisher.Logic
                         if (!cancelationToken.IsCancellationRequested)
                         {
                             logger.LogInformation($"Add product to the queue: {product}");
-                            await queue.SendMessageAsync(jsonFactory.CreateJson(product));
                             publishedProducts.Add(product.Id);
+                            await queue.SendMessageAsync(jsonFactory.CreateJson(product));
                         }
                     });
 

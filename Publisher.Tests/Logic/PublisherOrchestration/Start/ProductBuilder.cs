@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Database.Models.DTO;
 
 namespace Publisher.Tests.Logic.PublisherOrchestration.Start
@@ -11,7 +12,7 @@ namespace Publisher.Tests.Logic.PublisherOrchestration.Start
 
             for (var i = 0; i < x; i++)
             {
-                result.Add(new ProductDtoForPublishing { Id = new System.Guid() });
+                result.Add(new ProductDtoForPublishing { Id = Guid.NewGuid() });
             }
 
             return result;
