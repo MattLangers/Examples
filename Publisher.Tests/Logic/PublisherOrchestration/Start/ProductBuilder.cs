@@ -6,9 +6,9 @@ namespace Publisher.Tests.Logic.PublisherOrchestration.Start
 {
     internal class ProductBuilder
     {
-        public HashSet<ProductDtoForPublishing> Create(int x)
+        public List<ProductDtoForPublishing> Create(int x)
         {
-            var result = new HashSet<ProductDtoForPublishing>();
+            var result = new List<ProductDtoForPublishing>();
 
             for (var i = 0; i < x; i++)
             {

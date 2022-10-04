@@ -22,7 +22,7 @@ namespace Publisher.Tests.Logic.PublisherOrchestration.Start
         private static readonly ProductDtoForPublishing productDto1 = new ProductDtoForPublishing() { Id = guidForProduct1 };
         private static readonly ProductDtoForPublishing productDto2 = new ProductDtoForPublishing() { Id = guidForProduct2 };
 
-        private readonly HashSet<ProductDtoForPublishing> products = new HashSet<ProductDtoForPublishing>()
+        private readonly List<ProductDtoForPublishing> products = new List<ProductDtoForPublishing>()
         {
             productDto1, productDto2
         };

@@ -16,7 +16,7 @@ namespace Publisher.Tests.Logic.PublisherOrchestration.Start
     {
         private const int NumberOfProducts = 1000;
 
-        private readonly HashSet<ProductDtoForPublishing> products = new ProductBuilder().Create(NumberOfProducts);
+        private readonly List<ProductDtoForPublishing> products = new ProductBuilder().Create(NumberOfProducts);
 
         private readonly AutoMocker autoMocker = new AutoMocker();
 

@@ -15,13 +15,13 @@ namespace Publisher.Tests.Logic.PublisherOrchestration.Start
     [TestFixture]
     public sealed class PublisherOrchestration_Start_Cancel_Token_Tests
     {
-        private readonly static Guid guidForProduct1 = new Guid();
-        private readonly static Guid guidForProduct2 = new Guid();
+        private static readonly Guid guidForProduct1 = new Guid();
+        private static readonly Guid guidForProduct2 = new Guid();
 
-        private readonly static ProductDtoForPublishing productDto1 = new ProductDtoForPublishing() { Id = guidForProduct1 };
-        private readonly static ProductDtoForPublishing productDto2 = new ProductDtoForPublishing() { Id = guidForProduct2 };
-        
-        private readonly HashSet<ProductDtoForPublishing> products = new HashSet<ProductDtoForPublishing>()
+        private static readonly ProductDtoForPublishing productDto1 = new ProductDtoForPublishing() { Id = guidForProduct1 };
+        private static readonly ProductDtoForPublishing productDto2 = new ProductDtoForPublishing() { Id = guidForProduct2 };
+
+        private readonly List<ProductDtoForPublishing> products = new List<ProductDtoForPublishing>()
         {
             productDto1, productDto2
         };
@@ -36,7 +36,7 @@ namespace Publisher.Tests.Logic.PublisherOrchestration.Start
         public async Task Setup()
         {
             autoMocker.GetMock<IProductsDAL>().Setup(m => m.GetUnPublishedProducts()).Returns(Task.Run(() => products));
-            
+
             autoMocker.GetMock<IQueueFactory>().Setup(m => m.CreateQueueClient()).Returns(Task.Run(() => mockQueueClientWrapper.Object)).Callback(() =>
             {
                 cancelationServiceToken.Cancel();
