@@ -25,6 +25,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{1154
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{B002DF52-D449-4C7A-AAAA-847A2B419298}"
 	ProjectSection(SolutionItems) = preProject
+		.github\workflows\build.unit.test.package.yml = .github\workflows\build.unit.test.package.yml
+		.github\workflows\deploy.yml = .github\workflows\deploy.yml
+		.github\workflows\infrastructure.create.yml = .github\workflows\infrastructure.create.yml
+		.github\workflows\infrastructure.destroy.yml = .github\workflows\infrastructure.destroy.yml
+		.github\workflows\integration.tests.yml = .github\workflows\integration.tests.yml
+		.github\workflows\main.pr.yml = .github\workflows\main.pr.yml
 		.github\workflows\main.yml = .github\workflows\main.yml
 	EndProjectSection
 EndProject
