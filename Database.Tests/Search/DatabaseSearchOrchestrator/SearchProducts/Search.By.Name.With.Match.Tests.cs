@@ -11,7 +11,7 @@ namespace Database.Tests.Search.DatabaseSearchOrchestrator.SearchProducts
 {
     public sealed class DatabaseSearchOrchestrator_SearchProducts_By_Name_With_Match_Tests
     {
-        private readonly static Models.Product product = new() { Name = "Name" };
+        private static readonly Models.Product product = new() { Name = "Name" };
 
         private readonly ProductSearchInputModel productSearchInputModel = new ProductSearchInputModel() { Name = "Na", HasSearchPropertiesDefined = true };
 

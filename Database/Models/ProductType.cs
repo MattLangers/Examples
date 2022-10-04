@@ -12,6 +12,6 @@ namespace Database.Models
         [Required, MaxLength(250)]
         public string Name { get; set; } = default!;
 
-        public DateTime CreationDate { get; set; } =  DateTime.UtcNow;
+        public DateTime CreationDate { get; set; } = DateTime.UtcNow;
     }
 }

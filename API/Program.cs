@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Database;
 using Microsoft.AspNetCore.Mvc;
 using Database.Search;
@@ -69,7 +69,7 @@ app.MapPost("/products", async (
     ILogger<Program> logger,
     IProductsDAL productsDAL,
     IOutputModelFactory outputModelFactory,
-    [FromBody]Product inputModel) =>
+    [FromBody] Product inputModel) =>
 {
     return await CreateProduct(logger, productsDAL, outputModelFactory, inputModel);
 });
@@ -86,8 +86,8 @@ app.Run();
 
 static async Task<IResult> CreateProduct(
     ILogger<Program> logger,
-    IProductsDAL productsDAL, 
-    IOutputModelFactory outputModelFactory, 
+    IProductsDAL productsDAL,
+    IOutputModelFactory outputModelFactory,
     Product inputModel)
 {
     /* Unable to keep this logic in the main path of the request end-point as visual studio was 

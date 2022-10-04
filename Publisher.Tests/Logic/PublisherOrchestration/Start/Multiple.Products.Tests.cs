@@ -14,19 +14,9 @@ namespace Publisher.Tests.Logic.PublisherOrchestration.Start
     [TestFixture]
     public sealed class PublisherOrchestration_Start_Multiple_Product_Tests
     {
-        private const string productAsJsonMessage1 = "productAsJsonMessage1";
-        private const string productAsJsonMessage2 = "productAsJsonMessage2";
+        private const int NumberOfProducts = 1000;
 
-        private readonly static Guid guidForProduct1 = new Guid();
-        private readonly static Guid guidForProduct2 = new Guid();
-
-        private readonly static ProductDtoForPublishing productDto1 = new ProductDtoForPublishing() { Id = guidForProduct1 };
-        private readonly static ProductDtoForPublishing productDto2 = new ProductDtoForPublishing() { Id = guidForProduct2 };
-        
-        private readonly HashSet<ProductDtoForPublishing> products = new HashSet<ProductDtoForPublishing>()
-        {
-            productDto1, productDto2
-        };
+        private readonly List<ProductDtoForPublishing> products = new ProductBuilder().Create(NumberOfProducts);
 
         private readonly AutoMocker autoMocker = new AutoMocker();
 
@@ -36,17 +26,20 @@ namespace Publisher.Tests.Logic.PublisherOrchestration.Start
         public async Task Setup()
         {
             autoMocker.GetMock<IProductsDAL>().Setup(m => m.GetUnPublishedProducts()).Returns(Task.Run(() => products));
-            
+
             autoMocker.GetMock<IQueueFactory>().Setup(m => m.CreateQueueClient()).Returns(Task.Run(() => mockQueueClientWrapper.Object));
-            
-            autoMocker.GetMock<IJsonFactory>().Setup(m => m.CreateJson(productDto1)).Returns(productAsJsonMessage1);
-            autoMocker.GetMock<IJsonFactory>().Setup(m => m.CreateJson(productDto2)).Returns(productAsJsonMessage2);
 
-            mockQueueClientWrapper.Setup(m => m.SendMessageAsync(productAsJsonMessage1)).Returns(Task.Run(() => { }));
-            mockQueueClientWrapper.Setup(m => m.SendMessageAsync(productAsJsonMessage2)).Returns(Task.Run(() => { }));
+            foreach (var product in products)
+            {
+                autoMocker.GetMock<IJsonFactory>().Setup(m => m.CreateJson(It.IsAny<ProductDtoForPublishing>())).Returns(product.Id.ToString());
+            }
 
-            autoMocker.GetMock<IProductsDAL>().Setup(m => m.ProductPublished(productDto1)).Returns(Task.Run(() => { }));
-            autoMocker.GetMock<IProductsDAL>().Setup(m => m.ProductPublished(productDto2)).Returns(Task.Run(() => { }));
+            mockQueueClientWrapper.Setup(m => m.SendMessageAsync(It.IsAny<string>())).Returns(Task.Run(async () =>
+            {
+                await Task.Delay(1000);
+            }));
+
+            autoMocker.GetMock<IProductsDAL>().Setup(m => m.ProductsPublished(It.IsAny<List<Guid>>())).Returns(Task.Run(() => { }));
 
             await autoMocker.CreateInstance<Publisher.Logic.PublisherOrchestration>().Start();
         }
@@ -55,6 +48,12 @@ namespace Publisher.Tests.Logic.PublisherOrchestration.Start
         public void IProductsDAL_VerifyAll()
         {
             autoMocker.VerifyAll();
+        }
+
+        [Test]
+        public void IProductsDAL_ProductsPublished_is_called_with_number_of_expected_Products()
+        {
+            autoMocker.GetMock<IProductsDAL>().Verify(m => m.ProductsPublished(It.Is<List<Guid>>(l => l.Count == NumberOfProducts)), Times.Once);
         }
 
         [Test]

@@ -9,8 +9,8 @@ namespace Database
 
         Task<List<ProductType>> GetProductTypeDtos();
 
-        Task<HashSet<ProductDtoForPublishing>> GetUnPublishedProducts();
+        Task<List<ProductDtoForPublishing>> GetUnPublishedProducts();
 
-        Task ProductPublished(ProductDtoForPublishing productGuid);
+        Task ProductsPublished(List<Guid> publishedProductIds);
     }
 }

@@ -30,22 +30,25 @@ namespace Publisher.Logic
                 {
                     var products = await productsDAL.GetUnPublishedProducts();
                     var queue = await queueFactory.CreateQueueClient();
+                    var publishedProducts = new List<Guid>();
+
                     logger.LogInformation($"Number of products: {products.Count}");
 
-                    foreach (var product in products)
+                    var tasks = products.Select(async product =>
                     {
-                        if (cancelationToken.IsCancellationRequested)
+                        if (!cancelationToken.IsCancellationRequested)
                         {
-                            logger.LogInformation($"Request cancelled");
-                            break;
+                            logger.LogInformation($"Add product to the queue: {product}");
+                            publishedProducts.Add(product.Id);
+                            await queue.SendMessageAsync(jsonFactory.CreateJson(product));
                         }
+                    });
 
-                        logger.LogInformation($"Add product to the queue: {product.Id}");
-                        await queue.SendMessageAsync(jsonFactory.CreateJson(product));
-                        await productsDAL.ProductPublished(product);
-                    }
+                    await Task.WhenAll(tasks);
+
+                    await productsDAL.ProductsPublished(publishedProducts);
+
                 }, cancelationToken);
-            
         }
     }
 }

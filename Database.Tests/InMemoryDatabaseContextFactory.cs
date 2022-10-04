@@ -7,7 +7,7 @@ namespace Database.Tests
     {
         private readonly DbContextOptionsBuilder<DatabaseContext> dbContextOptionsBuilder = new DbContextOptionsBuilder<DatabaseContext>().UseInMemoryDatabase(Guid.NewGuid().ToString("N"));
 
-        private DatabaseContext databaseContext;
+        private readonly DatabaseContext databaseContext;
 
         public InMemoryDatabaseContextFactory()
         {

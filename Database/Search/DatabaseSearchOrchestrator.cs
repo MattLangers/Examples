@@ -51,7 +51,7 @@ namespace Database.Search
                 products = products.Specify(searchProductSpecificationFactory.CreateSearchByName(productSearchInputModel));
             }
 
-            if(hasGuid || hasProductTypeId || hasName)
+            if (hasGuid || hasProductTypeId || hasName)
             {
                 logger.LogInformation("Return products for search");
                 return productsToDtoMapper.Map(products);

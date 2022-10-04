@@ -1,7 +1,9 @@
-﻿using API.Models.InputModels;
+﻿using System.Diagnostics.Metrics;
+using API.Models.InputModels;
 using Database.Models;
 using Database.Models.DTO;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Database
 {
@@ -27,22 +29,26 @@ namespace Database
             return _dbContext.Set<Models.ProductType>().Select(p => new Models.DTO.ProductType() { Id = p.Id, CreationDate = p.CreationDate, Name = p.Name }).ToListAsync();
         }
 
-        public Task<HashSet<ProductDtoForPublishing>> GetUnPublishedProducts()
+        public Task<List<ProductDtoForPublishing>> GetUnPublishedProducts()
         {
             return Task.Run(() =>
             {
-                /* TODO: should we be using Linq to buid the query */
-                return _dbContext.Set<Models.Product>()
-                .FromSqlRaw("select p.* from Product p Left Join ProductPublished pb on p.Id = pb.Id Where pb.Id is NULL")
-                .Select(product => new ProductDtoForPublishing() { Id = product.Id, Name = product.Name, ProductTypeId = product.ProductType.Id })
-                .ToHashSet();
+                return _dbContext.Product.Include(p => p.ProductPublished).Where(p => p.ProductPublished == null).Select(p => new ProductDtoForPublishing() { Id = p.Id, Name = p.Name, ProductTypeId = p.ProductTypeId }).ToList();
             });
         }
 
-        public async Task ProductPublished(ProductDtoForPublishing productGuid)
+        public async Task ProductsPublished(
+            List<Guid> publishedProductIds)
         {
-            _dbContext.Add(new Models.ProductPublished() { Id = productGuid.Id });
-            await _dbContext.SaveChangesAsync();
+            if (publishedProductIds.Any())
+            {
+                foreach (var id in publishedProductIds)
+                {
+                    _dbContext.Add(new Models.ProductPublished() { Id = id });
+                }
+
+                await _dbContext.SaveChangesAsync();
+            }
         }
     }
 }
