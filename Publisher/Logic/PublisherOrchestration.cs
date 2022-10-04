@@ -40,12 +40,11 @@ namespace Publisher.Logic
                             break;
                         }
 
-                        logger.LogInformation($"Add product to the queue: {product.Id}");
-                        await queue.SendMessageAsync(jsonFactory.CreateJson(product));
-                        await productsDAL.ProductPublished(product);
+                        logger.LogInformation($"Add product to the queue: {product}");
+                        await queue.SendMessageAsync(jsonFactory.CreateJson(product), cancelationToken);
+                        await productsDAL.ProductPublished(product, cancelationToken);
                     }
                 }, cancelationToken);
-            
         }
     }
 }

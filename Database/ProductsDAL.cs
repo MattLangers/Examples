@@ -39,10 +39,15 @@ namespace Database
             });
         }
 
-        public async Task ProductPublished(ProductDtoForPublishing productGuid)
+        public async Task ProductPublished(
+            ProductDtoForPublishing product,
+            CancellationToken cancellationToken)
         {
-            _dbContext.Add(new Models.ProductPublished() { Id = productGuid.Id });
-            await _dbContext.SaveChangesAsync();
+            if (!cancellationToken.IsCancellationRequested)
+            {
+                _dbContext.Add(new Models.ProductPublished() { Id = product.Id });
+                await _dbContext.SaveChangesAsync();
+            }
         }
     }
 }

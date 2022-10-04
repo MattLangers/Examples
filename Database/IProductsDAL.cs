@@ -11,6 +11,6 @@ namespace Database
 
         Task<HashSet<ProductDtoForPublishing>> GetUnPublishedProducts();
 
-        Task ProductPublished(ProductDtoForPublishing productGuid);
+        Task ProductPublished(ProductDtoForPublishing product, CancellationToken cancellationToken);
     }
 }

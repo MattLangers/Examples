@@ -11,9 +11,9 @@ namespace Publisher.Logic
             this.queueClient = queueClient;
         }
 
-        public Task SendMessageAsync(string jsonMessage)
+        public Task SendMessageAsync(string jsonMessage, CancellationToken cancellationToken)
         {
-            return queueClient.SendMessageAsync(jsonMessage);
+            return queueClient.SendMessageAsync(jsonMessage, cancellationToken);
         }
     }
 }
