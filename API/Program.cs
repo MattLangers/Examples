@@ -20,7 +20,7 @@ builder.Services.AddScoped<IProductSearchInputModelFactory, ProductSearchInputMo
 builder.Services.AddScoped<IDatabaseSearchOrchestrator, DatabaseSearchOrchestrator>();
 builder.Services.AddScoped<IProductDtoFactory, ProductDtoFactory>();
 builder.Services.AddScoped<ISearchProductSpecificationFactory, SearchProductSpecificationFactory>();
-builder.Services.AddScoped<IProductsToDtoMapper, ProductsToDtoMapper>();
+builder.Services.AddScoped<IMapProductsToDto, MapProductsToDto>();
 builder.Services.AddScoped<IProductsDAL, ProductsDAL>();
 builder.Services.AddScoped<IOutputModelFactory, OutputModelFactory>();
 
