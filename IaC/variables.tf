@@ -28,10 +28,18 @@ variable "sql_service_principle_secret" {
   default     = "sql_service_principle_secret"
 }
 
-variable "sql_server_ad_admin_username" {
-  default     = "sql_server_ad_admin_username"
+variable "sql_instance_administrator_login_username" {
+  default     = "sql_instance_administrator_login_username"
 }
 
-variable "sql_server_ad_admin_object_id" {
-  default     = "00000000-0000-0000-0000-000000000000"
+variable "sql_instance_administrator_login_password" {
+  default     = "sql_instance_administrator_login_password"
+}
+
+variable "sql_login_username" {
+  default     = "sql_login_username"
+}
+
+variable "sql_login_password" {
+  default     = "sql_login_password"
 }

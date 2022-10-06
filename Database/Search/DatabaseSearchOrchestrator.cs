@@ -10,13 +10,13 @@ namespace Database.Search
     {
         private readonly ILogger logger;
         private readonly DatabaseContext context;
-        private readonly IProductsToDtoMapper productsToDtoMapper;
+        private readonly IMapProductsToDto productsToDtoMapper;
         private readonly ISearchProductSpecificationFactory searchProductSpecificationFactory;
 
         public DatabaseSearchOrchestrator(
             ILogger<DatabaseSearchOrchestrator> logger,
             DatabaseContext context,
-            IProductsToDtoMapper productsToDtoMapper,
+            IMapProductsToDto productsToDtoMapper,
             ISearchProductSpecificationFactory searchProductSpecificationFactory)
         {
             this.context = context;

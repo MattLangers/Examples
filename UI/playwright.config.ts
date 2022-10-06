@@ -11,7 +11,8 @@ const config: PlaywrightTestConfig = {
 	},
 	use: {
 		baseURL: process.env.PLAYWRIGHT_BASE_URL,
-	}
+	},
+	reporter: process.env.CI ? 'html' : 'list',
 };
 
 export default config;

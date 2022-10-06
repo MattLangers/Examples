@@ -18,11 +18,13 @@ on:
         required: true
       AZURE_SQL_INSTANCE_NAME:
         required: true
-      AZURE_SQL_DATABASE_PRODUCTCATALOGUE_CONNECTION_STRING:
+      AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME:
         required: true
-      AZURE_SQL_SERVER_AD_ADMIN_OBJECT_ID:
+      AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD:
         required: true
-      AZURE_SQL_SERVER_AD_ADMIN_USERNAME:
+      AZURE_SQL_PRODUCT_CATALOGUE_LOGIN_USERNAME:
+        required: true
+      AZURE_SQL_PRODUCT_CATALOGUE_LOGIN_PASSWORD:
         required: true
     outputs:
       static_website_url:
@@ -83,8 +85,10 @@ jobs:
           terraform plan -out main.tfplan -no-color 
           -var environment_prefix="${{ inputs.environment }}" 
           -var sql_instance_name="${{ secrets.AZURE_SQL_INSTANCE_NAME }}"
-          -var sql_server_ad_admin_object_id="${{ secrets.AZURE_SQL_SERVER_AD_ADMIN_OBJECT_ID }}"
-          -var sql_server_ad_admin_username="${{ secrets.AZURE_SQL_SERVER_AD_ADMIN_USERNAME }}"
+          -var sql_instance_administrator_login_username="${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME }}"
+          -var sql_instance_administrator_login_password="${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD }}"
+          -var sql_login_username="${{ secrets.AZURE_SQL_PRODUCT_CATALOGUE_LOGIN_USERNAME }}"
+          -var sql_login_password="${{ secrets.AZURE_SQL_PRODUCT_CATALOGUE_LOGIN_PASSWORD }}"
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
