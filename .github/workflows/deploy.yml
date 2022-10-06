@@ -6,9 +6,6 @@ on:
       artifactNameSqlMigration:
         required: true
         type: string
-      artifactNameSqlAzureAdPermissions:
-        required: true
-        type: string
       artifactNameAPI:
         required: true
         type: string
@@ -30,9 +27,15 @@ on:
         required: true
       AZURE_SQL_INSTANCE_NAME:
         required: true
-      AZURE_ACCESS_TOKEN:
-        required: true
       static_webapp_api_key:
+        required: true
+      AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME:
+        required: true
+      AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD:
+        required: true
+      AZURE_SQL_PRODUCT_CATALOGUE_DEV_LOGIN_USERNAME:
+        required: true
+      AZURE_SQL_PRODUCT_CATALOGUE_DEV_LOGIN_PASSWORD:
         required: true
 
 jobs:
@@ -51,19 +54,46 @@ jobs:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Generate access token
+        id: generate_token
+        run: >
+          $access_token=az account get-access-token --resource=https://database.windows.net/ --query accessToken
+
+          $access_token = $access_token.replace('"', "")
+
+          Write-Output "::add-mask $($access_token)"
+          
+          Write-Output "::set-output name=access_token::$($access_token)"
           
       - name: Create firewall rule
         run: |
           $temp_firewall_rule_name = "temp_firewall_rule_name"
           az sql server firewall-rule create -g "dev_product_catalogue" -s "${{ secrets.AZURE_SQL_INSTANCE_NAME }}" -n $temp_firewall_rule_name --start-ip-address 0.0.0.0 --end-ip-address 0.0.0.0
 
-      - name: create sql user with permissions
-        working-directory: ${{github.workspace}}/artifacts/${{inputs.artifactNameSqlAzureAdPermissions}}
+      - name: Create login
+        run: |
+          $database_name = "master"
+          $server_name = "${{ secrets.AZURE_SQL_INSTANCE_NAME }}"
+          $query = "IF NOT EXISTS (SELECT name FROM master.sys.server_principals WHERE name = '${{ secrets.AZURE_SQL_PRODUCT_CATALOGUE_DEV_LOGIN_USERNAME }}') BEGIN CREATE LOGIN ${{ secrets.AZURE_SQL_PRODUCT_CATALOGUE_DEV_LOGIN_USERNAME }} WITH PASSWORD = N'${{ secrets.AZURE_SQL_PRODUCT_CATALOGUE_DEV_LOGIN_PASSWORD }}' END"
+          Get-ChildItem
+          Invoke-Sqlcmd -Query $query -ServerInstance "$($server_name).database.windows.net" -Database $database_name -Username ${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME }} -Password ${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD }}
+      
+      - name: Create user
         run: |
           $database_name = "product_catalogue_dev"
           $server_name = "${{ secrets.AZURE_SQL_INSTANCE_NAME }}"
+          $query = "if not exists(select * from sys.database_principals where name = '${{ secrets.AZURE_SQL_PRODUCT_CATALOGUE_DEV_LOGIN_USERNAME }}') BEGIN CREATE USER ${{ secrets.AZURE_SQL_PRODUCT_CATALOGUE_DEV_LOGIN_USERNAME }} FOR LOGIN ${{ secrets.AZURE_SQL_PRODUCT_CATALOGUE_DEV_LOGIN_USERNAME }}; END"
           Get-ChildItem
-          Invoke-Sqlcmd -InputFile "dev.user.sql" -ServerInstance "$($server_name).database.windows.net" -Database $database_name -AccessToken ${{ secrets.AZURE_ACCESS_TOKEN }}
+          Invoke-Sqlcmd -Query $query -ServerInstance "$($server_name).database.windows.net" -Database $database_name -Username ${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME }} -Password ${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD }}
+      
+      - name: Grant permissions
+        run: |
+          $database_name = "product_catalogue_dev"
+          $server_name = "${{ secrets.AZURE_SQL_INSTANCE_NAME }}"
+          $query = "ALTER ROLE db_datareader ADD MEMBER ${{ secrets.AZURE_SQL_PRODUCT_CATALOGUE_DEV_LOGIN_USERNAME }} ALTER ROLE db_datawriter ADD MEMBER ${{ secrets.AZURE_SQL_PRODUCT_CATALOGUE_DEV_LOGIN_USERNAME }}"
+          Get-ChildItem
+          Invoke-Sqlcmd -Query $query -ServerInstance "$($server_name).database.windows.net" -Database $database_name -Username ${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME }} -Password ${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD }}
           
       - name: Run migrations sql script
         working-directory: ${{github.workspace}}/artifacts/${{inputs.artifactNameSqlMigration}}
@@ -71,7 +101,7 @@ jobs:
           $database_name = "product_catalogue_dev"
           $server_name = "${{ secrets.AZURE_SQL_INSTANCE_NAME }}"
           Get-ChildItem
-          Invoke-Sqlcmd -InputFile "product-catalogue-migration-script.sql" -ServerInstance "$($server_name).database.windows.net" -Database $database_name -AccessToken ${{ secrets.AZURE_ACCESS_TOKEN }}
+          Invoke-Sqlcmd -InputFile "product-catalogue-migration-script.sql" -ServerInstance "$($server_name).database.windows.net" -Database $database_name -Username ${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME }} -Password ${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD }}
 
       - name: Delete firewall rule
         run: |

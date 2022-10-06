@@ -7,7 +7,6 @@ on:
 env:
   artifact_name_api: product-catalogue-api
   artifact_name_sql_migration_script: migration-script
-  artifact_name_azure_ad_permissions: azure-ad-permissions
   artifact_name_terraform: terraform
   artifact_name_postman: postman
   artifact_name_static_website: product-catalogue-static-ui
@@ -19,7 +18,6 @@ jobs:
     with:
       artifactNameAPI: $artifact_name_api
       artifactNameSqlMigration: $artifact_name_sql_migration_script
-      artifactNameSqlAzureAdPermissions: $artifact_name_azure_ad_permissions
       artifactNameTerraform: $artifact_name_terraform
       artifactNamePostman: $artifact_name_postman
       artifactNameStaticWebsite: $artifact_name_static_website
@@ -36,16 +34,14 @@ jobs:
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       AZURE_SQL_INSTANCE_NAME: ${{ secrets.AZURE_SQL_INSTANCE_NAME }}
-      AZURE_SQL_DATABASE_PRODUCTCATALOGUE_CONNECTION_STRING: ${{ secrets.AZURE_SQL_DATABASE_PRODUCTCATALOGUE_CONNECTION_STRING }}
-      AZURE_SQL_SERVER_AD_ADMIN_OBJECT_ID: ${{ secrets.AZURE_SQL_SERVER_AD_ADMIN_OBJECT_ID }}
-      AZURE_SQL_SERVER_AD_ADMIN_USERNAME: ${{ secrets.AZURE_SQL_SERVER_AD_ADMIN_USERNAME }}
+      AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME: ${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME }}
+      AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD: ${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD }}
 
   deploy:
     needs: iac
     uses: ./.github/workflows/deploy.yml
     with:
       artifactNameSqlMigration: $artifact_name_sql_migration_script
-      artifactNameSqlAzureAdPermissions: $artifact_name_azure_ad_permissions
       artifactNameAPI: $artifact_name_api
       artifactNameStaticWebsite: $artifact_name_static_website
       api_app_name: ${{ needs.iac.outputs.api_app_name }}
@@ -55,8 +51,11 @@ jobs:
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       AZURE_SQL_INSTANCE_NAME: ${{ secrets.AZURE_SQL_INSTANCE_NAME }}
-      AZURE_ACCESS_TOKEN: ${{ secrets.AZURE_ACCESS_TOKEN }}
       static_webapp_api_key: ${{ needs.iac.outputs.static_webapp_api_key }}
+      AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME: ${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME }}
+      AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD: ${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD }}
+      AZURE_SQL_PRODUCT_CATALOGUE_DEV_LOGIN_USERNAME: ${{ secrets.AZURE_SQL_PRODUCT_CATALOGUE_DEV_LOGIN_USERNAME }}
+      AZURE_SQL_PRODUCT_CATALOGUE_DEV_LOGIN_PASSWORD: ${{ secrets.AZURE_SQL_PRODUCT_CATALOGUE_DEV_LOGIN_PASSWORD }}
 
   integration_tests:
     needs: [iac, deploy]

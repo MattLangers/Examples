@@ -47,12 +47,8 @@ resource "azurerm_mssql_server" "product_catalogue" {
   location                     = azurerm_resource_group.product_catalogue.location
   version                      = "12.0"
   minimum_tls_version          = "1.2"
-
-  azuread_administrator {
-    login_username = var.sql_server_ad_admin_username
-    object_id      = var.sql_server_ad_admin_object_id
-    azuread_authentication_only  = true
-  }
+  administrator_login          = "${var.sql_instance_administrator_login_username}"
+  administrator_login_password = "${var.sql_instance_administrator_login_password}"
 }
 
 resource "azurerm_mssql_firewall_rule" "product_catalogue" {

@@ -10,7 +10,6 @@ jobs:
     with:
       artifactNameAPI: product-catalogue-api
       artifactNameSqlMigration: migration-script
-      artifactNameSqlAzureAdPermissions: azure-ad-permissions
       artifactNameTerraform: terraform
       artifactNamePostman: postman
       artifactNameStaticWebsite: product-catalogue-static-ui
