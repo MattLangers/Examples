@@ -11,6 +11,7 @@ env:
   artifact_name_terraform: terraform
   artifact_name_postman: postman
   artifact_name_static_website: product-catalogue-static-ui
+  target_environment: dev
 
 jobs:
   build:
@@ -22,14 +23,14 @@ jobs:
       artifactNameTerraform: $artifact_name_terraform
       artifactNamePostman: $artifact_name_postman
       artifactNameStaticWebsite: $artifact_name_static_website
-      environment: dev
+      environment: $target_environment
 
   iac:
     needs: build
     uses: ./.github/workflows/infrastructure.create.yml
     with:
       artifactNameTerraform: $artifact_name_terraform
-      environment: dev
+      environment: $target_environment
     secrets:
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
