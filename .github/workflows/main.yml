@@ -2,25 +2,33 @@ name: orchestration
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "0.0.9.github.actions" ]
+
+env:
+  artifact_name_api: product-catalogue-api
+  artifact_name_sql_migration_script: migration-script
+  artifact_name_azure_ad_permissions: azure-ad-permissions
+  artifact_name_terraform: terraform
+  artifact_name_postman: postman
+  artifact_name_static_website: product-catalogue-static-ui
 
 jobs:
   build:
     uses: ./.github/workflows/build.unit.test.package.yml
     with:
-      artifactNameAPI: product-catalogue-api
-      artifactNameSqlMigration: migration-script
-      artifactNameSqlAzureAdPermissions: azure-ad-permissions
-      artifactNameTerraform: terraform
-      artifactNamePostman: postman
-      artifactNameStaticWebsite: product-catalogue-static-ui
+      artifactNameAPI: $artifact_name_api
+      artifactNameSqlMigration: $artifact_name_sql_migration_script
+      artifactNameSqlAzureAdPermissions: $artifact_name_azure_ad_permissions
+      artifactNameTerraform: $artifact_name_terraform
+      artifactNamePostman: $artifact_name_postman
+      artifactNameStaticWebsite: $artifact_name_static_website
       environment: dev
 
   iac:
     needs: build
     uses: ./.github/workflows/infrastructure.create.yml
     with:
-      artifactNameTerraform: terraform
+      artifactNameTerraform: $artifact_name_terraform
       environment: dev
     secrets:
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
@@ -35,10 +43,10 @@ jobs:
     needs: iac
     uses: ./.github/workflows/deploy.yml
     with:
-      artifactNameSqlMigration: migration-script
-      artifactNameSqlAzureAdPermissions: azure-ad-permissions
-      artifactNameAPI: product-catalogue-api
-      artifactNameStaticWebsite: product-catalogue-static-ui
+      artifactNameSqlMigration: $artifact_name_sql_migration_script
+      artifactNameSqlAzureAdPermissions: $artifact_name_azure_ad_permissions
+      artifactNameAPI: $artifact_name_api
+      artifactNameStaticWebsite: $artifact_name_static_website
       api_app_name: ${{ needs.iac.outputs.api_app_name }}
       resource_group_name: ${{ needs.iac.outputs.resource_group_name }}
     secrets:
@@ -53,14 +61,14 @@ jobs:
     needs: [iac, deploy]
     uses: ./.github/workflows/integration.tests.yml
     with:
-      artifactNamePostman: postman
+      artifactNamePostman: $artifact_name_postman
       static_website_url: ${{ needs.iac.outputs.static_website_url }}
 
   iac_destroy:
     needs: integration_tests
     uses: ./.github/workflows/infrastructure.destroy.yml
     with:
-      artifactNameTerraform: terraform
+      artifactNameTerraform: $artifact_name_terraform
     secrets:
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
