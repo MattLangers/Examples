@@ -35,3 +35,11 @@ variable "sql_instance_administrator_login_username" {
 variable "sql_instance_administrator_login_password" {
   default     = "sql_instance_administrator_login_password"
 }
+
+variable "sql_login_username" {
+  default     = "sql_login_username"
+}
+
+variable "sql_login_password" {
+  default     = "sql_login_password"
+}

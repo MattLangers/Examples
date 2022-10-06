@@ -82,5 +82,5 @@ resource "azurerm_static_site" "product_catalogue" {
 }
 
 locals {
-  connection_string = "Server=${var.sql_instance_name}.database.windows.net; Database=${var.sql_database_name}_${var.environment_prefix};Authentication=Active Directory Default;TrustServerCertificate=True;"
+  connection_string = "Server=${var.sql_instance_name}.database.windows.net,1433; Database=${var.sql_database_name}_${var.environment_prefix};User ID=${var.sql_login_username};Password=${var.sql_login_password};Trusted_Connection=False;Encrypt=True;"
 }
