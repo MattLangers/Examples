@@ -65,7 +65,6 @@ jobs:
           $database_name = "master"
           $server_name = "${{ secrets.AZURE_SQL_INSTANCE_NAME }}"
           $query = "IF NOT EXISTS (SELECT name FROM master.sys.server_principals WHERE name = '${{ secrets.AZURE_SQL_PRODUCT_CATALOGUE_LOGIN_USERNAME }}') BEGIN CREATE LOGIN ${{ secrets.AZURE_SQL_PRODUCT_CATALOGUE_LOGIN_USERNAME }} WITH PASSWORD = N'${{ secrets.AZURE_SQL_PRODUCT_CATALOGUE_LOGIN_PASSWORD }}' END"
-          Get-ChildItem
           Invoke-Sqlcmd -Query $query -ServerInstance "$($server_name).database.windows.net" -Database $database_name -Username ${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME }} -Password ${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD }}
       
       - name: Create user
@@ -73,7 +72,6 @@ jobs:
           $database_name = "product_catalogue_dev"
           $server_name = "${{ secrets.AZURE_SQL_INSTANCE_NAME }}"
           $query = "if not exists(select * from sys.database_principals where name = '${{ secrets.AZURE_SQL_PRODUCT_CATALOGUE_LOGIN_USERNAME }}') BEGIN CREATE USER ${{ secrets.AZURE_SQL_PRODUCT_CATALOGUE_LOGIN_USERNAME }} FOR LOGIN ${{ secrets.AZURE_SQL_PRODUCT_CATALOGUE_LOGIN_USERNAME }}; END"
-          Get-ChildItem
           Invoke-Sqlcmd -Query $query -ServerInstance "$($server_name).database.windows.net" -Database $database_name -Username ${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME }} -Password ${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD }}
       
       - name: Grant permissions
@@ -81,7 +79,6 @@ jobs:
           $database_name = "product_catalogue_dev"
           $server_name = "${{ secrets.AZURE_SQL_INSTANCE_NAME }}"
           $query = "ALTER ROLE db_datareader ADD MEMBER ${{ secrets.AZURE_SQL_PRODUCT_CATALOGUE_LOGIN_USERNAME }} ALTER ROLE db_datawriter ADD MEMBER ${{ secrets.AZURE_SQL_PRODUCT_CATALOGUE_LOGIN_USERNAME }}"
-          Get-ChildItem
           Invoke-Sqlcmd -Query $query -ServerInstance "$($server_name).database.windows.net" -Database $database_name -Username ${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME }} -Password ${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD }}
           
       - name: Run migrations sql script
@@ -89,7 +86,6 @@ jobs:
         run: |
           $database_name = "product_catalogue_dev"
           $server_name = "${{ secrets.AZURE_SQL_INSTANCE_NAME }}"
-          Get-ChildItem
           Invoke-Sqlcmd -InputFile "product-catalogue-migration-script.sql" -ServerInstance "$($server_name).database.windows.net" -Database $database_name -Username ${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME }} -Password ${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD }}
 
       - name: Delete firewall rule

@@ -2,7 +2,7 @@ name: orchestration
 
 on:
   push:
-    branches: [ "0.0.9.github.actions" ]
+    branches: [ "main" ]
 
 jobs:
   build:
