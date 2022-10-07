@@ -150,6 +150,8 @@ npm install
 npm run dev
 ```
 
+We are using the Tailwind CSS framework.
+
 #### UI End-to-end tests using Playwright
 
 Run the following command from the route of the UI folder

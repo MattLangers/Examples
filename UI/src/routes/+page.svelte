@@ -34,15 +34,15 @@
         <LeftHandNavigation></LeftHandNavigation>
     </div>
     <div class="grow h-14 pr-10">
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-            {#if searchProductsCompleted}
+        {#if searchProductsCompleted}
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-2.5">
                 {#each products as product}
                     <ProductComponent product={product}></ProductComponent>
                 {/each}
-            {:else}
-                <Loading />
-            {/if}
-        </div>
+            </div>
+        {:else}
+            <Loading />
+        {/if}
     </div>
   </div>
 
