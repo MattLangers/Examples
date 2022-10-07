@@ -8,6 +8,8 @@
 
         public string? Name { get; init; }
 
+        public bool Archived { get; set; } = false;
+
         public bool HasSearchPropertiesDefined { get; init; } = false;
     }
 }

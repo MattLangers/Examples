@@ -7,6 +7,10 @@ namespace Database
     {
         Task<Guid> CreateProduct(Product inputModel);
 
+        Task UpdateProduct(Product inputModel);
+
+        Task ArchiveProduct(Guid id);
+
         Task<List<ProductType>> GetProductTypeDtos();
 
         Task<List<ProductDtoForPublishing>> GetUnPublishedProducts();

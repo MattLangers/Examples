@@ -4,7 +4,7 @@
     {
         public SearchAllProductSpecification()
         {
-            Criteria = p => true;
+            Criteria = p => p.Archived == false;
             Includes.Add(i => i.ProductType);
         }
     }

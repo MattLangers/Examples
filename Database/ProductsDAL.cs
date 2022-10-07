@@ -16,6 +16,18 @@ namespace Database
             _dbContext = dbContext;
         }
 
+        public async Task ArchiveProduct(Guid id)
+        {
+            var product = await GetProduct(id);
+
+            if (product != null)
+            {
+                /* todo: archive */
+                _dbContext.Update(product);
+                await _dbContext.SaveChangesAsync();
+            }
+        }
+
         public async Task<Guid> CreateProduct(API.Models.InputModels.Product inputModel)
         {
             var product = new Models.Product() { ProductTypeId = inputModel.ProductTypeId, Name = inputModel.Name };
@@ -31,10 +43,7 @@ namespace Database
 
         public Task<List<ProductDtoForPublishing>> GetUnPublishedProducts()
         {
-            return Task.Run(() =>
-            {
-                return _dbContext.Product.Include(p => p.ProductPublished).Where(p => p.ProductPublished == null).Select(p => new ProductDtoForPublishing() { Id = p.Id, Name = p.Name, ProductTypeId = p.ProductTypeId }).ToList();
-            });
+            return _dbContext.Product.Include(p => p.ProductPublished).Where(p => p.ProductPublished == null).Select(p => new ProductDtoForPublishing() { Id = p.Id, Name = p.Name, ProductTypeId = p.ProductTypeId }).ToListAsync();
         }
 
         public async Task ProductsPublished(
@@ -49,6 +58,23 @@ namespace Database
 
                 await _dbContext.SaveChangesAsync();
             }
+        }
+
+        public async Task UpdateProduct(API.Models.InputModels.Product inputModel)
+        {
+            var product = await GetProduct(inputModel.Id);
+
+            if (product != null)
+            {
+                product.Name = inputModel.Name;
+                _dbContext.Update(product);
+                await _dbContext.SaveChangesAsync();
+            }
+        }
+
+        private Task<Models.Product?> GetProduct(Guid id)
+        {
+            return _dbContext.Product.FirstOrDefaultAsync(p => p.Id == id);
         }
     }
 }

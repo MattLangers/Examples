@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Database.Models
@@ -15,6 +16,9 @@ namespace Database.Models
         public DateTime CreationDate { get; set; } = DateTime.UtcNow;
 
         public int ProductTypeId { get; set; }
+
+        [DefaultValue(false)]
+        public bool Archived { get; set; }
 
         public ProductType ProductType { get; set; } = default!;
 
