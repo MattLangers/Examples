@@ -47,6 +47,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           path: artifacts
+          name: ${{ inputs.artifactNameSqlMigration }}
 
       - name: 'Az CLI login'
         uses: azure/login@v1
