@@ -23,5 +23,11 @@ namespace Database.Models
         public ProductType ProductType { get; set; } = default!;
 
         public ProductPublished ProductPublished { get; set; } = default!;
+
+        public List<ProductPrice> ProductPrices { get; set; } = default!;
+
+        public List<ProductDescription> ProductDescriptions { get; set; } = default!;
+
+        public List<ProductRanking> ProductRankings { get; set; } = default!;
     }
 }
