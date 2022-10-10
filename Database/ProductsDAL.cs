@@ -24,7 +24,7 @@ namespace Database
 
         public async Task ArchiveProduct(Guid id)
         {
-            var product = await GetProduct(id);
+            var product = await _dbContext.Product.FirstOrDefaultAsync(p => p.Id == id);
 
             if (product != null)
             {
@@ -69,7 +69,7 @@ namespace Database
 
         public async Task UpdateProduct(API.Models.InputModels.Product inputModel, Guid id)
         {
-            var product = await GetProduct(id);
+            var product = await _dbContext.Product.Include(p => p.Description).Include(p => p.Price).Include(p => p.Ranking).FirstOrDefaultAsync(p => p.Id == id);
 
             if (product != null)
             {
@@ -105,11 +105,6 @@ namespace Database
                 _dbContext.Update(product);
                 await _dbContext.SaveChangesAsync();
             }
-        }
-
-        private Task<Models.Product?> GetProduct(Guid id)
-        {
-            return _dbContext.Product.FirstOrDefaultAsync(p => p.Id == id);
         }
     }
 }

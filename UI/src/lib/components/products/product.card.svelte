@@ -1,14 +1,21 @@
 <script lang="ts">
 	import type { Product } from '$lib/models/product';
 	import ProductTypeIconComponent from '$lib/components/products/product.type.icon.svelte';
-	import ProductModal from '$lib/components/products/product.modal.svelte';
+	import ProductArchive from '$lib/components/products/product.archive.svelte';
+	import ProductRanking from '$lib/components/products/product.ranking.svelte';
+	import ProductEdit from '$lib/components/products/product.edit.svelte';
 
     export let product: Product;
+	
+	let showArchiveModal = false;
+	let showEditModal = false;
 
-	let showModal = false;
-
-	const handleToggleModal = () => {
-		showModal = !showModal;
+	const handleToggleForArchiveModal = () => {
+		showArchiveModal = !showArchiveModal;
+	};
+	
+	const handleToggleForEditModal = () => {
+		showEditModal = !showEditModal;
 	};
 </script>
 
@@ -20,51 +27,20 @@
 
 	<div>
 		<p class="mt-2 text-sm text-gray-600">
-			Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odio eligendi similique
-			exercitationem optio libero vitae accusamus cupiditate laborum eos.
+			{product.description}
 		</p>
 	</div>
 
 	<div>
-		<div class="flex mt-2 item-center">
-			<svg class="w-5 h-5 text-amber-300 fill-current" viewBox="0 0 24 24">
-				<path
-					d="M12 17.27L18.18 21L16.54 13.97L22 9.24L14.81 8.63L12 2L9.19 8.63L2 9.24L7.46 13.97L5.82 21L12 17.27Z"
-				/>
-			</svg>
-
-			<svg class="w-5 h-5 text-amber-300 fill-current" viewBox="0 0 24 24">
-				<path
-					d="M12 17.27L18.18 21L16.54 13.97L22 9.24L14.81 8.63L12 2L9.19 8.63L2 9.24L7.46 13.97L5.82 21L12 17.27Z"
-				/>
-			</svg>
-
-			<svg class="w-5 h-5 text-amber-300 fill-current" viewBox="0 0 24 24">
-				<path
-					d="M12 17.27L18.18 21L16.54 13.97L22 9.24L14.81 8.63L12 2L9.19 8.63L2 9.24L7.46 13.97L5.82 21L12 17.27Z"
-				/>
-			</svg>
-
-			<svg class="w-5 h-5 text-gray-300 fill-current" viewBox="0 0 24 24">
-				<path
-					d="M12 17.27L18.18 21L16.54 13.97L22 9.24L14.81 8.63L12 2L9.19 8.63L2 9.24L7.46 13.97L5.82 21L12 17.27Z"
-				/>
-			</svg>
-
-			<svg class="w-5 h-5 text-gray-300 fill-current" viewBox="0 0 24 24">
-				<path
-					d="M12 17.27L18.18 21L16.54 13.97L22 9.24L14.81 8.63L12 2L9.19 8.63L2 9.24L7.46 13.97L5.82 21L12 17.27Z"
-				/>
-			</svg>
-		</div>
+		<ProductRanking ranking={product.ranking}/>
 	</div>
 
 	<div class="flex justify-between mt-3 item-center">
 		<div class="flex flex-row w-full">
 			<div class="basis-3/5">
-				<h1 class="text-lg font-bold text-gray-700">£1.00</h1>
+				<h1 class="text-lg font-bold text-gray-700">£{product.price}</h1>
 			</div>
-			<div class="basis-1/5 icon_alignment" title="Click here to edit this product">
+			<div class="basis-1/5 icon_alignment cursor-pointer" title="Click here to edit this product" on:click={() => handleToggleForEditModal()}>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					fill="none"
@@ -80,7 +56,7 @@
 					/>
 				</svg>
 			</div>
-			<div class="basis-1/5 icon_alignment cursor-pointer" title="Click here to archive this product" on:click={() => handleToggleModal()}>
+			<div class="basis-1/5 icon_alignment cursor-pointer" title="Click here to archive this product" on:click={() => handleToggleForArchiveModal()}>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					fill="none"
@@ -100,7 +76,8 @@
 	</div>
 </div>
 
-<ProductModal bind:product={product} open={showModal} on:close={() => handleToggleModal()} />
+<ProductArchive bind:product={product} open={showArchiveModal} on:close={() => handleToggleForArchiveModal()} />
+<ProductEdit bind:product={product} open={showEditModal} on:close={() => handleToggleForEditModal()} />
 
 <style>
 	.icon_alignment {
