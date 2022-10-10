@@ -11,9 +11,9 @@ namespace Database.Models.Hitory
         public int Id { get; set; }
 
         [Column(TypeName = "smallint")]
-        public int From { get; set; }
+        public byte From { get; set; }
 
-        public int To { get; set; }
+        public byte To { get; set; }
 
         public DateTime CreationDate { get; set; } = DateTime.UtcNow;
 

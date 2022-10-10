@@ -11,10 +11,10 @@ namespace Database.Models.Hitory
         public int Id { get; set; }
 
         [Column(TypeName = "smallmoney")]
-        public decimal From { get; set; }
+        public float From { get; set; }
 
         [Column(TypeName = "smallmoney")]
-        public decimal To { get; set; }
+        public float To { get; set; }
 
         public DateTime CreationDate { get; set; } = DateTime.UtcNow;
 

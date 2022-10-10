@@ -10,9 +10,9 @@ namespace Database.Models.Hitory
         [Key]
         public int Id { get; set; }
 
-        public string FromDescription { get; set; } = default!;
+        public string From { get; set; } = default!;
 
-        public string ToDescription { get; set; } = default!;
+        public string To { get; set; } = default!;
 
         public DateTime CreationDate { get; set; } = DateTime.UtcNow;
 
