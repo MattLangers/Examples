@@ -2,20 +2,22 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Database.Models
+namespace Database.Models.Hitory
 {
-    public sealed class ProductPrice
+    public sealed class ProductPriceHistory
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
         [Column(TypeName = "smallmoney")]
-        public float Price { get; set; }
+        public decimal From { get; set; }
+
+        [Column(TypeName = "smallmoney")]
+        public decimal To { get; set; }
 
         public DateTime CreationDate { get; set; } = DateTime.UtcNow;
 
-        [ForeignKey("Id")]
         public Product Product { get; set; } = default!;
     }
 }

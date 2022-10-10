@@ -8,13 +8,14 @@ namespace Database.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [Column(TypeName = "smallint")]
-        public int Rank { get; set; }
+        public byte Rank { get; set; }
 
         public DateTime CreationDate { get; set; } = DateTime.UtcNow;
 
+        [ForeignKey("Id")]
         public Product Product { get; set; } = default!;
     }
 }

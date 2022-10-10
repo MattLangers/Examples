@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Database.Models.Hitory;
 
 namespace Database.Models
 {
@@ -24,10 +25,18 @@ namespace Database.Models
 
         public ProductPublished ProductPublished { get; set; } = default!;
 
-        public List<ProductPrice> ProductPrices { get; set; } = default!;
+        public ProductPrice Price { get; set; } = default!;
 
-        public List<ProductDescription> ProductDescriptions { get; set; } = default!;
+        public ProductDescription Description { get; set; } = default!;
 
-        public List<ProductRanking> ProductRankings { get; set; } = default!;
+        public ProductRanking Ranking { get; set; } = default!;
+
+        public List<ProductDescriptionHistory> ProductDescriptionHistory { get; set; } = default!;
+
+        public List<ProductNameHistory> ProductNameHistory { get; set; } = default!;
+
+        public List<ProductPriceHistory> ProductPriceHistory { get; set; } = default!;
+
+        public List<ProductRankingHistory> ProductRankingHistory { get; set; } = default!;
     }
 }

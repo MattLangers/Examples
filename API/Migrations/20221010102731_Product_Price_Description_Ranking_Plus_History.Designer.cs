@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20221010093033_Product_Price_Description_Ranking")]
-    partial class Product_Price_Description_Ranking
+    [Migration("20221010102731_Product_Price_Description_Ranking_Plus_History")]
+    partial class Product_Price_Description_Ranking_Plus_History
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,6 +23,118 @@ namespace API.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("Database.Models.Hitory.ProductDescriptionHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FromDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ToDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductDescriptionHistory");
+                });
+
+            modelBuilder.Entity("Database.Models.Hitory.ProductNameHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("From")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("To")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductNameHistory");
+                });
+
+            modelBuilder.Entity("Database.Models.Hitory.ProductPriceHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("From")
+                        .HasColumnType("smallmoney");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("To")
+                        .HasColumnType("smallmoney");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductPriceHistory");
+                });
+
+            modelBuilder.Entity("Database.Models.Hitory.ProductRankingHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<short>("From")
+                        .HasColumnType("smallint");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("To")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductRankingHistory");
+                });
 
             modelBuilder.Entity("Database.Models.Product", b =>
                 {
@@ -55,7 +167,7 @@ namespace API.Migrations
                         {
                             Id = new Guid("f284aa7d-f280-4f81-9435-4b43b24e7bc7"),
                             Archived = false,
-                            CreationDate = new DateTime(2022, 10, 10, 9, 30, 33, 453, DateTimeKind.Utc).AddTicks(7014),
+                            CreationDate = new DateTime(2022, 10, 10, 10, 27, 31, 282, DateTimeKind.Utc).AddTicks(1561),
                             Name = "Sherbet Fountain",
                             ProductTypeId = 10
                         },
@@ -63,7 +175,7 @@ namespace API.Migrations
                         {
                             Id = new Guid("36e3555a-4d12-455b-9915-17260e798840"),
                             Archived = false,
-                            CreationDate = new DateTime(2022, 10, 10, 9, 30, 33, 453, DateTimeKind.Utc).AddTicks(7041),
+                            CreationDate = new DateTime(2022, 10, 10, 10, 27, 31, 282, DateTimeKind.Utc).AddTicks(1592),
                             Name = "Cadbury Creme Egg",
                             ProductTypeId = 11
                         },
@@ -71,7 +183,7 @@ namespace API.Migrations
                         {
                             Id = new Guid("611622e1-5c10-4e7e-a7d5-43d1457179d7"),
                             Archived = false,
-                            CreationDate = new DateTime(2022, 10, 10, 9, 30, 33, 453, DateTimeKind.Utc).AddTicks(7046),
+                            CreationDate = new DateTime(2022, 10, 10, 10, 27, 31, 282, DateTimeKind.Utc).AddTicks(1598),
                             Name = "Curly Wurly",
                             ProductTypeId = 11
                         },
@@ -79,7 +191,7 @@ namespace API.Migrations
                         {
                             Id = new Guid("ae942935-a413-4c83-8d0f-5c87ed468f79"),
                             Archived = false,
-                            CreationDate = new DateTime(2022, 10, 10, 9, 30, 33, 453, DateTimeKind.Utc).AddTicks(7048),
+                            CreationDate = new DateTime(2022, 10, 10, 10, 27, 31, 282, DateTimeKind.Utc).AddTicks(1602),
                             Name = "Liquorice Allsorts",
                             ProductTypeId = 7
                         },
@@ -87,7 +199,7 @@ namespace API.Migrations
                         {
                             Id = new Guid("c67a4aff-699f-4ba2-8513-7731864c6efe"),
                             Archived = false,
-                            CreationDate = new DateTime(2022, 10, 10, 9, 30, 33, 453, DateTimeKind.Utc).AddTicks(7052),
+                            CreationDate = new DateTime(2022, 10, 10, 10, 27, 31, 282, DateTimeKind.Utc).AddTicks(1607),
                             Name = "Coconut Mushrooms",
                             ProductTypeId = 2
                         },
@@ -95,7 +207,7 @@ namespace API.Migrations
                         {
                             Id = new Guid("822bea15-489a-49ac-bc05-32cc6a05e2ec"),
                             Archived = false,
-                            CreationDate = new DateTime(2022, 10, 10, 9, 30, 33, 453, DateTimeKind.Utc).AddTicks(7056),
+                            CreationDate = new DateTime(2022, 10, 10, 10, 27, 31, 282, DateTimeKind.Utc).AddTicks(1610),
                             Name = "Jelly Babies",
                             ProductTypeId = 2
                         },
@@ -103,7 +215,7 @@ namespace API.Migrations
                         {
                             Id = new Guid("faea9f16-a461-463d-a70e-051fb130fbd0"),
                             Archived = false,
-                            CreationDate = new DateTime(2022, 10, 10, 9, 30, 33, 453, DateTimeKind.Utc).AddTicks(7059),
+                            CreationDate = new DateTime(2022, 10, 10, 10, 27, 31, 282, DateTimeKind.Utc).AddTicks(1613),
                             Name = "Dolly Mixtures",
                             ProductTypeId = 2
                         });
@@ -111,11 +223,9 @@ namespace API.Migrations
 
             modelBuilder.Entity("Database.Models.ProductDescription", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
@@ -124,23 +234,16 @@ namespace API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
 
                     b.ToTable("ProductDescription");
                 });
 
             modelBuilder.Entity("Database.Models.ProductPrice", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
@@ -148,12 +251,7 @@ namespace API.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("smallmoney");
 
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
 
                     b.ToTable("ProductPrice");
                 });
@@ -174,24 +272,17 @@ namespace API.Migrations
 
             modelBuilder.Entity("Database.Models.ProductRanking", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<short>("Rank")
                         .HasColumnType("smallint");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
 
                     b.ToTable("ProductRanking");
                 });
@@ -220,69 +311,113 @@ namespace API.Migrations
                         new
                         {
                             Id = 1,
-                            CreationDate = new DateTime(2022, 10, 10, 9, 30, 33, 453, DateTimeKind.Utc).AddTicks(6943),
+                            CreationDate = new DateTime(2022, 10, 10, 10, 27, 31, 282, DateTimeKind.Utc).AddTicks(1489),
                             Name = "Boiled"
                         },
                         new
                         {
                             Id = 2,
-                            CreationDate = new DateTime(2022, 10, 10, 9, 30, 33, 453, DateTimeKind.Utc).AddTicks(6953),
+                            CreationDate = new DateTime(2022, 10, 10, 10, 27, 31, 282, DateTimeKind.Utc).AddTicks(1498),
                             Name = "Chewy"
                         },
                         new
                         {
                             Id = 3,
-                            CreationDate = new DateTime(2022, 10, 10, 9, 30, 33, 453, DateTimeKind.Utc).AddTicks(6954),
+                            CreationDate = new DateTime(2022, 10, 10, 10, 27, 31, 282, DateTimeKind.Utc).AddTicks(1499),
                             Name = "BubbleGum"
                         },
                         new
                         {
                             Id = 4,
-                            CreationDate = new DateTime(2022, 10, 10, 9, 30, 33, 453, DateTimeKind.Utc).AddTicks(6955),
+                            CreationDate = new DateTime(2022, 10, 10, 10, 27, 31, 282, DateTimeKind.Utc).AddTicks(1501),
                             Name = "Fizzy"
                         },
                         new
                         {
                             Id = 5,
-                            CreationDate = new DateTime(2022, 10, 10, 9, 30, 33, 453, DateTimeKind.Utc).AddTicks(6957),
+                            CreationDate = new DateTime(2022, 10, 10, 10, 27, 31, 282, DateTimeKind.Utc).AddTicks(1502),
                             Name = "Marshmallow"
                         },
                         new
                         {
                             Id = 6,
-                            CreationDate = new DateTime(2022, 10, 10, 9, 30, 33, 453, DateTimeKind.Utc).AddTicks(6959),
+                            CreationDate = new DateTime(2022, 10, 10, 10, 27, 31, 282, DateTimeKind.Utc).AddTicks(1504),
                             Name = "Jellies"
                         },
                         new
                         {
                             Id = 7,
-                            CreationDate = new DateTime(2022, 10, 10, 9, 30, 33, 453, DateTimeKind.Utc).AddTicks(6960),
+                            CreationDate = new DateTime(2022, 10, 10, 10, 27, 31, 282, DateTimeKind.Utc).AddTicks(1505),
                             Name = "Liquorice"
                         },
                         new
                         {
                             Id = 8,
-                            CreationDate = new DateTime(2022, 10, 10, 9, 30, 33, 453, DateTimeKind.Utc).AddTicks(6962),
+                            CreationDate = new DateTime(2022, 10, 10, 10, 27, 31, 282, DateTimeKind.Utc).AddTicks(1507),
                             Name = "Lollipops"
                         },
                         new
                         {
                             Id = 9,
-                            CreationDate = new DateTime(2022, 10, 10, 9, 30, 33, 453, DateTimeKind.Utc).AddTicks(6963),
+                            CreationDate = new DateTime(2022, 10, 10, 10, 27, 31, 282, DateTimeKind.Utc).AddTicks(1509),
                             Name = "Mints"
                         },
                         new
                         {
                             Id = 10,
-                            CreationDate = new DateTime(2022, 10, 10, 9, 30, 33, 453, DateTimeKind.Utc).AddTicks(6964),
+                            CreationDate = new DateTime(2022, 10, 10, 10, 27, 31, 282, DateTimeKind.Utc).AddTicks(1511),
                             Name = "Sherbet"
                         },
                         new
                         {
                             Id = 11,
-                            CreationDate = new DateTime(2022, 10, 10, 9, 30, 33, 453, DateTimeKind.Utc).AddTicks(6965),
+                            CreationDate = new DateTime(2022, 10, 10, 10, 27, 31, 282, DateTimeKind.Utc).AddTicks(1512),
                             Name = "Chocolate"
                         });
+                });
+
+            modelBuilder.Entity("Database.Models.Hitory.ProductDescriptionHistory", b =>
+                {
+                    b.HasOne("Database.Models.Product", "Product")
+                        .WithMany("ProductDescriptionHistory")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Database.Models.Hitory.ProductNameHistory", b =>
+                {
+                    b.HasOne("Database.Models.Product", "Product")
+                        .WithMany("ProductNameHistory")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Database.Models.Hitory.ProductPriceHistory", b =>
+                {
+                    b.HasOne("Database.Models.Product", "Product")
+                        .WithMany("ProductPriceHistory")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Database.Models.Hitory.ProductRankingHistory", b =>
+                {
+                    b.HasOne("Database.Models.Product", "Product")
+                        .WithMany("ProductRankingHistory")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Database.Models.Product", b =>
@@ -299,8 +434,8 @@ namespace API.Migrations
             modelBuilder.Entity("Database.Models.ProductDescription", b =>
                 {
                     b.HasOne("Database.Models.Product", "Product")
-                        .WithMany("ProductDescriptions")
-                        .HasForeignKey("ProductId")
+                        .WithOne("Description")
+                        .HasForeignKey("Database.Models.ProductDescription", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -310,8 +445,8 @@ namespace API.Migrations
             modelBuilder.Entity("Database.Models.ProductPrice", b =>
                 {
                     b.HasOne("Database.Models.Product", "Product")
-                        .WithMany("ProductPrices")
-                        .HasForeignKey("ProductId")
+                        .WithOne("Price")
+                        .HasForeignKey("Database.Models.ProductPrice", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -332,8 +467,8 @@ namespace API.Migrations
             modelBuilder.Entity("Database.Models.ProductRanking", b =>
                 {
                     b.HasOne("Database.Models.Product", "Product")
-                        .WithMany("ProductRankings")
-                        .HasForeignKey("ProductId")
+                        .WithOne("Ranking")
+                        .HasForeignKey("Database.Models.ProductRanking", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -342,14 +477,25 @@ namespace API.Migrations
 
             modelBuilder.Entity("Database.Models.Product", b =>
                 {
-                    b.Navigation("ProductDescriptions");
+                    b.Navigation("Description")
+                        .IsRequired();
 
-                    b.Navigation("ProductPrices");
+                    b.Navigation("Price")
+                        .IsRequired();
+
+                    b.Navigation("ProductDescriptionHistory");
+
+                    b.Navigation("ProductNameHistory");
+
+                    b.Navigation("ProductPriceHistory");
 
                     b.Navigation("ProductPublished")
                         .IsRequired();
 
-                    b.Navigation("ProductRankings");
+                    b.Navigation("ProductRankingHistory");
+
+                    b.Navigation("Ranking")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

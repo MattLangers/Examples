@@ -7,5 +7,11 @@ namespace Database.Factories
         IList<ProductType> CreateProductTypes();
 
         IList<Product> CreateProducts();
+
+        IList<ProductDescription> CreateProductDescriptions();
+
+        IList<ProductPrice> CreateProductPrices();
+
+        IList<ProductRanking> CreateProductRankings();
     }
 }

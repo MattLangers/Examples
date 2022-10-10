@@ -73,7 +73,10 @@ namespace Database
             if (product != null)
             {
                 _logger.LogInformation($"Product {id} updated");
-                product.Name = inputModel.Name;
+                if (!string.IsNullOrWhiteSpace(inputModel.Name))
+                {
+                    product.Name = inputModel.Name;
+                }
                 _dbContext.Update(product);
                 await _dbContext.SaveChangesAsync();
             }

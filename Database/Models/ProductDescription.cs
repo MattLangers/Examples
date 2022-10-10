@@ -8,12 +8,13 @@ namespace Database.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public string Description { get; set; } = default!;
 
         public DateTime CreationDate { get; set; } = DateTime.UtcNow;
 
+        [ForeignKey("Id")]
         public Product Product { get; set; } = default!;
     }
 }

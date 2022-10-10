@@ -83,17 +83,6 @@ app.MapPost("/products", async (
     return Results.Ok(outputModelFactory.Create(productGuid));
 });
 
-app.MapPut("/products/{id}/archive", async (
-    ILogger<Program> logger,
-    IProductsDAL productsDAL,
-    IOutputModelFactory outputModelFactory,
-    Guid id) =>
-{
-    logger.LogInformation($"St: product update request - {id}");
-    await productsDAL.ArchiveProduct(id);
-    return Results.Ok();
-});
-
 app.MapPut("/products/{id}", async (
     ILogger<Program> logger,
     IProductsDAL productsDAL,
@@ -104,6 +93,17 @@ app.MapPut("/products/{id}", async (
     logger.LogInformation($"St: archive product");
     logger.LogInformation(inputModel.ToString());
     await productsDAL.UpdateProduct(inputModel, id);
+    return Results.Ok();
+});
+
+app.MapPut("/products/{id}/archive", async (
+    ILogger<Program> logger,
+    IProductsDAL productsDAL,
+    IOutputModelFactory outputModelFactory,
+    Guid id) =>
+{
+    logger.LogInformation($"St: product update request - {id}");
+    await productsDAL.ArchiveProduct(id);
     return Results.Ok();
 });
 

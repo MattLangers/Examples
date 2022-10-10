@@ -5,9 +5,9 @@
         public SearchProductBaseWithInclude()
         {
             Includes.Add(i => i.ProductType);
-            Includes.Add(i => i.ProductDescriptions.OrderByDescending(pd => pd.Id).Take(1));
-            Includes.Add(i => i.ProductPrices.OrderByDescending(pp => pp.Id).Take(1));
-            Includes.Add(i => i.ProductRankings.OrderByDescending(pr => pr.Id).Take(1));
+            Includes.Add(i => i.Description);
+            Includes.Add(i => i.Price);
+            Includes.Add(i => i.Ranking);
         }
     }
 }

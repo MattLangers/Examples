@@ -19,7 +19,7 @@ namespace Database.Search
 
             foreach (var product in products)
             {
-                result.Add(productDtoFactory.Create(product.Id, product.Name, product.CreationDate, product.ProductType.Id, product.ProductType.Name));
+                result.Add(productDtoFactory.Create(product));
             }
 
             return result;
