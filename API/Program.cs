@@ -37,7 +37,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: productCategoryAllowOrigins,
                       policy =>
                       {
-                          policy.WithOrigins(corsAllowedOrigins.ToArray()).AllowAnyHeader();
+                          policy.WithOrigins(corsAllowedOrigins.ToArray()).AllowAnyHeader().AllowAnyMethod();
                       });
 });
 
@@ -83,15 +83,27 @@ app.MapPost("/products", async (
     return Results.Ok(outputModelFactory.Create(productGuid));
 });
 
-app.MapPut("/products", async (
+app.MapPut("/products/{id}/archive", async (
     ILogger<Program> logger,
     IProductsDAL productsDAL,
     IOutputModelFactory outputModelFactory,
+    Guid id) =>
+{
+    logger.LogInformation($"St: product update request - {id}");
+    await productsDAL.ArchiveProduct(id);
+    return Results.Ok();
+});
+
+app.MapPut("/products/{id}", async (
+    ILogger<Program> logger,
+    IProductsDAL productsDAL,
+    IOutputModelFactory outputModelFactory,
+    Guid id,
     Product inputModel) =>
 {
-    logger.LogInformation($"St: product update request");
+    logger.LogInformation($"St: archive product");
     logger.LogInformation(inputModel.ToString());
-    await productsDAL.UpdateProduct(inputModel);
+    await productsDAL.UpdateProduct(inputModel, id);
     return Results.Ok();
 });
 

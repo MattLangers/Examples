@@ -3,16 +3,21 @@ using API.Models.InputModels;
 using Database.Models;
 using Database.Models.DTO;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Database
 {
     public sealed class ProductsDAL : IProductsDAL
     {
+        private readonly ILogger _logger;
         private readonly DatabaseContext _dbContext;
 
-        public ProductsDAL(DatabaseContext dbContext)
+        public ProductsDAL(
+            ILogger<ProductsDAL> logger,
+            DatabaseContext dbContext)
         {
+            _logger = logger;
             _dbContext = dbContext;
         }
 
@@ -22,7 +27,8 @@ namespace Database
 
             if (product != null)
             {
-                /* todo: archive */
+                _logger.LogInformation($"Product {id} archived");
+                product.Archived = true;
                 _dbContext.Update(product);
                 await _dbContext.SaveChangesAsync();
             }
@@ -60,12 +66,13 @@ namespace Database
             }
         }
 
-        public async Task UpdateProduct(API.Models.InputModels.Product inputModel)
+        public async Task UpdateProduct(API.Models.InputModels.Product inputModel, Guid id)
         {
-            var product = await GetProduct(inputModel.Id);
+            var product = await GetProduct(id);
 
             if (product != null)
             {
+                _logger.LogInformation($"Product {id} updated");
                 product.Name = inputModel.Name;
                 _dbContext.Update(product);
                 await _dbContext.SaveChangesAsync();

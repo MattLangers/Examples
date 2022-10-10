@@ -7,12 +7,10 @@ using Database.SpecificationPattern.Specifications.Product;
 using Moq;
 using Moq.AutoMock;
 
-namespace Database.Tests.ProductsDal.UpdateProduct
+namespace Database.Tests.ProductsDal.ArchiveProduct
 {
-    public sealed class ProductsDal_UpdateProduct_Product_Exists_Tests
+    public sealed class ProductsDal_ArchiveProduct_Product_Doesnt_Exist_Archive_Tests
     {
-        private const string ProductName = "Snickers";
-
         private static readonly Guid guid = Guid.NewGuid();
 
         private readonly AutoMocker autoMocker = new AutoMocker();
@@ -24,19 +22,17 @@ namespace Database.Tests.ProductsDal.UpdateProduct
         [OneTimeSetUp]
         public async Task SetupAsync()
         {
-            databaseContextFactory.WithProduct(new Models.Product() { Id = guid, Name = "Something" });
-
             databaseContext = databaseContextFactory.GetContext();
 
             autoMocker.Use(databaseContext);
 
-            await autoMocker.CreateInstance<ProductsDAL>().UpdateProduct(new API.Models.InputModels.Product() { Name = ProductName }, guid);
+            await autoMocker.CreateInstance<ProductsDAL>().ArchiveProduct(guid);
         }
 
         [Test]
-        public void Expect_Product_Name_To_Be_Updated()
+        public void Expect_Method_To_Complete_No_New_Products()
         {
-            Assert.That(databaseContext.Product.Single().Name, Is.EqualTo(ProductName));
+            Assert.That(databaseContext.Product.Any(), Is.False);
         }
 
         [OneTimeTearDown]

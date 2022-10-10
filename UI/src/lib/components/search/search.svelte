@@ -4,7 +4,8 @@
 	import { variables } from '../../../variables';
 	import type { QueryStringParams } from '$lib/models/query.string.params';
 	import { onMount } from 'svelte';
-	import { productTypes as storeProductTypes } from "$lib/components/products/product.type.store"
+	import { productTypes as productTypeStore } from "$lib/components/products/product.type.store"
+	import { products as productStore } from "$lib/components/products/product.store"
 	import ProdcuctTypeSelectElement from '$lib/components/products/product.type.select.element.svelte';
 
 	export let products: Product[] = [];
@@ -14,8 +15,12 @@
 	let productTypeSelected: ProductType;
 	let productTypes: ProductType[] = [];
 
-	storeProductTypes.subscribe((productTypeValues) => {
+	productTypeStore.subscribe((productTypeValues) => {
 		productTypes = productTypeValues;
+	});
+
+	productStore.subscribe((producValues) => {
+		products = producValues;
 	});
 
 	var getProductTypes = async function (): Promise<void> {
@@ -23,7 +28,7 @@
         const response = await fetch(variables.api_URL + 'product-types');
 		const data = await response.json().then(data => data as ProductType[]);
 		data.unshift({name: "Please select", id: 0})
-		storeProductTypes.update((v) => v = <never[]>data);
+		productTypeStore.update((v) => v = <never[]>data);
         searchProductsCompleted = true;
 		productTypeSelected = productTypes[0];
 	};
@@ -43,7 +48,9 @@
 			variables.api_URL + 'products?' + new URLSearchParams(querystringParameters).toString();
 
 		const response = await fetch(url);
-		products = await response.json();
+
+		const data = await response.json().then(data => data as Product[]);
+		productStore.update(() => <never[]>data);
 	};
 
 	onMount(() => {

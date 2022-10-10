@@ -9,12 +9,10 @@
 	import TopRightHandNav from '$lib/components/navigation/top.right.hand.nav.svelte';
 	import Search from '$lib/components/search/search.svelte';
 	import Loading from '$lib/components/search/loading.svelte';
-    import ProductModal from '$lib/components/products/product.modal.svelte'
 
 	let products: Product[] = [];
 	let searchProductsCompleted = false;
 	let sideBarOpen = false;
-	let openModal = false;
 </script>
 
 <Sidebar bind:open={sideBarOpen} />
@@ -42,8 +40,6 @@
 					<ProductComponent {product} />
 				{/each}
 			</div>
-
-            <ProductModal bind:openModal={openModal} bind:product={products[0]}/>
 		{:else}
 			<Loading />
 		{/if}

@@ -28,7 +28,7 @@ namespace Database.Tests.ProductsDal.UpdateProduct
 
             autoMocker.Use(databaseContext);
 
-            await autoMocker.CreateInstance<ProductsDAL>().UpdateProduct(new API.Models.InputModels.Product() { Id = guid, Name = ProductName });
+            await autoMocker.CreateInstance<ProductsDAL>().UpdateProduct(new API.Models.InputModels.Product() { Name = ProductName }, guid);
         }
 
         [Test]

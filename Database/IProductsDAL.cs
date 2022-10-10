@@ -7,7 +7,7 @@ namespace Database
     {
         Task<Guid> CreateProduct(Product inputModel);
 
-        Task UpdateProduct(Product inputModel);
+        Task UpdateProduct(Product inputModel, Guid id);
 
         Task ArchiveProduct(Guid id);
 

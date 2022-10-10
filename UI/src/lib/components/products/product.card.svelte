@@ -1,14 +1,21 @@
 <script lang="ts">
 	import type { Product } from '$lib/models/product';
-    import ProductTypeIconComponent from '$lib/components/products/product.type.icon.svelte'
+	import ProductTypeIconComponent from '$lib/components/products/product.type.icon.svelte';
+	import ProductModal from '$lib/components/products/product.modal.svelte';
 
-	export let product: Product;
+    export let product: Product;
+
+	let showModal = false;
+
+	const handleToggleModal = () => {
+		showModal = !showModal;
+	};
 </script>
 
 <div class="w-full max-w-sm px-4 py-3 bg-white rounded-md shadow-md">
 	<div class="flex items-center justify-between">
 		<h1 class="mt-2 text-lg font-semibold text-gray-800">{product.name}</h1>
-		<ProductTypeIconComponent productType={product.productType}></ProductTypeIconComponent>
+		<ProductTypeIconComponent productType={product.productType} />
 	</div>
 
 	<div>
@@ -57,7 +64,7 @@
 			<div class="basis-3/5">
 				<h1 class="text-lg font-bold text-gray-700">£1.00</h1>
 			</div>
-			<div class="basis-1/5 icon_alignment">
+			<div class="basis-1/5 icon_alignment" title="Click here to edit this product">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					fill="none"
@@ -73,7 +80,7 @@
 					/>
 				</svg>
 			</div>
-			<div class="basis-1/5 icon_alignment">
+			<div class="basis-1/5 icon_alignment cursor-pointer" title="Click here to archive this product" on:click={() => handleToggleModal()}>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					fill="none"
@@ -82,12 +89,18 @@
 					stroke="currentColor"
 					class="w-6 h-6"
 				>
-					<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m6 4.125l2.25 2.25m0 0l2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"
+					/>
 				</svg>
 			</div>
 		</div>
 	</div>
 </div>
+
+<ProductModal bind:product={product} open={showModal} on:close={() => handleToggleModal()} />
 
 <style>
 	.icon_alignment {

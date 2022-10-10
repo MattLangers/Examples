@@ -60,6 +60,6 @@
 	}
 </script>
 
-<span class="px-3 py-1 text-xs text-white uppercase rounded-full {getClass(productType.id)}"
+<span class="px-3 py-1 text-xs text-white font-bold uppercase rounded-full {getClass(productType.id)}"
 	>{productType.name}</span
 >
