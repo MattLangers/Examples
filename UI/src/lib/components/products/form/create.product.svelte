@@ -41,7 +41,7 @@
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify({ Name: name, ProductTypeId: productTypeId, Price: price, Ranking: ranking })
+			body: JSON.stringify({ Name: name, ProductTypeId: productTypeId, Price: price, Ranking: ranking, Description: description })
 		});
 
 		var result = await response.json();
