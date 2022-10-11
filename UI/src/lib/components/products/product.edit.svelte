@@ -5,6 +5,7 @@
 	import { products as productsStore } from '$lib/components/products/product.store';
 	import { ProductEditObjectBuilder } from './product.edit.object.builder';
 	import type { ProductEdit } from '$lib/models/product.edit';
+	import ProductForm from './product.form.svelte';
 
 	export let open = false;
 	export let product: Product;
@@ -88,93 +89,7 @@
 								</svg>
 							</div>
 							<div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left grow">
-								<div class="form-group mb-6">
-									<input
-										type="text"
-										class="form-control
-										  block
-										  w-full
-										  px-3
-										  py-1.5
-										  text-base
-										  font-normal
-										  text-gray-700
-										  bg-white bg-clip-padding
-										  border border-solid border-gray-300
-										  rounded
-										  transition
-										  ease-in-out
-										  m-0
-										  focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none mb-2 "
-										id="edit_product_name"
-										placeholder="Name"
-										bind:value={productName}
-									/>
-
-									<textarea
-										class="form-control
-										block
-										w-full
-										px-3
-										py-1.5
-										text-base
-										font-normal
-										text-gray-700
-										bg-white bg-clip-padding
-										border border-solid border-gray-300
-										rounded
-										transition
-										ease-in-out
-										m-0
-										focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none mb-2"
-										id="edit_product_description"
-										placeholder="Description"
-										rows="4"
-										bind:value={productDescription}
-									/>
-
-									<input
-										type="range"
-										id="cowbell"
-										name="cowbell"
-										min="0"
-										max="5"
-										bind:value={productRanking}
-										step="1"
-										list="product_ranking_labels"
-									/>
-
-									<datalist id="product_ranking_labels">
-										<option value="0" label="0" />
-										<option value="1" label="1" />
-										<option value="2" label="2" />
-										<option value="3" label="3" />
-										<option value="4" label="4" />
-										<option value="5" label="5" />
-									</datalist>
-
-									<input
-										type="number"
-										class="form-control
-										  block
-										  w-full
-										  px-3
-										  py-1.5
-										  text-base
-										  font-normal
-										  text-gray-700
-										  bg-white bg-clip-padding
-										  border border-solid border-gray-300
-										  rounded
-										  transition
-										  ease-in-out
-										  m-0
-										  focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none mb-2 "
-										id="edit_product_price"
-										placeholder="Price"
-										bind:value={productPrice}
-									/>
-								</div>
+								<ProductForm bind:productName={productName} bind:productDescription={productDescription} bind:productPrice={productPrice} bind:productRanking={productRanking} />
 							</div>
 						</div>
 					</div>
@@ -184,9 +99,12 @@
 							class="inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
 							id="product_edit_submit_button"
 							on:click={handleEdit}
-							disabled={submitButtonDisabled}>
+							disabled={submitButtonDisabled}
+						>
 							<svg
-								class="animate-spin -ml-1 mr-3 h-5 w-5 text-white { submitButtonDisabled ? '' : 'processing_edit_request'}"
+								class="animate-spin -ml-1 mr-3 h-5 w-5 text-white {submitButtonDisabled
+									? ''
+									: 'processing_edit_request'}"
 								xmlns="http://www.w3.org/2000/svg"
 								fill="none"
 								viewBox="0 0 24 24"
@@ -220,23 +138,6 @@
 {/if}
 
 <style>
-	datalist {
-		display: flex;
-		flex-direction: column;
-		justify-content: space-between;
-		writing-mode: vertical-lr;
-		width: 200px;
-	}
-
-	option {
-		padding: 0;
-	}
-
-	input[type='range'] {
-		width: 200px;
-		margin: 0;
-	}
-
 	.processing_edit_request {
 		visibility: hidden;
 		display: none;
