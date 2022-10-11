@@ -1,4 +1,4 @@
-export type ProductEdit = {
+export type Product_Edit = {
 	description?: string
 	name?: string
 	price?: number

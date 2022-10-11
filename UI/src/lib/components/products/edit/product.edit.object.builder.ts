@@ -1,14 +1,14 @@
 import type { Product } from "$lib/models/product"
-import type { ProductEdit } from "$lib/models/product.edit";
+import type { Product_Edit } from "$lib/models/product.edit";
 
 export interface IProductEditObjectBuilder{
-    create(originalProduct: Product, newProduct: ProductEdit): ProductEdit
+    create(originalProduct: Product, newProduct: Product_Edit): Product_Edit
 }
 
-export class ProductEditObjectBuilder implements IProductEditObjectBuilder{
-    public create(originalProduct: Product, newProduct: Product): ProductEdit {
+export class Product_Edit_Object_Builder implements IProductEditObjectBuilder{
+    public create(originalProduct: Product, newProduct: Product): Product_Edit {
         
-        const result: ProductEdit = {};
+        const result: Product_Edit = {};
 
         if(originalProduct.name !== newProduct.name && newProduct.name.length > 0){
             result.name = newProduct.name

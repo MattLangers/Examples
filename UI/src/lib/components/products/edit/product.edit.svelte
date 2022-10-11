@@ -3,19 +3,19 @@
 	import { variables } from '$lib/../variables';
 	import { createEventDispatcher } from 'svelte';
 	import { products as productsStore } from '$lib/components/products/product.store';
-	import { ProductEditObjectBuilder } from './product.edit.object.builder';
-	import type { ProductEdit } from '$lib/models/product.edit';
-	import ProductForm from './product.form.svelte';
+	import { Product_Edit_Object_Builder as Product_Edit_Object_Builder } from './product.edit.object.builder';
+	import type { Product_Edit as Product_Edit } from '$lib/models/product.edit';
+	import Product_Form from './product.edit.form.svelte';
 
 	export let open = false;
 	export let product: Product;
 
-	let productName = product.name;
-	let productDescription = product.description;
-	let productPrice = product.price;
-	let productRanking = product.ranking;
-	let productEdit: ProductEdit;
-	let submitButtonDisabled = false;
+	let product_name = product.name;
+	let product_description = product.description;
+	let product_price = product.price;
+	let product_ranking = product.ranking;
+	let product_edit: Product_Edit;
+	let submit_button_disabled = false;
 
 	productsStore.subscribe(() => {});
 
@@ -23,35 +23,35 @@
 
 	async function handleEdit() {
 		if (product.id.length > 0) {
-			submitButtonDisabled = true;
+			submit_button_disabled = true;
 			var result = await editProduct(product);
 			if (result) {
-				product.name = productName;
-				product.description = productDescription;
-				product.price = productPrice;
-				product.ranking = productRanking;
+				product.name = product_name;
+				product.description = product_description;
+				product.price = product_price;
+				product.ranking = product_ranking;
 				productsStore.update((contents) => [...contents, product]);
 				dispatch('close');
-				submitButtonDisabled = false;
+				submit_button_disabled = false;
 			}
 		}
 	}
 
 	var editProduct = async function (product: Product): Promise<boolean> {
-		productEdit = new ProductEditObjectBuilder().create(product, {
+		product_edit = new Product_Edit_Object_Builder().create(product, {
 			id: product.id,
 			productType: product.productType,
-			name: productName,
-			description: productDescription,
-			ranking: productRanking,
-			price: productPrice
+			name: product_name,
+			description: product_description,
+			ranking: product_ranking,
+			price: product_price
 		});
 		const response = await fetch(variables.api_URL + 'products/' + product.id, {
 			method: 'PUT',
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify(productEdit)
+			body: JSON.stringify(product_edit)
 		});
 
 		await response;
@@ -89,7 +89,7 @@
 								</svg>
 							</div>
 							<div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left grow">
-								<ProductForm bind:productName={productName} bind:productDescription={productDescription} bind:productPrice={productPrice} bind:productRanking={productRanking} />
+								<Product_Form bind:product_name={product_name} bind:product_description={product_description} bind:product_price={product_price} bind:product_ranking={product_ranking} />
 							</div>
 						</div>
 					</div>
@@ -99,10 +99,10 @@
 							class="inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
 							id="product_edit_submit_button"
 							on:click={handleEdit}
-							disabled={submitButtonDisabled}
+							disabled={submit_button_disabled}
 						>
 							<svg
-								class="animate-spin -ml-1 mr-3 h-5 w-5 text-white {submitButtonDisabled
+								class="animate-spin -ml-1 mr-3 h-5 w-5 text-white {submit_button_disabled
 									? ''
 									: 'processing_edit_request'}"
 								xmlns="http://www.w3.org/2000/svg"
