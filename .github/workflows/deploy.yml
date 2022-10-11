@@ -83,7 +83,7 @@ jobs:
           Invoke-Sqlcmd -Query $query -ServerInstance "$($server_name).database.windows.net" -Database $database_name -Username ${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_USERNAME }} -Password ${{ secrets.AZURE_SQL_INSTANCE_ADMINISTRATOR_LOGIN_PASSWORD }}
           
       - name: Run migrations sql script
-        working-directory: ${{github.workspace}}/artifacts/${{inputs.artifactNameSqlMigration}}
+        working-directory: ${{github.workspace}}/artifacts/
         run: |
           $database_name = "product_catalogue_dev"
           $server_name = "${{ secrets.AZURE_SQL_INSTANCE_NAME }}"
