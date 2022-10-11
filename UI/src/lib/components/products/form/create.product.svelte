@@ -3,13 +3,15 @@
 	import type { ProductType } from '$lib/models/productType';
 	import { variables } from '../../../../variables';
 	import { productTypes as storeProductTypes } from '$lib/components/products/product.type.store';
-	import Ranking from '../ranking/create.edit.product.ranking.svelte';
-	import Price from '../edit/create.edit.price.svelte';
+	import Ranking from './elements/ranking/create.edit.product.ranking.svelte';
+	import Price from './elements/price/create.edit.price.svelte';
+	import Description from './elements/description/create.edit.description.svelte';
 
 	let productTypeSelected: ProductType;
-	let product_name = '';
-	let product_ranking = 0;
-	let product_price = 0;
+	let name = '';
+	let description = '';
+	let ranking = 0;
+	let price = 0;
 	let creatingProduct = false;
     let productTypes: ProductType[] = [];
 
@@ -18,9 +20,9 @@
 	});
 
 	async function handleSubmit() {
-		if (product_name.length > 0 && productTypeSelected.id > 0) {
+		if (name.length > 0 && productTypeSelected.id > 0) {
 			creatingProduct = true;
-			var result = await createProduct(product_name, productTypeSelected.id);
+			var result = await createProduct(name, productTypeSelected.id);
 			creatingProduct = false;
 			if (result) {
 				CompletedCreationRequest();
@@ -29,7 +31,7 @@
 	}
 
 	function CompletedCreationRequest() {
-		product_name = '';
+		name = '';
         productTypeSelected = productTypes[0];
 	}
 
@@ -39,7 +41,7 @@
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify({ Name: name, ProductTypeId: productTypeId })
+			body: JSON.stringify({ Name: name, ProductTypeId: productTypeId, Price: price, Ranking: ranking })
 		});
 
 		var result = await response.json();
@@ -50,7 +52,7 @@
 <div class="flex flex-wrap pl-5 pt-5 items-center">
 	<div class="">
 		<input
-			bind:value={product_name}
+			bind:value={name}
 			type="text"
 			id="name"
 			class="bg-gray-50 
@@ -75,10 +77,13 @@
 		<ProdcuctTypeSelectElement bind:productTypeSelected />
 	</div>
 	<div class="ml-2">
-		<Ranking bind:product_ranking />
+		<Description bind:description />
 	</div>
 	<div class="ml-2">
-		<Price bind:product_price/>
+		<Ranking bind:ranking />
+	</div>
+	<div class="ml-2">
+		<Price bind:price={price}/>
 	</div>
 	<div class="ml-2">
 		{#if creatingProduct}

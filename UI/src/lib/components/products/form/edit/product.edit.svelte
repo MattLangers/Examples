@@ -89,7 +89,7 @@
 								</svg>
 							</div>
 							<div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left grow">
-								<Product_Form bind:product_name={product_name} bind:product_description={product_description} bind:product_price={product_price} bind:product_ranking={product_ranking} />
+								<Product_Form bind:name={product_name} bind:description={product_description} bind:price={product_price} bind:ranking={product_ranking} />
 							</div>
 						</div>
 					</div>

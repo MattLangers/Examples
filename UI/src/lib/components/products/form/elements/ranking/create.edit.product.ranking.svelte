@@ -1,5 +1,5 @@
 <script lang="ts">
-	export let product_ranking: number;
+	export let ranking: number;
 </script>
 
 <input
@@ -8,7 +8,7 @@
 	name="cowbell"
 	min="0"
 	max="5"
-	bind:value={product_ranking}
+	bind:value={ranking}
 	step="1"
 	list="product_ranking_labels"
 />

@@ -2,8 +2,8 @@
 	import type { Product } from '$lib/models/product';
 	import ProductTypeIconComponent from '$lib/components/products/product.type.icon.svelte';
 	import ProductArchive from '$lib/components/products/product.archive.svelte';
-	import ProductRanking from '$lib/components/products/ranking/view.product.ranking.svelte';
-	import ProductEdit from '$lib/components/products/edit/product.edit.svelte';
+	import ProductRanking from '$lib/components/products/form/elements/ranking/view.product.ranking.svelte';
+	import ProductEdit from '$lib/components/products/form/edit/product.edit.svelte';
 
     export let product: Product;
 	
