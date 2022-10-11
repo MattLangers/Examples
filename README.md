@@ -33,10 +33,10 @@ I thought this fictitious application would be a good place to start, to allow y
 * Unit-testing:
   * Use Moq.AutoMock to instantiate unit under test: saves time as there is no need to create mocks, and if a constructor call signature change there is no additional work to fix broken tests
   * Use  [Nunit.Framework.ValuesAttribute](/Database.Tests/Enums/MapEnumToEnum/MapProductToProductType/EnsureAllProductsAreMapped.Tests.cs#L11) to allow a test to scale with the Enum we are testing - protection if a new enum value is added and the engineer doesn't see the need to extend mapping logic.
-* Middleware: Exception handling to capture any exceptions that bubble up to the route of the API
+* [Middleware](API/Middleware/ExceptionHandlerMiddleware.cs): Exception handling to capture any exceptions that bubble up to the route of the API
 * Github pipelines for Continuous integration / deployment
 * IaC: [Terraform files](/IaC/) to create cloud resources for this project
-* CICD: [GitHub action files](/.github/workflows/) to manage continuous integration, creation of resources in azure (on-demand) & deployment of artifacts, run & persist postman integration tests, and the final step  to teardown azure resources.
+* CICD: [GitHub action files](/.github/workflows/) to manage continuous integration, creation of resources in azure (on-demand) & deployment of artifacts, run & persist postman/plawright integration tests, and the final step  to teardown azure resources.
   * [FIle](.github/workflows/main.pr.yml) to orchestrate actions when a pull-request is submitted.
   * [FIle](.github/workflows/main.yml) to orchestrate actions when a branch is merged into main.
 * Postman Requests with tests checking:
@@ -44,6 +44,11 @@ I thought this fictitious application would be a good place to start, to allow y
   * Content-type is JSON
   * Schema
   * Search functionality
+* Plawright e2e tests
+  * This is my first time using this library. At present the coverage is low, but we are testing the following:
+    * [main products page](UI/tests/products.initial.load.count.test.ts)
+    * [search functionality](UI/tests/search/)
+    * [creation of a product](UI/tests/create/create.product.test.ts)
 * SvelteKit UI
   * I have been keeping an eye on SvelteKit for a while and I wanted to try out the framework. I'm not a frontend expert, but I know enough to dabble.  
 
@@ -57,12 +62,17 @@ I thought this fictitious application would be a good place to start, to allow y
   * If we wanted to create different environments from this source code, some of the terraform runtime variables would need to be reviewed.
 * Observability should be better: need to create more logs for analysis and install application insights
 * At present its only myself working on this repository, at some point a branching strategy should be adopted - for example: GitFlow
-* UI: The current effort is good enough for a first pass, the search functionality is working but this area requires more work before it can be considered complete:
-  * Create products page
-  * Hamburger right hand nav
-  * Parameterize the API url in the Playwright tests
-  * Create static website in the continuous deployment part of GitHub actions to deploy the static files
-    * run playwright tests against static website and persist results
+* UI: The current effort is good enough for an MVP, the design is not going to win any awards (review the screen-grabs below to view its current design) but the base of the product has good foundations to be built upon. We are using tailwind css and SvelteKit of which I've very much enjoyed using:
+  * We can search for existing products, and create/archive.
+    * The search is performed on the backend, should we be enhancing this functionality to include:
+      * Add some ordering functionality
+      * And filtering.
+  * The design is responsive, with a Hamburger for the navigation
+  * We are running a small collection of playwright tests post deployment - these tests should be expanded, and we should run these using different browsers.
+  * I need to agree on, or go searching for an industry standard on component/variable naming standards and enforce these.
+* Playwright
+  * The coverage of these tests should be extended.
+  * I would be tempted to rewrite these in c# - to compare the experience, as I'm wandering if there is any advantage/disadvantages in doing so?
 
 ## Instructions
 
@@ -149,6 +159,17 @@ terraform destroy -auto-approve
 npm install
 npm run dev
 ```
+
+We are using the Tailwind CSS framework.
+
+* Full screen
+  * [main products UI](UI.screen.grabs/full.screen.main.products.page.png)
+  * [product editing modal](UI.screen.grabs/full.screen.edit.modal.png)
+  * [product archive modal](UI.screen.grabs/full.screen.archive.modal.png)
+* Responsive
+  * [main products UI](UI.screen.grabs/responsive.screen.main.png)
+  * [product editing modal](UI.screen.grabs/responsive.screen.edit.png)
+  * [Hamburger/navigation](UI.screen.grabs/responsive.screen.hamburger.png)
 
 #### UI End-to-end tests using Playwright
 

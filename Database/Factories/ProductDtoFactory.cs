@@ -1,17 +1,21 @@
-﻿using Database.Models.DTO;
+﻿using Database.Models;
+using Database.Models.DTO;
 
 namespace Database.Factories
 {
     public sealed class ProductDtoFactory : IProductDtoFactory
     {
-        public ProductDto Create(Guid id, string Name, DateTime creationDate, int productTypeId, string productTypeName)
+        public ProductDto Create(Product product)
         {
             return new ProductDto()
             {
-                Id = id,
-                CreationDate = creationDate,
-                Name = Name,
-                ProductType = new ProductTypeDto() { Id = productTypeId, Name = productTypeName }
+                Id = product.Id,
+                CreationDate = product.CreationDate,
+                Name = product.Name,
+                ProductType = new ProductTypeDto() { Id = product.ProductType.Id, Name = product.ProductType.Name },
+                Description = product.Description.Description,
+                Price = product.Price.Price,
+                Ranking = product.Ranking.Rank
             };
         }
     }

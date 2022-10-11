@@ -1,9 +1,9 @@
-<div class="place-content-center">
+<div class="w3/5 m-5 search_ani">
 	<svg
 		version="1.1"
 		xmlns="http://www.w3.org/2000/svg"
 		width="60px"
-		height="10px"
+		height="20px"
 		viewBox="0 0 80 20"
 	>
 		<circle cx="10" cy="10" r="10" fill="#666">
@@ -56,3 +56,11 @@
 		</circle>
 	</svg>
 </div>
+
+<style>
+	.search_ani {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+</style>

@@ -13,7 +13,7 @@
     });
 </script>
 
-<div class="top-0 h-full">
+<div class="top-0 h-full ml-2 mr-2">
     <div id="left-hand-nav">
         {#each navs as navigation}
             <div class="flex items-center rounded-md p-1.5 {currentPath === navigation.href ? 'bg-green-400 text-white' : ''}">

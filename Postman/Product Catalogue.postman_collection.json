@@ -351,13 +351,16 @@
 									"        \"properties\":{\r",
 									"            \"id\": { \"type\": \"string\" },\r",
 									"            \"name\": { \"type\": \"string\" },\r",
+									"            \"description\": { \"type\": \"string\" },\r",
+									"            \"price\": { \"type\": \"number\" },\r",
+									"            \"ranking\": { \"type\": \"number\" },\r",
 									"            \"creationDate\": { \"type\": \"string\" },\r",
 									"            \"productType\": { \"type\": \"object\", \"properties\": {\r",
 									"                    \"id\": { \"type\": \"integer\" },\r",
 									"                    \"name\": { \"type\": \"string\" },\r",
 									"            } },\r",
 									"        },\r",
-									"        \"required\": [\"id\", \"name\", \"creationDate\", \"productType\"]\r",
+									"        \"required\": [\"id\", \"name\", \"description\", \"price\", \"ranking\", \"creationDate\", \"productType\"]\r",
 									"    },\r",
 									"}\r",
 									"\r",
@@ -516,6 +519,78 @@
 							],
 							"path": [
 								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Archive product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{product_catalogue_url}}/products/c67a4aff-699f-4ba2-8513-7731864c6efe/archive",
+							"host": [
+								"{{product_catalogue_url}}"
+							],
+							"path": [
+								"products",
+								"c67a4aff-699f-4ba2-8513-7731864c6efe",
+								"archive"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Name updated\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{product_catalogue_url}}/products/c67a4aff-699f-4ba2-8513-7731864c6efe",
+							"host": [
+								"{{product_catalogue_url}}"
+							],
+							"path": [
+								"products",
+								"c67a4aff-699f-4ba2-8513-7731864c6efe"
 							]
 						}
 					},

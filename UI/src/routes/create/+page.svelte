@@ -6,7 +6,7 @@
 	import LeftHandNavigation from "$lib/components/navigation/left.hand.nav.svelte";
 	import Sidebar from "$lib/components/navigation/sidebar.svelte";
 	import TopRightHandNav from "$lib/components/navigation/top.right.hand.nav.svelte";
-    import CreateProduct from "$lib/components/products/create.product.svelte"
+    import CreateProduct from "$lib/components/products/form/create.product.svelte"
 
     let open = false;
 </script>
