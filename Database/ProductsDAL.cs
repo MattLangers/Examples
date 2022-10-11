@@ -37,9 +37,23 @@ namespace Database
 
         public async Task<Guid> CreateProduct(API.Models.InputModels.Product inputModel)
         {
-            var product = new Models.Product() { ProductTypeId = inputModel.ProductTypeId, Name = inputModel.Name };
+            var name = inputModel.Name == null ? "default name" : inputModel.Name;
+            var price = inputModel.Price == null ? 0 : inputModel.Price.Value;
+            var rank = inputModel.Ranking == null ? (byte)0 : inputModel.Ranking.Value;
+            var description = inputModel.Description == null ? string.Empty : inputModel.Description;
+
+            var product = new Models.Product() { ProductTypeId = inputModel.ProductTypeId, Name = name };
+
+            product.Description = new ProductDescription() { Description = description };
+
+            product.Price = new ProductPrice() { Price = price };
+
+            product.Ranking = new ProductRanking() { Rank = rank };
+
             _dbContext.Set<Models.Product>().Add(product);
+
             await _dbContext.SaveChangesAsync();
+
             return product.Id;
         }
 
