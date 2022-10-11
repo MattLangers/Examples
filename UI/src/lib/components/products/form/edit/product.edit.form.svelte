@@ -36,5 +36,5 @@
 
 	<Ranking bind:ranking={ranking} />
 
-	<Price bind:product_price={price} />
+	<Price bind:price={price} />
 </div>
