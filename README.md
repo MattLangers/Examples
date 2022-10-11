@@ -152,6 +152,15 @@ npm run dev
 
 We are using the Tailwind CSS framework.
 
+* Full screen
+  * [main products UI](UI.screen.grabs/full.screen.main.products.page.png)
+  * [product editing modal](UI.screen.grabs/full.screen.edit.modal.png)
+  * [product archive modal](UI.screen.grabs/full.screen.archive.modal.png)
+* Responsive
+  * [main products UI](UI.screen.grabs/responsive.screen.main.png)
+  * [product editing modal](UI.screen.grabs/responsive.screen.edit.png)
+  * [Hamburger/navigation](UI.screen.grabs/responsive.screen.hamburger.png)
+
 #### UI End-to-end tests using Playwright
 
 Run the following command from the route of the UI folder
